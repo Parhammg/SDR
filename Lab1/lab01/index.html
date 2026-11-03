@@ -1,0 +1,852 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Lab 1 - Spectrum Monitoring - SDR Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-01-report-rf-spectrum-monitoring" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SDR Lab" class="md-header__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SDR Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1 - Spectrum Monitoring
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SDR Lab" class="md-nav__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SDR Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Spectrum Monitoring
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lab 1 - Spectrum Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-setup-spectrum-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1: Setup &amp; Spectrum Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1: Setup &amp; Spectrum Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-flowgraph-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Flowgraph Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-question-1-reliable-span-and-sweep-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Question 1: Reliable Span and Sweep Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-question-2-frequency-error-reference-accuracy-for-gsm900" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Question 2: Frequency Error &amp; Reference Accuracy for GSM900
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-loopback-test-with-known-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2: Loopback Test with Known Signal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2: Loopback Test with Known Signal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-flowgraph-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Flowgraph Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-question-3-quadrature-iq-sampling-positivenegative-tone-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Question 3: Quadrature I/Q Sampling &amp; Positive/Negative Tone Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-question-4-peak-classification-via-lo-shift-slope-s-fracdelta-textlabeldelta-textlo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Question 4: Peak Classification via LO Shift Slope \(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-question-5-error-cancellation-in-loopback-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Question 5: Error Cancellation in Loopback Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-data-analysis-custom-psd-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3: Data Analysis &amp; Custom PSD Plot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4-troubleshooting-anomalies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 4: Troubleshooting &amp; Anomalies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5-what-we-would-do-differently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 5: What We Would Do Differently
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6-ai-tool-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 6: AI Tool Disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../log.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-setup-spectrum-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1: Setup &amp; Spectrum Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1: Setup &amp; Spectrum Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-flowgraph-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Flowgraph Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-question-1-reliable-span-and-sweep-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Question 1: Reliable Span and Sweep Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-question-2-frequency-error-reference-accuracy-for-gsm900" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Question 2: Frequency Error &amp; Reference Accuracy for GSM900
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-loopback-test-with-known-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2: Loopback Test with Known Signal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2: Loopback Test with Known Signal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-flowgraph-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Flowgraph Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-question-3-quadrature-iq-sampling-positivenegative-tone-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Question 3: Quadrature I/Q Sampling &amp; Positive/Negative Tone Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-question-4-peak-classification-via-lo-shift-slope-s-fracdelta-textlabeldelta-textlo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Question 4: Peak Classification via LO Shift Slope \(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-question-5-error-cancellation-in-loopback-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Question 5: Error Cancellation in Loopback Measurement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-data-analysis-custom-psd-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3: Data Analysis &amp; Custom PSD Plot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4-troubleshooting-anomalies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 4: Troubleshooting &amp; Anomalies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5-what-we-would-do-differently" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 5: What We Would Do Differently
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6-ai-tool-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 6: AI Tool Disclosure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lab-01-report-rf-spectrum-monitoring">Lab 01 Report: RF Spectrum Monitoring</h1>
+<p><strong>Course:</strong> Software Defined Radio (SDR) Laboratory<br />
+<strong>Team ID:</strong> Team-07<br />
+<strong>Date:</strong> [Insert Date Here]<br />
+<strong>Team Members &amp; Roles:</strong>
+- <strong>Member 1:</strong> [Name] — Hardware Setup &amp; Flowgraph Configuration
+- <strong>Member 2:</strong> [Name] — Data Logging &amp; Python Post-Processing</p>
+<p><strong>Hardware Specifications:</strong> ADALM-Pluto (AD9363 Transceiver, Zynq-7010 FPGA+ARM), IP: <code>192.168.1.10</code>, Reference TCXO Accuracy: <span class="arithmatex">\(\pm 25\text{ ppm}\)</span>.</p>
+<hr />
+<h2 id="section-1-setup-spectrum-monitoring">Section 1: Setup &amp; Spectrum Monitoring</h2>
+<h3 id="11-flowgraph-architecture">1.1 Flowgraph Architecture</h3>
+<p>In the <code>lab01_monitor.grc</code> flowgraph, the <code>Filter Configuration</code> parameter of the <code>PlutoSDR Source</code> block is set to <code>Off</code>. This setting ensures that the hardware analog bandwidth remains at its maximum default (<span class="arithmatex">\(20\text{ MHz}\)</span>) rather than being automatically constrained by software, preventing unexpected spectral truncation at the edges.</p>
+<hr />
+<h3 id="12-question-1-reliable-span-and-sweep-step">1.2 Question 1: Reliable Span and Sweep Step</h3>
+<ul>
+<li><strong>Edge Roll-off vs. Spectrum Center:</strong> Analog low-pass filters (LPF) and digital decimation filters inside the AD9363 receiver attenuate amplitude levels at the spectrum edges near <span class="arithmatex">\(\pm f_s / 2\)</span>. Additionally, DC offset and Local Oscillator (LO) leakage introduce an artificial spike at the baseband center (<span class="arithmatex">\(f_{bb} = 0\)</span>).</li>
+<li><strong>Reliable Span Ratio:</strong> The reliable frequency span is defined as the central <strong>80% of <span class="arithmatex">\(f_s\)</span></strong>, covering <span class="arithmatex">\([-0.4 f_s, +0.4 f_s]\)</span>.</li>
+<li><strong>Sweep Step Relation:</strong> To perform wideband spectrum scanning without edge distortion, the frequency step between consecutive center frequencies is set to:</li>
+</ul>
+<div class="arithmatex">\[ \Delta \text{step} = 0.8 f_s \]</div>
+<p>This choice provides a <strong>20% spectral overlap</strong> between steps, allowing attenuated outer edges to be cropped while seamlessly stitching reliable central bands together.</p>
+<hr />
+<h3 id="13-question-2-frequency-error-reference-accuracy-for-gsm900">1.3 Question 2: Frequency Error &amp; Reference Accuracy for GSM900</h3>
+<ul>
+<li><strong>Theoretical Formulation:</strong> Downlink GSM900 carrier frequencies follow the standard grid <span class="arithmatex">\(f_{\text{standard}} = 935 + 0.2n \text{ MHz}\)</span>. The absolute frequency error <span class="arithmatex">\(\Delta f\)</span> and reference clock error <span class="arithmatex">\(\varepsilon\)</span> in ppm are expressed as:</li>
+</ul>
+<div class="arithmatex">\[ \Delta f = f_{\text{observed}} - f_{\text{standard}} \]</div>
+<div class="arithmatex">\[ \text{Error (ppm)} = \frac{\Delta f}{f_c} \times 10^6 \]</div>
+<ul>
+<li><strong>Nominal Boundary:</strong> For the ADALM-Pluto's <span class="arithmatex">\(\pm 25\text{ ppm}\)</span> reference TCXO, at <span class="arithmatex">\(f_c = 945\text{ MHz}\)</span>, the maximum expected offset is:</li>
+</ul>
+<div class="arithmatex">\[ \Delta f_{\text{max}} = 945 \times 10^6 \times (\pm 25 \times 10^{-6}) = \pm 23.625 \text{ kHz} \]</div>
+<ul>
+<li><strong>Data Note:</strong> Observed carrier peak frequencies extracted offline from raw <code>.cf32</code> recordings must be substituted into <span class="arithmatex">\(f_{\text{observed}}\)</span> to calculate Team-07's device-specific ppm error.</li>
+</ul>
+<hr />
+<h2 id="section-2-loopback-test-with-known-signal">Section 2: Loopback Test with Known Signal</h2>
+<h3 id="21-flowgraph-setup">2.1 Flowgraph Setup</h3>
+<p>The <code>lab01_loopback.grc</code> flowgraph incorporates a complex <code>Signal Source</code> connected to a <code>PlutoSDR Sink</code> transmitting a single tone at <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span> with a transmitter attenuation of <span class="arithmatex">\(tx\_att = 60\text{ dB}\)</span>.</p>
+<hr />
+<h3 id="22-question-3-quadrature-iq-sampling-positivenegative-tone-separation">2.2 Question 3: Quadrature I/Q Sampling &amp; Positive/Negative Tone Separation</h3>
+<ul>
+<li><strong>Separation Mechanism:</strong> The AD9363 receiver uses Direct Conversion (Zero-IF) with Quadrature I/Q sampling. The received complex signal <span class="arithmatex">\(x(t) = I(t) + jQ(t) = e^{j 2\pi f_{tx} t}\)</span> maintains a <span class="arithmatex">\(90^\circ\)</span> phase difference between <span class="arithmatex">\(I\)</span> and <span class="arithmatex">\(Q\)</span> channels. This phase relationship preserves signal rotation directionality in the complex plane, cleanly distinguishing <span class="arithmatex">\(+250\text{ kHz}\)</span> from <span class="arithmatex">\(-250\text{ kHz}\)</span> in the FFT spectrum.</li>
+<li><strong>If Only <span class="arithmatex">\(I\)</span>-Branch Were Sampled:</strong> The resulting signal would be purely real: <span class="arithmatex">\(x(t) = I(t) = \cos(2\pi f_{tx} t)\)</span>. By Euler's identity:</li>
+</ul>
+<div class="arithmatex">\[ \cos(2\pi f_{tx} t) = \frac{1}{2} e^{j 2\pi f_{tx} t} + \frac{1}{2} e^{-j 2\pi f_{tx} t} \]</div>
+<p>Real-valued signals possess a symmetric spectrum around zero frequency. Consequently, both <span class="arithmatex">\(+250\text{ kHz}\)</span> and <span class="arithmatex">\(-250\text{ kHz}\)</span> inputs would produce identical twin peaks at <span class="arithmatex">\(\pm 250\text{ kHz}\)</span>, making sign identification impossible.</p>
+<hr />
+<h3 id="23-question-4-peak-classification-via-lo-shift-slope-s-fracdelta-textlabeldelta-textlo">2.3 Question 4: Peak Classification via LO Shift Slope <span class="arithmatex">\(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)</span></h3>
+<p>During the LO shift test (<span class="arithmatex">\(f_c = 434.00\text{ MHz}\)</span>, <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span>), spectral peaks are classified using their shift slope <span class="arithmatex">\(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)</span>:</p>
+<ol>
+<li><strong>Real Transmitted Signal Peak (<span class="arithmatex">\(434.250\text{ MHz}\)</span>):</strong></li>
+<li>The physical RF frequency remains unchanged at <span class="arithmatex">\(f_{\text{RF}} = f_c + f_{tx} = 434.250\text{ MHz}\)</span>.</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = 0\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Real Input Signal</strong>.</li>
+<li><strong>LO Leakage / DC Offset Peak (<span class="arithmatex">\(434.000\text{ MHz}\)</span>):</strong></li>
+<li>Located at baseband DC (<span class="arithmatex">\(f_{bb} = 0\)</span>), labeled at <span class="arithmatex">\(f_{\text{label}} = f_{\text{LO}}\)</span>. As LO shifts by <span class="arithmatex">\(\Delta \text{LO}\)</span>, the label moves by the exact same amount.</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = +1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (DC Offset / LO Leakage)</strong>.</li>
+<li><strong>Image Peak (<span class="arithmatex">\(433.750\text{ MHz}\)</span>):</strong></li>
+<li>Caused by I/Q gain and phase imbalance at the image frequency <span class="arithmatex">\(-f_{tx}\)</span>.</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = -1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (Image Peak)</strong>.</li>
+</ol>
+<p><em>Anomalous Screenshot Observation:</em> In image <code>100k.png</code>, the main peak label displays <span class="arithmatex">\(433.996\text{ MHz}\)</span> instead of <span class="arithmatex">\(434.250\text{ MHz}\)</span> (<span class="arithmatex">\(s=0\)</span>). This anomaly is documented in the Troubleshooting section as a GUI widget update artifact during capture.</p>
+<hr />
+<h3 id="24-question-5-error-cancellation-in-loopback-measurement">2.4 Question 5: Error Cancellation in Loopback Measurement</h3>
+<ul>
+<li><strong>Explanation:</strong> In over-the-air reception, transmitter and receiver operate on independent clock sources, exposing reference frequency offset.</li>
+<li>In the loopback configuration, both TX and RX reside on the same AD9363 chip inside ADALM-Pluto, sharing a single TCXO reference oscillator.</li>
+<li>Assuming a fractional reference oscillator error <span class="arithmatex">\(\delta\)</span>:</li>
+</ul>
+<div class="arithmatex">\[ f_{\text{TX, real}} = (f_c + f_{tx})(1 + \delta) \]</div>
+<div class="arithmatex">\[ f_{\text{RX, LO}} = f_c (1 + \delta) \]</div>
+<div class="arithmatex">\[ f_{bb, \text{meas}} = f_{\text{TX, real}} - f_{\text{RX, LO}} = f_{tx}(1 + \delta) \]</div>
+<p>The software frequency label applies the same clock scale:</p>
+<div class="arithmatex">\[ f_{\text{label}} = f_{\text{RX, LO}} + f_{bb, \text{meas}} = (f_c + f_{tx})(1 + \delta) \]</div>
+<p>Because the software frequency axis scale and sampling clock share the identical reference, the error factor <span class="arithmatex">\((1 + \delta)\)</span> cancels out relative to the nominal software grid, yielding an exact reading of <span class="arithmatex">\(434.250\text{ MHz}\)</span>.</p>
+<hr />
+<h2 id="section-3-data-analysis-custom-psd-plot">Section 3: Data Analysis &amp; Custom PSD Plot</h2>
+<p>Below is the Power Spectral Density (PSD) computed via Welch's method from Team-07's raw <code>.cf32</code> I/Q recording (<code>Team-07_lab01_loopback.cf32</code>):</p>
+<p><img alt="Loopback PSD Spectrum" src="images/loopback_psd.png" />
+<em>Figure 1: Power Spectral Density of loopback test signal (<span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span>) computed from raw binary I/Q data.</em></p>
+<hr />
+<h2 id="section-4-troubleshooting-anomalies">Section 4: Troubleshooting &amp; Anomalies</h2>
+<table>
+<thead>
+<tr>
+<th>Anomaly / Symptom</th>
+<th>Suspected Cause</th>
+<th>Resolution / Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Main peak label shifted to <span class="arithmatex">\(433.996\text{ MHz}\)</span> in screenshot <code>100k.png</code>.</td>
+<td>Unintended parameter range adjustment immediately prior to saving image.</td>
+<td>Verified raw binary <code>.cf32</code> data offline using Python to confirm true peak at <span class="arithmatex">\(434.250\text{ MHz}\)</span>.</td>
+</tr>
+<tr>
+<td><code>Device or resource busy</code> or <code>No Pluto device found</code> error in GRC console.</td>
+<td>Another active process or script holding IIO context open.</td>
+<td>Killed background IIO processes and re-verified connection via <code>ping 192.168.1.10</code>.</td>
+</tr>
+<tr>
+<td>Attenuated signal edges at high sample rates.</td>
+<td><code>Filter Configuration</code> left on <code>Auto</code> instead of <code>Off</code>.</td>
+<td>Set <code>Filter Configuration = Off</code> in <code>PlutoSDR Source</code> block options.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="section-5-what-we-would-do-differently">Section 5: What We Would Do Differently</h2>
+<ol>
+<li><strong>Automated Sweep Scripts:</strong> Utilize <code>pyadi-iio</code> Python scripts for wideband scanning to eliminate manual tuning errors.</li>
+<li><strong>Strict Screenshot Protocols:</strong> Verify GUI parameter controls (<span class="arithmatex">\(f_c, f_{tx}, \text{lo\_shift}\)</span>) immediately before taking screenshots.</li>
+<li><strong>In-Lab Raw Data Validation:</strong> Execute quick offline Python validation scripts during the lab session to verify file sizes (<span class="arithmatex">\(8 f_s T\)</span> bytes) before disconnecting hardware.</li>
+</ol>
+<hr />
+<h2 id="section-6-ai-tool-disclosure">Section 6: AI Tool Disclosure</h2>
+<ul>
+<li><strong>Tools Used:</strong> Large Language Models (LLMs) were used for Markdown formatting, English language syntax polish, and LaTeX math expression rendering.</li>
+<li><strong>Data Integrity:</strong> All analytical conclusions, numerical calculations, and code scripts were derived strictly from actual lab measurements and source documents.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
