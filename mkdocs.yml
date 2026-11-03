@@ -1,3 +1,47 @@
-site_name: SDR Lab 
+site_name: SDR Laboratory 
+
 theme:
-  name: 'material'
+  name: material
+  language: en
+  palette:
+    # حالت روشن (Light Mode)
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # حالت تاریک (Dark Mode)
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs          # تب‌های بالای صفحه
+    - navigation.top           # دکمه بازگشت به بالای صفحه (Back to top)
+    - navigation.tracking      # ردیابی خودکار اسکرول در آدرس مرورگر
+    - content.code.copy        # افزودن دکمه Copy به کادر کدها
+    - toc.follow               # اسکرول خودکار جدول محتوای سمت راست
+
+nav:
+  - Home: index.md
+  - Lab 1 - Spectrum Monitoring: Lab1/lab01.md
+  - Logbook: log.md
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition                 # کادرهای رنگی نکته، هشدار و راهنما
+  - pymdownx.details           # قابلیت بازوبسته شدن (آکاردئونی) کادرها
+  - pymdownx.superfences       # هایلایت پیشرفته کدهای پایتون
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - tables                     # جدول‌های تمیز و مرتب
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
