@@ -21,11 +21,14 @@
     
     
       
-        <title>SDR Lab</title>
+        <title>SDR Laboratory</title>
       
     
     
       <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +56,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -62,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#software-defined-radio-sdr-laboratory" class="md-skip">
           Skip to content
         </a>
       
@@ -74,11 +84,9 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="SDR Lab" class="md-header__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+    <a href="." title="SDR Laboratory" class="md-header__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -92,7 +100,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SDR Lab
+            SDR Laboratory
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -104,6 +112,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -160,6 +194,74 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="Lab1/lab01/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lab 1 - Spectrum Monitoring
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="log.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Logbook
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -173,16 +275,18 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="SDR Lab" class="md-nav__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+    <a href="." title="SDR Laboratory" class="md-nav__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SDR Lab
+    SDR Laboratory
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -254,10 +358,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#team-course-identity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        👥 Team &amp; Course Identity
       
     </span>
   </a>
@@ -265,10 +369,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#hardware-software-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project layout
+        🛠️ Hardware &amp; Software Specifications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Hardware &amp; Software Specifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adalm-pluto-transceiver-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📡 ADALM-Pluto Transceiver Specifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💻 Software Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laboratory-reports-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Laboratory Reports Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-links-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Quick Links &amp; Navigation
       
     </span>
   </a>
@@ -364,10 +518,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#team-course-identity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Commands
+        👥 Team &amp; Course Identity
       
     </span>
   </a>
@@ -375,10 +529,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
+  <a href="#hardware-software-specifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project layout
+        🛠️ Hardware &amp; Software Specifications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Hardware &amp; Software Specifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adalm-pluto-transceiver-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📡 ADALM-Pluto Transceiver Specifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💻 Software Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laboratory-reports-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📂 Laboratory Reports Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-links-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📁 Quick Links &amp; Navigation
       
     </span>
   </a>
@@ -402,21 +606,113 @@
 
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<h1 id="software-defined-radio-sdr-laboratory">Software Defined Radio (SDR) Laboratory</h1>
+<p>Welcome to the official documentation portal and report repository for <strong>Team-07</strong> in the Software Defined Radio Laboratory course at the Department of Electrical Engineering.</p>
+<div class="admonition info">
+<p class="admonition-title">Lab Portal Overview</p>
+<p>This website contains all laboratory documentation, including pre-lab preparation, real-time measurement logs, raw <code>.cf32</code> data analysis, and post-session reports for <strong>ADALM-Pluto SDR</strong> experiments.</p>
+</div>
+<hr />
+<h2 id="team-course-identity">👥 Team &amp; Course Identity</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Course</strong></td>
+<td style="text-align: left;">Software Defined Radio (SDR) Laboratory</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Department</strong></td>
+<td style="text-align: left;">Department of Electrical Engineering</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Instructor</strong></td>
+<td style="text-align: left;">Dr. Seyed Mohammad Karbasi</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Teaching Assistants</strong></td>
+<td style="text-align: left;">Ali Aghaei, Fatemeh Saem, Ali Pourhassan, Ali Majlesi</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Team Identifier</strong></td>
+<td style="text-align: left;"><strong>Team-01</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Team Members</strong></td>
+<td style="text-align: left;">Seyedparham Moghaddasi &amp; Amirali Rajai</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="hardware-software-specifications">🛠️ Hardware &amp; Software Specifications</h2>
+<h3 id="adalm-pluto-transceiver-specifications">📡 ADALM-Pluto Transceiver Specifications</h3>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li><strong>RF Transceiver Chip:</strong> Analog Devices AD9363</li>
+<li><strong>SoC Architecture:</strong> Xilinx Zynq-7010 (FPGA + Dual ARM Cortex-A9)</li>
+<li><strong>Frequency Coverage:</strong> <span class="arithmatex">\(325\text{ MHz}\)</span> to <span class="arithmatex">\(3.8\text{ GHz}\)</span> (default RF tuning range)</li>
+<li><strong>Reference Oscillator Accuracy:</strong> <span class="arithmatex">\(\pm 25\text{ ppm}\)</span> TCXO</li>
+<li><strong>Network Configuration:</strong> Static IP <code>192.168.1.10</code> via LAN/USB</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
+<h3 id="software-infrastructure">💻 Software Infrastructure</h3>
+<ul>
+<li><strong>Flowgraph Environment:</strong> GNU Radio Companion 3.10+</li>
+<li><strong>Offline Post-Processing:</strong> Python 3 (NumPy, SciPy, Matplotlib)</li>
+<li><strong>Hardware Interface Drivers:</strong> <code>libiio</code> &amp; <code>pyadi-iio</code></li>
+<li><strong>Documentation Engine:</strong> MkDocs Material with MathJax rendering</li>
+<li><strong>Source Control &amp; Hosting:</strong> Git &amp; GitHub Pages</li>
+</ul>
+<hr />
+<h2 id="laboratory-reports-directory">📂 Laboratory Reports Directory</h2>
+<p>The course follows a structured three-stage learning model (Pre-Session, In-Session, Post-Session). Below is the master index of all lab reports:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Lab #</th>
+<th style="text-align: left;">Topic / Title</th>
+<th style="text-align: center;">Pre-Report</th>
+<th style="text-align: center;">In-Lab Data</th>
+<th style="text-align: center;">Post-Report</th>
+<th style="text-align: center;">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>Lab 00</strong></td>
+<td style="text-align: left;">System Setup &amp; Environment Calibration</td>
+<td style="text-align: center;">Completed</td>
+<td style="text-align: center;">Verified</td>
+<td style="text-align: center;">Published</td>
+<td style="text-align: center;"><a href="log.md">View Logbook</a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Lab 01</strong></td>
+<td style="text-align: left;"><strong>RF Spectrum Monitoring</strong></td>
+<td style="text-align: center;">Completed</td>
+<td style="text-align: center;">Recorded <code>.cf32</code></td>
+<td style="text-align: center;"><strong>Published</strong></td>
+<td style="text-align: center;"><a href="Lab1/lab01/"><strong>View Lab 01 Report</strong></a></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Lab 02</strong></td>
+<td style="text-align: left;"><em>Upcoming Session</em></td>
+<td style="text-align: center;">Pending</td>
+<td style="text-align: center;">Pending</td>
+<td style="text-align: center;">Pending</td>
+<td style="text-align: center;"><em>TBA</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="quick-links-navigation">📁 Quick Links &amp; Navigation</h2>
+<ul>
+<li>[x] <a href="Lab1/lab01/"><strong>Lab 01 Report (<code>Lab1/lab01.md</code>)</strong></a> — Comprehensive analysis of Spectrum Monitoring and Loopback tests.</li>
+<li>[x] <a href="log.md"><strong>Team Measurement Logbook (<code>log.md</code>)</strong></a> — Real-time in-lab measurement logs, device parameters, and troubleshooting records.</li>
+</ul>
 
 
 
@@ -436,6 +732,12 @@ docs/
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -466,7 +768,7 @@ docs/
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": [], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.top", "navigation.tracking", "content.code.copy", "toc.follow"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.d7400e89.min.js"></script>

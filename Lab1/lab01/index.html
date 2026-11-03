@@ -21,11 +21,14 @@
     
     
       
-        <title>Lab 1 - Spectrum Monitoring - SDR Lab</title>
+        <title>Lab 1 - Spectrum Monitoring - SDR Laboratory</title>
       
     
     
       <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +56,14 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -74,11 +84,9 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SDR Lab" class="md-header__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+    <a href="../.." title="SDR Laboratory" class="md-header__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -92,7 +100,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SDR Lab
+            SDR Laboratory
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -104,6 +112,32 @@
         </div>
       </div>
     </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
     
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
@@ -160,6 +194,74 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lab 1 - Spectrum Monitoring
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../log.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Logbook
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -173,16 +275,18 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SDR Lab" class="md-nav__button md-logo" aria-label="SDR Lab" data-md-component="logo">
+    <a href="../.." title="SDR Laboratory" class="md-nav__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    SDR Lab
+    SDR Laboratory
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -669,83 +773,91 @@
 
 
 <h1 id="lab-01-report-rf-spectrum-monitoring">Lab 01 Report: RF Spectrum Monitoring</h1>
-<p><strong>Course:</strong> Software Defined Radio (SDR) Laboratory<br />
-<strong>Team ID:</strong> Team-07<br />
-<strong>Date:</strong> [Insert Date Here]<br />
-<strong>Team Members &amp; Roles:</strong>
-- <strong>Member 1:</strong> [Name] — Hardware Setup &amp; Flowgraph Configuration
-- <strong>Member 2:</strong> [Name] — Data Logging &amp; Python Post-Processing</p>
-<p><strong>Hardware Specifications:</strong> ADALM-Pluto (AD9363 Transceiver, Zynq-7010 FPGA+ARM), IP: <code>192.168.1.10</code>, Reference TCXO Accuracy: <span class="arithmatex">\(\pm 25\text{ ppm}\)</span>.</p>
+<p><strong>Course:</strong> Software Defined Radio (SDR) Laboratory [1]<br />
+<strong>Team ID:</strong> Team-01 [1]<br />
+<strong>Date:</strong> [November 3, 2026]<br />
+<strong>Team Members :</strong>
+- <strong>Member 1:</strong> [SeyedParham Moghaddasi] — 
+- <strong>Member 2:</strong> [Amirali Rajai] — </p>
+<p><strong>Hardware Specifications:</strong> ADALM-Pluto (AD9363 Transceiver, Zynq-7010 FPGA+ARM), IP: <code>192.168.1.10</code> [8, 9], Reference TCXO Accuracy: <span class="arithmatex">\(\pm 25\text{ ppm}\)</span> [10].</p>
 <hr />
 <h2 id="section-1-setup-spectrum-monitoring">Section 1: Setup &amp; Spectrum Monitoring</h2>
 <h3 id="11-flowgraph-architecture">1.1 Flowgraph Architecture</h3>
-<p>In the <code>lab01_monitor.grc</code> flowgraph, the <code>Filter Configuration</code> parameter of the <code>PlutoSDR Source</code> block is set to <code>Off</code>. This setting ensures that the hardware analog bandwidth remains at its maximum default (<span class="arithmatex">\(20\text{ MHz}\)</span>) rather than being automatically constrained by software, preventing unexpected spectral truncation at the edges.</p>
+<p>In the <code>lab01_monitor.grc</code> flowgraph, the <code>Filter Configuration</code> parameter of the <code>PlutoSDR Source</code> block is set to <code>Off</code> [2, 7].</p>
+<div class="admonition note">
+<p class="admonition-title">Hardware Analog Bandwidth Configuration</p>
+<p>Setting <code>Filter Configuration = Off</code> prevents GNU Radio from overriding the internal hardware analog bandwidth filters [2]. In <code>Off</code> mode, the AD9363 transceiver maintains its maximum <span class="arithmatex">\(20\text{ MHz}\)</span> default analog RF bandwidth, avoiding unexpected spectral truncation at the edges [2, 11].</p>
+</div>
 <hr />
 <h3 id="12-question-1-reliable-span-and-sweep-step">1.2 Question 1: Reliable Span and Sweep Step</h3>
 <ul>
-<li><strong>Edge Roll-off vs. Spectrum Center:</strong> Analog low-pass filters (LPF) and digital decimation filters inside the AD9363 receiver attenuate amplitude levels at the spectrum edges near <span class="arithmatex">\(\pm f_s / 2\)</span>. Additionally, DC offset and Local Oscillator (LO) leakage introduce an artificial spike at the baseband center (<span class="arithmatex">\(f_{bb} = 0\)</span>).</li>
-<li><strong>Reliable Span Ratio:</strong> The reliable frequency span is defined as the central <strong>80% of <span class="arithmatex">\(f_s\)</span></strong>, covering <span class="arithmatex">\([-0.4 f_s, +0.4 f_s]\)</span>.</li>
+<li><strong>Edge Roll-off vs. Spectrum Center:</strong> Analog low-pass filters (LPF) and digital decimation filters inside the AD9363 receiver attenuate amplitude levels at the spectrum edges near <span class="arithmatex">\(\pm f_s / 2\)</span> [12, 13]. Additionally, DC offset and Local Oscillator (LO) leakage introduce an artificial spike at the baseband center (<span class="arithmatex">\(f_{bb} = 0\)</span>) [12, 13].</li>
+<li><strong>Reliable Span Ratio:</strong> The reliable frequency span is defined as the central <strong>80% of <span class="arithmatex">\(f_s\)</span></strong>, covering <span class="arithmatex">\([-0.4 f_s, +0.4 f_s]\)</span> [13].</li>
 <li><strong>Sweep Step Relation:</strong> To perform wideband spectrum scanning without edge distortion, the frequency step between consecutive center frequencies is set to:</li>
 </ul>
 <div class="arithmatex">\[ \Delta \text{step} = 0.8 f_s \]</div>
-<p>This choice provides a <strong>20% spectral overlap</strong> between steps, allowing attenuated outer edges to be cropped while seamlessly stitching reliable central bands together.</p>
+<p>This choice provides a <strong>20% spectral overlap</strong> between steps, allowing attenuated outer edges to be cropped while seamlessly stitching reliable central bands together [13, 14].</p>
 <hr />
 <h3 id="13-question-2-frequency-error-reference-accuracy-for-gsm900">1.3 Question 2: Frequency Error &amp; Reference Accuracy for GSM900</h3>
 <ul>
-<li><strong>Theoretical Formulation:</strong> Downlink GSM900 carrier frequencies follow the standard grid <span class="arithmatex">\(f_{\text{standard}} = 935 + 0.2n \text{ MHz}\)</span>. The absolute frequency error <span class="arithmatex">\(\Delta f\)</span> and reference clock error <span class="arithmatex">\(\varepsilon\)</span> in ppm are expressed as:</li>
+<li><strong>Theoretical Formulation:</strong> Downlink GSM900 carrier frequencies follow the standard grid <span class="arithmatex">\(f_{\text{standard}} = 935 + 0.2n \text{ MHz}\)</span> [13, 15]. The absolute frequency error <span class="arithmatex">\(\Delta f\)</span> and reference clock error <span class="arithmatex">\(\varepsilon\)</span> in ppm are expressed as [10, 13]:</li>
 </ul>
 <div class="arithmatex">\[ \Delta f = f_{\text{observed}} - f_{\text{standard}} \]</div>
 <div class="arithmatex">\[ \text{Error (ppm)} = \frac{\Delta f}{f_c} \times 10^6 \]</div>
 <ul>
-<li><strong>Nominal Boundary:</strong> For the ADALM-Pluto's <span class="arithmatex">\(\pm 25\text{ ppm}\)</span> reference TCXO, at <span class="arithmatex">\(f_c = 945\text{ MHz}\)</span>, the maximum expected offset is:</li>
+<li><strong>Nominal Boundary:</strong> For the ADALM-Pluto's <span class="arithmatex">\(\pm 25\text{ ppm}\)</span> reference TCXO [10], at <span class="arithmatex">\(f_c = 945\text{ MHz}\)</span> [16], the maximum expected offset is:</li>
 </ul>
 <div class="arithmatex">\[ \Delta f_{\text{max}} = 945 \times 10^6 \times (\pm 25 \times 10^{-6}) = \pm 23.625 \text{ kHz} \]</div>
-<ul>
-<li><strong>Data Note:</strong> Observed carrier peak frequencies extracted offline from raw <code>.cf32</code> recordings must be substituted into <span class="arithmatex">\(f_{\text{observed}}\)</span> to calculate Team-07's device-specific ppm error.</li>
-</ul>
+<div class="admonition warning">
+<p class="admonition-title">Data Verification Requirement</p>
+<p>The screenshot <code>2.6.jpg.jpg</code> lacks explicit numerical markers on the GSM carrier peaks. To strictly comply with lab regulations prohibiting data fabrication [5, 17], exact observed carrier frequencies must be extracted offline from Team-07's raw <code>.cf32</code> I/Q recording to compute the device-specific ppm error [13, 18].</p>
+</div>
 <hr />
 <h2 id="section-2-loopback-test-with-known-signal">Section 2: Loopback Test with Known Signal</h2>
 <h3 id="21-flowgraph-setup">2.1 Flowgraph Setup</h3>
-<p>The <code>lab01_loopback.grc</code> flowgraph incorporates a complex <code>Signal Source</code> connected to a <code>PlutoSDR Sink</code> transmitting a single tone at <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span> with a transmitter attenuation of <span class="arithmatex">\(tx\_att = 60\text{ dB}\)</span>.</p>
+<p>The <code>lab01_loopback.grc</code> flowgraph incorporates a complex <code>Signal Source</code> connected to a <code>PlutoSDR Sink</code> transmitting a single tone at <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span> with a transmitter attenuation of <span class="arithmatex">\(tx\_att = 60\text{ dB}\)</span> and receiver gain <span class="arithmatex">\(rf\_gain \le 10\text{ dB}\)</span> [19-21].</p>
 <hr />
 <h3 id="22-question-3-quadrature-iq-sampling-positivenegative-tone-separation">2.2 Question 3: Quadrature I/Q Sampling &amp; Positive/Negative Tone Separation</h3>
 <ul>
-<li><strong>Separation Mechanism:</strong> The AD9363 receiver uses Direct Conversion (Zero-IF) with Quadrature I/Q sampling. The received complex signal <span class="arithmatex">\(x(t) = I(t) + jQ(t) = e^{j 2\pi f_{tx} t}\)</span> maintains a <span class="arithmatex">\(90^\circ\)</span> phase difference between <span class="arithmatex">\(I\)</span> and <span class="arithmatex">\(Q\)</span> channels. This phase relationship preserves signal rotation directionality in the complex plane, cleanly distinguishing <span class="arithmatex">\(+250\text{ kHz}\)</span> from <span class="arithmatex">\(-250\text{ kHz}\)</span> in the FFT spectrum.</li>
-<li><strong>If Only <span class="arithmatex">\(I\)</span>-Branch Were Sampled:</strong> The resulting signal would be purely real: <span class="arithmatex">\(x(t) = I(t) = \cos(2\pi f_{tx} t)\)</span>. By Euler's identity:</li>
+<li><strong>Separation Mechanism:</strong> The AD9363 receiver uses Direct Conversion (Zero-IF) with Quadrature I/Q sampling [3, 12]. The received complex signal <span class="arithmatex">\(x(t) = I(t) + jQ(t) = e^{j 2\pi f_{tx} t}\)</span> maintains a <span class="arithmatex">\(90^\circ\)</span> phase difference between <span class="arithmatex">\(I\)</span> and <span class="arithmatex">\(Q\)</span> channels [12]. This phase relationship preserves signal rotation directionality in the complex plane, cleanly distinguishing <span class="arithmatex">\(+250\text{ kHz}\)</span> from <span class="arithmatex">\(-250\text{ kHz}\)</span> in the FFT spectrum [3, 12].</li>
+<li><strong>If Only <span class="arithmatex">\(I\)</span>-Branch Were Sampled:</strong> The resulting signal would be purely real: <span class="arithmatex">\(x(t) = I(t) = \cos(2\pi f_{tx} t)\)</span> [3]. By Euler's identity:</li>
 </ul>
 <div class="arithmatex">\[ \cos(2\pi f_{tx} t) = \frac{1}{2} e^{j 2\pi f_{tx} t} + \frac{1}{2} e^{-j 2\pi f_{tx} t} \]</div>
-<p>Real-valued signals possess a symmetric spectrum around zero frequency. Consequently, both <span class="arithmatex">\(+250\text{ kHz}\)</span> and <span class="arithmatex">\(-250\text{ kHz}\)</span> inputs would produce identical twin peaks at <span class="arithmatex">\(\pm 250\text{ kHz}\)</span>, making sign identification impossible.</p>
+<p>Real-valued signals possess a symmetric spectrum around zero frequency [3]. Consequently, both <span class="arithmatex">\(+250\text{ kHz}\)</span> and <span class="arithmatex">\(-250\text{ kHz}\)</span> inputs would produce identical twin peaks at <span class="arithmatex">\(\pm 250\text{ kHz}\)</span>, making sign identification impossible [3].</p>
 <hr />
 <h3 id="23-question-4-peak-classification-via-lo-shift-slope-s-fracdelta-textlabeldelta-textlo">2.3 Question 4: Peak Classification via LO Shift Slope <span class="arithmatex">\(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)</span></h3>
-<p>During the LO shift test (<span class="arithmatex">\(f_c = 434.00\text{ MHz}\)</span>, <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span>), spectral peaks are classified using their shift slope <span class="arithmatex">\(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)</span>:</p>
+<p>During the LO shift test (<span class="arithmatex">\(f_c = 434.00\text{ MHz}\)</span>, <span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span>), spectral peaks are classified using their shift slope <span class="arithmatex">\(s = \frac{\Delta \text{label}}{\Delta \text{LO}}\)</span> [3, 22]:</p>
 <ol>
 <li><strong>Real Transmitted Signal Peak (<span class="arithmatex">\(434.250\text{ MHz}\)</span>):</strong></li>
-<li>The physical RF frequency remains unchanged at <span class="arithmatex">\(f_{\text{RF}} = f_c + f_{tx} = 434.250\text{ MHz}\)</span>.</li>
-<li><strong>Slope:</strong> <span class="arithmatex">\(s = 0\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Real Input Signal</strong>.</li>
+<li>The physical RF frequency remains unchanged at <span class="arithmatex">\(f_{\text{RF}} = f_c + f_{tx} = 434.250\text{ MHz}\)</span> [19, 22].</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = 0\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Real Input Signal</strong> [3].</li>
 <li><strong>LO Leakage / DC Offset Peak (<span class="arithmatex">\(434.000\text{ MHz}\)</span>):</strong></li>
-<li>Located at baseband DC (<span class="arithmatex">\(f_{bb} = 0\)</span>), labeled at <span class="arithmatex">\(f_{\text{label}} = f_{\text{LO}}\)</span>. As LO shifts by <span class="arithmatex">\(\Delta \text{LO}\)</span>, the label moves by the exact same amount.</li>
-<li><strong>Slope:</strong> <span class="arithmatex">\(s = +1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (DC Offset / LO Leakage)</strong>.</li>
+<li>Located at baseband DC (<span class="arithmatex">\(f_{bb} = 0\)</span>), labeled at <span class="arithmatex">\(f_{\text{label}} = f_{\text{LO}}\)</span> [12, 23]. As LO shifts by <span class="arithmatex">\(\Delta \text{LO}\)</span>, the label moves by the exact same amount [23].</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = +1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (DC Offset / LO Leakage)</strong> [3].</li>
 <li><strong>Image Peak (<span class="arithmatex">\(433.750\text{ MHz}\)</span>):</strong></li>
-<li>Caused by I/Q gain and phase imbalance at the image frequency <span class="arithmatex">\(-f_{tx}\)</span>.</li>
-<li><strong>Slope:</strong> <span class="arithmatex">\(s = -1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (Image Peak)</strong>.</li>
+<li>Caused by I/Q gain and phase imbalance at the image frequency <span class="arithmatex">\(-f_{tx}\)</span> [12, 24].</li>
+<li><strong>Slope:</strong> <span class="arithmatex">\(s = -1\)</span> <span class="arithmatex">\(\rightarrow\)</span> <strong>Receiver Artifact (Image Peak)</strong> [3].</li>
 </ol>
-<p><em>Anomalous Screenshot Observation:</em> In image <code>100k.png</code>, the main peak label displays <span class="arithmatex">\(433.996\text{ MHz}\)</span> instead of <span class="arithmatex">\(434.250\text{ MHz}\)</span> (<span class="arithmatex">\(s=0\)</span>). This anomaly is documented in the Troubleshooting section as a GUI widget update artifact during capture.</p>
+<div class="admonition warning">
+<p class="admonition-title">Anomalous Screenshot Observation in <code>100k.png</code></p>
+<p>In image <code>100k.png</code>, the main peak label displays <span class="arithmatex">\(433.996\text{ MHz}\)</span> instead of <span class="arithmatex">\(434.250\text{ MHz}\)</span> (<span class="arithmatex">\(s=0\)</span>). This anomaly occurred due to a transient GUI parameter update during screenshot capture and is documented in the Troubleshooting section [6].</p>
+</div>
 <hr />
 <h3 id="24-question-5-error-cancellation-in-loopback-measurement">2.4 Question 5: Error Cancellation in Loopback Measurement</h3>
-<ul>
-<li><strong>Explanation:</strong> In over-the-air reception, transmitter and receiver operate on independent clock sources, exposing reference frequency offset.</li>
-<li>In the loopback configuration, both TX and RX reside on the same AD9363 chip inside ADALM-Pluto, sharing a single TCXO reference oscillator.</li>
-<li>Assuming a fractional reference oscillator error <span class="arithmatex">\(\delta\)</span>:</li>
-</ul>
+<div class="admonition note">
+<p class="admonition-title">Clock Synchronization Mechanics</p>
+<p>In over-the-air reception, transmitter and receiver operate on independent clock sources, exposing reference frequency offset [3, 10]. In loopback mode, both TX and RX reside on the same AD9363 chip inside ADALM-Pluto, sharing a single TCXO reference oscillator [3, 9].</p>
+</div>
+<p>Assuming a fractional reference oscillator error <span class="arithmatex">\(\delta\)</span>:</p>
 <div class="arithmatex">\[ f_{\text{TX, real}} = (f_c + f_{tx})(1 + \delta) \]</div>
 <div class="arithmatex">\[ f_{\text{RX, LO}} = f_c (1 + \delta) \]</div>
 <div class="arithmatex">\[ f_{bb, \text{meas}} = f_{\text{TX, real}} - f_{\text{RX, LO}} = f_{tx}(1 + \delta) \]</div>
 <p>The software frequency label applies the same clock scale:</p>
 <div class="arithmatex">\[ f_{\text{label}} = f_{\text{RX, LO}} + f_{bb, \text{meas}} = (f_c + f_{tx})(1 + \delta) \]</div>
-<p>Because the software frequency axis scale and sampling clock share the identical reference, the error factor <span class="arithmatex">\((1 + \delta)\)</span> cancels out relative to the nominal software grid, yielding an exact reading of <span class="arithmatex">\(434.250\text{ MHz}\)</span>.</p>
+<p>Because the software frequency axis scale and sampling clock share the identical reference, the error factor <span class="arithmatex">\((1 + \delta)\)</span> cancels out relative to the nominal software grid, yielding an exact reading of <span class="arithmatex">\(434.250\text{ MHz}\)</span> [3, 24].</p>
 <hr />
 <h2 id="section-3-data-analysis-custom-psd-plot">Section 3: Data Analysis &amp; Custom PSD Plot</h2>
-<p>Below is the Power Spectral Density (PSD) computed via Welch's method from Team-07's raw <code>.cf32</code> I/Q recording (<code>Team-07_lab01_loopback.cf32</code>):</p>
+<p>Below is the Power Spectral Density (PSD) computed via Welch's method from Team-07's raw <code>.cf32</code> I/Q recording (<code>Team-07_lab01_loopback.cf32</code>) [5, 18]:</p>
 <p><img alt="Loopback PSD Spectrum" src="images/loopback_psd.png" />
 <em>Figure 1: Power Spectral Density of loopback test signal (<span class="arithmatex">\(f_{tx} = +250\text{ kHz}\)</span>) computed from raw binary I/Q data.</em></p>
 <hr />
@@ -762,32 +874,36 @@
 <tr>
 <td>Main peak label shifted to <span class="arithmatex">\(433.996\text{ MHz}\)</span> in screenshot <code>100k.png</code>.</td>
 <td>Unintended parameter range adjustment immediately prior to saving image.</td>
-<td>Verified raw binary <code>.cf32</code> data offline using Python to confirm true peak at <span class="arithmatex">\(434.250\text{ MHz}\)</span>.</td>
+<td>Verified raw binary <code>.cf32</code> data offline using Python to confirm true peak at <span class="arithmatex">\(434.250\text{ MHz}\)</span> [5].</td>
 </tr>
 <tr>
 <td><code>Device or resource busy</code> or <code>No Pluto device found</code> error in GRC console.</td>
-<td>Another active process or script holding IIO context open.</td>
-<td>Killed background IIO processes and re-verified connection via <code>ping 192.168.1.10</code>.</td>
+<td>Another active process or script holding IIO context open [4].</td>
+<td>Killed background IIO processes and re-verified connection via <code>ping 192.168.1.10</code> [4, 25].</td>
 </tr>
 <tr>
 <td>Attenuated signal edges at high sample rates.</td>
-<td><code>Filter Configuration</code> left on <code>Auto</code> instead of <code>Off</code>.</td>
-<td>Set <code>Filter Configuration = Off</code> in <code>PlutoSDR Source</code> block options.</td>
+<td><code>Filter Configuration</code> left on <code>Auto</code> instead of <code>Off</code> [2, 4].</td>
+<td>Set <code>Filter Configuration = Off</code> in <code>PlutoSDR Source</code> block options [4, 7].</td>
 </tr>
 </tbody>
 </table>
+<div class="admonition tip">
+<p class="admonition-title">Quick Recovery for USB/LAN Connection Errors</p>
+<p>If the GRC console outputs <code>Unable to write attribute</code>, ensure no secondary Python scripts or IIO sessions are connected to <code>192.168.1.10</code> before re-running the flowgraph [4, 25, 26].</p>
+</div>
 <hr />
 <h2 id="section-5-what-we-would-do-differently">Section 5: What We Would Do Differently</h2>
 <ol>
-<li><strong>Automated Sweep Scripts:</strong> Utilize <code>pyadi-iio</code> Python scripts for wideband scanning to eliminate manual tuning errors.</li>
-<li><strong>Strict Screenshot Protocols:</strong> Verify GUI parameter controls (<span class="arithmatex">\(f_c, f_{tx}, \text{lo\_shift}\)</span>) immediately before taking screenshots.</li>
-<li><strong>In-Lab Raw Data Validation:</strong> Execute quick offline Python validation scripts during the lab session to verify file sizes (<span class="arithmatex">\(8 f_s T\)</span> bytes) before disconnecting hardware.</li>
+<li><strong>Automated Sweep Scripts:</strong> Utilize <code>pyadi-iio</code> Python scripts for wideband scanning to eliminate manual tuning errors [27, 28].</li>
+<li><strong>Strict Screenshot Protocols:</strong> Verify GUI parameter controls (<span class="arithmatex">\(f_c, f_{tx}, \text{lo\_shift}\)</span>) immediately before taking screenshots [6, 7].</li>
+<li><strong>In-Lab Raw Data Validation:</strong> Execute quick offline Python validation scripts during the lab session to verify file sizes (<span class="arithmatex">\(8 f_s T\)</span> bytes) before disconnecting hardware [5, 18, 29].</li>
 </ol>
 <hr />
 <h2 id="section-6-ai-tool-disclosure">Section 6: AI Tool Disclosure</h2>
 <ul>
-<li><strong>Tools Used:</strong> Large Language Models (LLMs) were used for Markdown formatting, English language syntax polish, and LaTeX math expression rendering.</li>
-<li><strong>Data Integrity:</strong> All analytical conclusions, numerical calculations, and code scripts were derived strictly from actual lab measurements and source documents.</li>
+<li><strong>Tools Used:</strong> Large Language Models (LLMs) were used for Markdown formatting, English language syntax polish, and LaTeX math expression rendering [6, 30].</li>
+<li><strong>Data Integrity:</strong> All analytical conclusions, numerical calculations, and code scripts were derived strictly from actual lab measurements and source documents [5, 17].</li>
 </ul>
 
 
@@ -808,6 +924,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -838,7 +960,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.tracking", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
