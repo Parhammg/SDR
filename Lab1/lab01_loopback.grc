@@ -1,0 +1,683 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: lab01_loopback
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: f_tune
+  id: variable
+  parameters:
+    comment: ''
+    value: int(fc + lo_shift)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 4.0]
+    rotation: 0
+    state: enabled
+- name: f_tx
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: -1e6
+    step: 50e3
+    stop: 1e6
+    value: 250e3
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 1056.0]
+    rotation: 0
+    state: enabled
+- name: fc
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: 325e6
+    step: 16e6
+    stop: 3.8e9
+    value: 945e6
+    widget: counter
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 416.0]
+    rotation: 0
+    state: enabled
+- name: lo_shift
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: -500e3
+    step: 10e3
+    stop: 500e3
+    value: '0'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 576.0]
+    rotation: 0
+    state: enabled
+- name: rec
+  id: variable_qtgui_check_box
+  parameters:
+    comment: ''
+    'false': 'False'
+    gui_hint: ''
+    label: Record I/Q
+    'true': 'True'
+    type: bool
+    value: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 600.0]
+    rotation: 0
+    state: enabled
+- name: rec_sec
+  id: variable
+  parameters:
+    comment: ''
+    value: ' min(4.0, 80e6/(8*samp_rate))'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 12.0]
+    rotation: 0
+    state: enabled
+- name: rf_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '10'
+    value: '10'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 1056.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: 2.6 MS/s
+    label0: 2.6 MS/s
+    label1: ' 5 MS/s'
+    label2: 10 MS/s
+    label3: ' 20 MS/s'
+    label4: ''
+    labels: '[]'
+    num_opts: '4'
+    option0: '2600000'
+    option1: '5000000'
+    option2: '10000000'
+    option3: '20000000'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: int
+    value: '2600000'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 160.0]
+    rotation: 0
+    state: enabled
+- name: tx_att
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '40'
+    step: '1'
+    stop: '89'
+    value: '60'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 1056.0]
+    rotation: 0
+    state: enabled
+- name: uri
+  id: variable
+  parameters:
+    comment: ''
+    value: '"ip:192.168.1.10"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1088, 44.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.5'
+    comment: ''
+    freq: f_tx
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 792.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "import os\nimport datetime\nimport numpy as np\nfrom gnuradio import\
+      \ gr\n\n\nclass blk(gr.sync_block):\n    \"\"\"\n    SDR Lab IQ Recorder\n \
+      \   \u0636\u0628\u0637 \u062F\u0627\u062F\u0647 \u062E\u0627\u0645 I/Q \u0628\
+      \u0627 \u0641\u0631\u0645\u062A \u0627\u0633\u062A\u0627\u0646\u062F\u0627\u0631\
+      \u062F \u0622\u0632\u0645\u0627\u06CC\u0634\u06AF\u0627\u0647:\n    teamID_labNN_fc_fs_gain_timestamp.cf32\n\
+      \    \"\"\"\n\n    def __init__(\n        self,\n        team_id=\"Team-07\"\
+      ,\n        lab_id=\"lab01\",\n        fc=945000000,\n        fs=2600000,\n \
+      \       gain=20.0,\n        record=False,\n        max_seconds=3.8,\n      \
+      \  out_dir=\".\",\n    ):\n        gr.sync_block.__init__(\n            self,\n\
+      \            name=\"SDR Lab IQ Recorder\",\n            in_sig=[np.complex64],\n\
+      \            out_sig=None,\n        )\n\n        # \u0630\u062E\u06CC\u0631\u0647\
+      \ \u067E\u0627\u0631\u0627\u0645\u062A\u0631\u0647\u0627\u06CC \u0627\u0648\u0644\
+      \u06CC\u0647\n        self._team_id = str(team_id)\n        self._lab_id = str(lab_id)\n\
+      \        self._fc = fc\n        self._fs = fs\n        self._gain = gain\n \
+      \       self._record = bool(record)\n        self._max_seconds = float(max_seconds)\n\
+      \        self._out_dir = str(out_dir)\n\n        # \u0645\u062A\u063A\u06CC\u0631\
+      \u0647\u0627\u06CC \u0648\u0636\u0639\u06CC\u062A \u0636\u0628\u0637\n     \
+      \   self._file = None\n        self._filename = \"\"\n        self._samples_written\
+      \ = 0\n        self._max_samples = 0\n        self._locked_until_uncheck = False\n\
+      \n    def _open_new_file(self):\n        \"\"\"\u0628\u0627\u0632 \u06A9\u0631\
+      \u062F\u0646 \u06CC\u06A9 \u0641\u0627\u06CC\u0644 \u062C\u062F\u06CC\u062F\
+      \ \u0628\u0627 \u0646\u0627\u0645 \u0627\u0633\u062A\u0627\u0646\u062F\u0627\
+      \u0631\u062F \u0622\u0632\u0645\u0627\u06CC\u0634\u06AF\u0627\u0647\"\"\"\n\
+      \        if not os.path.exists(self._out_dir):\n            os.makedirs(self._out_dir,\
+      \ exist_ok=True)\n\n        timestamp = datetime.datetime.now().strftime(\"\
+      %Y%m%dT%H%M%S\")\n        fname = f\"{self._team_id}_{self._lab_id}_{int(self._fc)}_{int(self._fs)}_{float(self._gain):.1f}_{timestamp}.cf32\"\
+      \n        self._filename = os.path.join(self._out_dir, fname)\n\n        self._file\
+      \ = open(self._filename, \"wb\")\n        self._samples_written = 0\n      \
+      \  self._max_samples = int(round(self._max_seconds * self._fs))\n\n        print(\n\
+      \            f\"[REC] Started recording: {self._filename} (Max limit: {self._max_seconds:.2f}\
+      \ s)\"\n        )\n\n    def _close_file(self, reason=\"\"):\n        \"\"\"\
+      \u0628\u0633\u062A\u0646 \u0641\u0627\u06CC\u0644 \u0641\u0639\u0644\u06CC \u0648\
+      \ \u0686\u0627\u067E \u06AF\u0632\u0627\u0631\u0634 \u062F\u0631 \u06A9\u0646\
+      \u0633\u0648\u0644\"\"\"\n        if self._file is not None:\n            self._file.close()\n\
+      \            self._file = None\n            duration = (\n                self._samples_written\
+      \ / float(self._fs) if self._fs > 0 else 0.0\n            )\n            size_mb\
+      \ = (self._samples_written * 8) / (1024 * 1024)\n            msg = f\" | Reason:\
+      \ {reason}\" if reason else \"\"\n            print(\n                f\"[REC]\
+      \ Closed file: {self._filename} | Duration: {duration:.2f} s ({size_mb:.2f}\
+      \ MB){msg}\"\n            )\n\n    # --- \u0645\u062A\u062F\u0647\u0627\u06CC\
+      \ \u0627\u0631\u062A\u0628\u0627\u0637 \u0628\u0627 \u0645\u062A\u063A\u06CC\
+      \u0631\u0647\u0627\u06CC GRC (Callback Setters) ---\n\n    @property\n    def\
+      \ team_id(self):\n        return self._team_id\n\n    @team_id.setter\n    def\
+      \ team_id(self, val):\n        self._team_id = str(val)\n\n    @property\n \
+      \   def lab_id(self):\n        return self._lab_id\n\n    @lab_id.setter\n \
+      \   def lab_id(self, val):\n        self._lab_id = str(val)\n\n    @property\n\
+      \    def fc(self):\n        return self._fc\n\n    @fc.setter\n    def fc(self,\
+      \ val):\n        if self._fc != val:\n            self._fc = val\n         \
+      \   if self._file is not None:\n                self._close_file(\n        \
+      \            \"Center frequency (fc) changed during recording\"\n          \
+      \      )\n                self._locked_until_uncheck = True\n\n    @property\n\
+      \    def fs(self):\n        return self._fs\n\n    @fs.setter\n    def fs(self,\
+      \ val):\n        if self._fs != val:\n            if self._file is not None:\n\
+      \                self._close_file(\"Sample rate (fs) changed during recording\"\
+      )\n                self._locked_until_uncheck = True\n            self._fs =\
+      \ val\n\n    @property\n    def gain(self):\n        return self._gain\n\n \
+      \   @gain.setter\n    def gain(self, val):\n        if self._gain != val:\n\
+      \            self._gain = val\n            if self._file is not None:\n    \
+      \            self._close_file(\"Gain changed during recording\")\n         \
+      \       self._locked_until_uncheck = True\n\n    @property\n    def record(self):\n\
+      \        return self._record\n\n    @record.setter\n    def record(self, val):\n\
+      \        val_bool = bool(val)\n        if not val_bool:\n            # \u0648\
+      \u0642\u062A\u06CC \u06A9\u0627\u0631\u0628\u0631 \u062A\u06CC\u06A9 Record\
+      \ \u0631\u0627 \u0628\u0631\u0645\u06CC\u200C\u062F\u0627\u0631\u062F\n    \
+      \        if self._file is not None:\n                self._close_file(\"User\
+      \ unchecked Record I/Q\")\n            self._locked_until_uncheck = False\n\
+      \        self._record = val_bool\n\n    @property\n    def max_seconds(self):\n\
+      \        return self._max_seconds\n\n    @max_seconds.setter\n    def max_seconds(self,\
+      \ val):\n        self._max_seconds = float(val)\n        if self._file is not\
+      \ None:\n            self._max_samples = int(round(self._max_seconds * self._fs))\n\
+      \n    @property\n    def out_dir(self):\n        return self._out_dir\n\n  \
+      \  @out_dir.setter\n    def out_dir(self, val):\n        self._out_dir = str(val)\n\
+      \n    # --- \u062D\u0644\u0642\u0647 \u0627\u0635\u0644\u06CC \u067E\u0631\u062F\
+      \u0627\u0632\u0634 \u0646\u0645\u0648\u0646\u0647\u200C\u0647\u0627 ---\n\n\
+      \    def work(self, input_items, output_items):\n        in0 = input_items[0]\n\
+      \        n_in = len(in0)\n\n        if self._record and not self._locked_until_uncheck:\n\
+      \            # \u0627\u06AF\u0631 \u062A\u0627\u0632\u0647 \u062A\u06CC\u06A9\
+      \ \u0632\u062F\u0647 \u0634\u062F\u0647\u060C \u0641\u0627\u06CC\u0644 \u062C\
+      \u062F\u06CC\u062F \u0628\u0627\u0632 \u06A9\u0646\n            if self._file\
+      \ is None:\n                self._open_new_file()\n\n            # \u0628\u0631\
+      \u0631\u0633\u06CC \u0633\u0642\u0641 \u0645\u062C\u0627\u0632 \u0646\u0645\u0648\
+      \u0646\u0647\u200C\u0647\u0627 \u0637\u0628\u0642 rec_sec\n            remaining\
+      \ = self._max_samples - self._samples_written\n            if remaining <= 0:\n\
+      \                self._close_file(f\"Reached max duration ({self._max_seconds}s)\"\
+      )\n                self._locked_until_uncheck = True\n            else:\n  \
+      \              to_write = min(n_in, remaining)\n                # \u0630\u062E\
+      \u06CC\u0631\u0647 \u0628\u0627 \u0641\u0631\u0645\u062A \u0627\u0633\u062A\u0627\
+      \u0646\u062F\u0627\u0631\u062F cf32 (8 \u0628\u0627\u06CC\u062A \u0628\u0647\
+      \ \u0627\u0632\u0627\u06CC \u0647\u0631 \u0646\u0645\u0648\u0646\u0647: 4 \u0628\
+      \u0627\u06CC\u062A I \u0648 4 \u0628\u0627\u06CC\u062A Q)\n                in0[:to_write].tofile(self._file)\n\
+      \                self._samples_written += to_write\n\n                if self._samples_written\
+      \ >= self._max_samples:\n                    self._close_file(\n           \
+      \             f\"Reached max duration ({self._max_seconds}s)\"\n           \
+      \         )\n                    self._locked_until_uncheck = True\n\n     \
+      \   return n_in\n\n    def stop(self):\n        \"\"\"\u0628\u0633\u062A\u0646\
+      \ \u0627\u06CC\u0645\u0646 \u0641\u0627\u06CC\u0644 \u062F\u0631 \u0635\u0648\
+      \u0631\u062A \u062A\u0648\u0642\u0641 \u0641\u0644\u0648\u06AF\u0631\u0627\u0641\
+      \"\"\"\n        if self._file is not None:\n            self._close_file(\"\
+      Flowgraph stopped\")\n        return True"
+    affinity: ''
+    alias: ''
+    comment: ''
+    fc: f_tune
+    fs: samp_rate
+    gain: rf_gain
+    lab_id: '"lab01"'
+    max_seconds: rec_sec
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    out_dir: '"."'
+    record: rec
+    team_id: '"Team_01"'
+  states:
+    _io_cache: "('SDR Lab IQ Recorder', 'blk', [('team_id', \"'Team-07'\"), ('lab_id',\
+      \ \"'lab01'\"), ('fc', '945000000'), ('fs', '2600000'), ('gain', '20.0'), ('record',\
+      \ 'False'), ('max_seconds', '3.8'), ('out_dir', \"'.'\")], [('0', 'complex',\
+      \ 1)], [], '\\n    SDR Lab IQ Recorder\\n    \u0636\u0628\u0637 \u062F\u0627\
+      \u062F\u0647 \u062E\u0627\u0645 I/Q \u0628\u0627 \u0641\u0631\u0645\u062A \u0627\
+      \u0633\u062A\u0627\u0646\u062F\u0627\u0631\u062F \u0622\u0632\u0645\u0627\u06CC\
+      \u0634\u06AF\u0627\u0647:\\n    teamID_labNN_fc_fs_gain_timestamp.cf32\\n  \
+      \  ', ['fc', 'fs', 'gain', 'lab_id', 'max_seconds', 'out_dir', 'record', 'team_id'])"
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 476.0]
+    rotation: 0
+    state: enabled
+- name: iio_pluto_sink_0
+  id: iio_pluto_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    attenuation1: tx_att
+    bandwidth: '20000000'
+    buffer_size: '32768'
+    comment: ''
+    cyclic: 'False'
+    filter: ''
+    filter_source: '''Off'''
+    fpass: '0'
+    frequency: int(fc)
+    fstop: '0'
+    len_tag_key: ''
+    samplerate: samp_rate
+    type: fc32
+    uri: uri
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 764.0]
+    rotation: 0
+    state: enabled
+- name: iio_pluto_source_0
+  id: iio_pluto_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bandwidth: '20000000'
+    bbdc: 'True'
+    buffer_size: '32768'
+    comment: ''
+    filter: ''
+    filter_source: '''Off'''
+    fpass: '0'
+    frequency: f_tune
+    fstop: '0'
+    gain1: '''manual'''
+    len_tag_key: packet_len
+    manual_gain1: rf_gain
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    quadrature: 'True'
+    rfdc: 'True'
+    samplerate: samp_rate
+    type: fc32
+    uri: uri
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 136.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'True'
+    fc: f_tune
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '0'
+    ymin: '-120'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 84.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 348.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_waterfall_sink_x_0
+  id: qtgui_waterfall_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: ''
+    fc: f_tune
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    int_max: '-20'
+    int_min: '-110'
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'False'
+    type: complex
+    update_time: '0.10'
+    wintype: window.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 236.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_sig_source_x_0, '0', iio_pluto_sink_0, '0']
+- [iio_pluto_source_0, '0', epy_block_0, '0']
+- [iio_pluto_source_0, '0', qtgui_freq_sink_x_0, '0']
+- [iio_pluto_source_0, '0', qtgui_time_sink_x_0, '0']
+- [iio_pluto_source_0, '0', qtgui_waterfall_sink_x_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0
