@@ -46,7 +46,8 @@ The course follows a structured three-stage learning model (Pre-Session, In-Sess
 | :---: | :--- | :---: | :---: | :---: | :---: |
 | **Lab 00** | System Setup & Environment Calibration | Completed | Verified | Published | [View Logbook](log.md) |
 | **Lab 01** | **RF Spectrum Monitoring** | Completed | Recorded `.cf32` | **Published** | [**View Lab 01 Report**](Lab1/lab01.md) |
-| **Lab 02** | *Upcoming Session* | Pending | Pending | Pending | *TBA* |
+| **Lab 02** | **RF Receiver Noise Figure & Nonlinearity** | Completed | Pending | Pending | [View Pre-Lab](Lab2/prelab.md) |
+
 
 ---
 

@@ -28,6 +28,8 @@ theme:
 nav:
   - Home: index.md
   - Lab 1 - Spectrum Monitoring: Lab1/lab01.md
+  - Lab 2 - Noise Figure & Nonlinearity:
+      - Pre-Lab Report: Lab2/prelab.md
   - Logbook: log.md
 
 markdown_extensions:
