@@ -14,9 +14,9 @@ Welcome to the official documentation portal and report repository for **Team-07
 | **Course** | Software Defined Radio (SDR) Laboratory |
 | **Department** | Department of Electrical Engineering |
 | **Instructor** | Dr. Seyed Mohammad Karbasi |
-| **Teaching Assistants** | Ali Aghaei, Fatemeh Saem, Ali Pourhassan, Ali Majlesi |
+| **Teaching Assistants** | Ali Aghaei, Fatemeh Pourhassan , Ali Majlesi |
 | **Team Identifier** | **Team-01** |
-| **Team Members** | Seyedparham Moghaddasi & Amirali Rajai|
+| **Team Members** | Seyedparham Moghaddasi & Amirali Rajaee|
 
 ---
 
