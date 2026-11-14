@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -571,7 +573,7 @@
   <a href="#y-factor-simulation-results-lab02_simgrc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Y-Factor Simulation Results (\(lab02\_sim.grc\))
+        Y-Factor Simulation Results ($lab02_sim.grc$)
       
     </span>
   </a>
@@ -762,7 +764,7 @@
   <a href="#y-factor-simulation-results-lab02_simgrc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Y-Factor Simulation Results (\(lab02\_sim.grc\))
+        Y-Factor Simulation Results ($lab02_sim.grc$)
       
     </span>
   </a>
@@ -873,44 +875,44 @@
 
 
 <h1 id="lab-02-pre-lab-report-noise-figure-gain-compression-and-intermodulation">Lab 02 Pre-Lab Report: Noise Figure, Gain Compression, and Intermodulation</h1>
-<p><a class="md-button md-button--primary" href="../Prelab2.pdf">📥 Download PDF Version of Pre-Lab Report</a></p>
+<p><a href="../Prelab2.pdf">📥 Download PDF Version of Pre-Lab Report</a>{ .md-button .md-button--primary }</p>
 <hr />
 <h2 id="1-summary-of-theoretical-concepts">1. Summary of Theoretical Concepts</h2>
 <p>RF receiver architectures are bounded at lower signal levels by thermal and internal component noise, and at upper levels by non-linear gain saturation and intermodulation distortion.</p>
 <h3 id="noise-figure-nf-and-noise-temperature-te">Noise Figure (NF) and Noise Temperature (Te)</h3>
-<p>The Noise Factor (<span class="arithmatex">\(F\)</span>) and Noise Figure (<span class="arithmatex">\(NF\)</span>) measure the degradation of the Signal-to-Noise Ratio (<span class="arithmatex">\(SNR\)</span>) as a signal propagates through a receiver processing chain:</p>
-<div class="arithmatex">\[F = \frac{SNR_{\text{in}}}{SNR_{\text{out}}} = 1 + \frac{T_e}{T_0}, \quad NF = 10 \log_{10}(F)\]</div>
-<p>The input-referred noise floor (<span class="arithmatex">\(N_{\text{floor}}\)</span>) over bandwidth <span class="arithmatex">\(B\)</span> is expressed as:</p>
-<div class="arithmatex">\[N_{\text{floor}} = -174\text{ dBm/Hz} + NF + 10 \log_{10}(B)\]</div>
+<p>The Noise Factor ($F$) and Noise Figure ($NF$) measure the degradation of the Signal-to-Noise Ratio ($SNR$) as a signal propagates through a receiver processing chain:</p>
+<p>$$F = \frac{SNR_{\text{in}}}{SNR_{\text{out}}} = 1 + \frac{T_e}{T_0}, \quad NF = 10 \log_{10}(F)$$</p>
+<p>The input-referred noise floor ($N_{\text{floor}}$) over bandwidth $B$ is expressed as:</p>
+<p>$$N_{\text{floor}} = -174\text{ dBm/Hz} + NF + 10 \log_{10}(B)$$</p>
 <h3 id="y-factor-noise-measurement-method">Y-Factor Noise Measurement Method</h3>
-<p>The Y-Factor method utilizes a calibrated noise source operating in two states: OFF (<span class="arithmatex">\(T_c \approx T_0\)</span>) and ON (<span class="arithmatex">\(T_h \gg T_0\)</span>), defined by Excess Noise Ratio (<span class="arithmatex">\(ENR\)</span>):</p>
-<div class="arithmatex">\[ENR = \frac{T_h - T_0}{T_0}, \quad Y = \frac{T_h + T_e}{T_0 + T_e} \implies F = \frac{ENR - Y \left(\frac{T_c}{T_0} - 1\right)}{Y - 1}\]</div>
+<p>The Y-Factor method utilizes a calibrated noise source operating in two states: OFF ($T_c \approx T_0$) and ON ($T_h \gg T_0$), defined by Excess Noise Ratio ($ENR$):</p>
+<p>$$ENR = \frac{T_h - T_0}{T_0}, \quad Y = \frac{T_h + T_e}{T_0 + T_e} \implies F = \frac{ENR - Y \left(\frac{T_c}{T_0} - 1\right)}{Y - 1}$$</p>
 <h3 id="third-order-intercept-point-iip3-and-gain-compression-p1db">Third-Order Intercept Point (IIP3) and Gain Compression (P1dB)</h3>
-<p>Under two-tone excitation at <span class="arithmatex">\(f_1\)</span> and <span class="arithmatex">\(f_2\)</span>, 3rd-order non-linearities generate intermodulation products (IM3) at <span class="arithmatex">\(2f_1 - f_2\)</span> and <span class="arithmatex">\(2f_2 - f_1\)</span>.</p>
+<p>Under two-tone excitation at $f_1$ and $f_2$, 3rd-order non-linearities generate intermodulation products (IM3) at $2f_1 - f_2$ and $2f_2 - f_1$.</p>
 <hr />
 <h2 id="2-theoretical-analysis-highlights">2. Theoretical Analysis Highlights</h2>
 <ul>
-<li><strong>Frontend Filter Relocation (Question 1c):</strong> Relocating the <span class="arithmatex">\(3\text{ dB}\)</span> filter to the frontend alters Friis chain hierarchy (Stage 1 = Filter, Stage 2 = LNA, Stage 3 = Mixer/ADC), resulting in <span class="arithmatex">\(NF_{\text{new}} \approx 4.95\text{ dB}\)</span>.</li>
-<li><strong>General Y-Factor Relation (Question 2a):</strong> Exact derivation for <span class="arithmatex">\(T_c \neq T_0\)</span> yields <span class="arithmatex">\(F = \frac{ENR - Y (T_c/T_0 - 1)}{Y - 1}\)</span>.</li>
+<li><strong>Frontend Filter Relocation (Question 1c):</strong> Relocating the $3\text{ dB}$ filter to the frontend alters Friis chain hierarchy (Stage 1 = Filter, Stage 2 = LNA, Stage 3 = Mixer/ADC), resulting in $NF_{\text{new}} \approx 4.95\text{ dB}$.</li>
+<li><strong>General Y-Factor Relation (Question 2a):</strong> Exact derivation for $T_c \neq T_0$ yields $F = \frac{ENR - Y (T_c/T_0 - 1)}{Y - 1}$.</li>
 </ul>
 <hr />
 <h2 id="3-measurement-design-and-simulation-summary">3. Measurement Design and Simulation Summary</h2>
-<h3 id="y-factor-simulation-results-lab02_simgrc">Y-Factor Simulation Results (<span class="arithmatex">\(lab02\_sim.grc\)</span>)</h3>
+<h3 id="y-factor-simulation-results-lab02_simgrc">Y-Factor Simulation Results ($lab02_sim.grc$)</h3>
 <ul>
-<li><strong>At Receiver Gain = 40.0 dB (<span class="arithmatex">\(ENR = 15\text{ dB}\)</span>):</strong> <span class="arithmatex">\(N_{\text{off}} = -41.85\text{ dBFS}\)</span>, <span class="arithmatex">\(N_{\text{on}} = -32.78\text{ dBFS} \implies Y = 9.07\text{ dB} \implies \mathbf{NF \approx 6.50\text{ dB}}\)</span></li>
-<li><strong>At Receiver Gain = 10.0 dB (<span class="arithmatex">\(ENR = 15\text{ dB}\)</span>):</strong> <span class="arithmatex">\(N_{\text{off}} = -51.40\text{ dBFS}\)</span>, <span class="arithmatex">\(N_{\text{on}} = -51.10\text{ dBFS} \implies Y = 0.30\text{ dB} \implies \mathbf{NF \approx 26.46\text{ dB}}\)</span></li>
-<li><em>Design Note:</em> At low gain, <span class="arithmatex">\(Y = 0.30\text{ dB} &lt; 3\text{ dB}\)</span> amplifies readout error sensitivity, justifying the requirement for an <span class="arithmatex">\(ENR \approx 35\text{ dB}\)</span> source per Table 4 design.</li>
+<li><strong>At Receiver Gain = 40.0 dB ($ENR = 15\text{ dB}$):</strong> $N_{\text{off}} = -41.85\text{ dBFS}$, $N_{\text{on}} = -32.78\text{ dBFS} \implies Y = 9.07\text{ dB} \implies \mathbf{NF \approx 6.50\text{ dB}}$</li>
+<li><strong>At Receiver Gain = 10.0 dB ($ENR = 15\text{ dB}$):</strong> $N_{\text{off}} = -51.40\text{ dBFS}$, $N_{\text{on}} = -51.10\text{ dBFS} \implies Y = 0.30\text{ dB} \implies \mathbf{NF \approx 26.46\text{ dB}}$</li>
+<li><em>Design Note:</em> At low gain, $Y = 0.30\text{ dB} &lt; 3\text{ dB}$ amplifies readout error sensitivity, justifying the requirement for an $ENR \approx 35\text{ dB}$ source per Table 4 design.</li>
 </ul>
 <h3 id="linearity-and-intermodulation-results">Linearity and Intermodulation Results</h3>
 <ul>
-<li><strong>Single-Tone 1-dB Compression Point (<span class="arithmatex">\(G = 0.0\text{ dB}\)</span>):</strong> <span class="arithmatex">\(P_{1\text{dB, in}} \approx -23.3\text{ dBm}\)</span> (output reaches <span class="arithmatex">\(+0.24\text{ dBFS}\)</span>).</li>
-<li><strong>Two-Tone Intermodulation (<span class="arithmatex">\(G = 0.0\text{ dB}, P_{\text{in}} = -30\text{ dBm}\)</span>):</strong> Fundamental output = <span class="arithmatex">\(-10.00\text{ dBFS}\)</span>, IM3 products = <span class="arithmatex">\(-25.79\text{ dBFS} \implies \Delta = +15.79\text{ dB} \implies \mathbf{IIP_3 \approx -22.1\text{ dBm}}\)</span> (compared to theoretical <span class="arithmatex">\(P_{1\text{dB}} + 9.6 = -13.7\text{ dBm}\)</span>).</li>
+<li><strong>Single-Tone 1-dB Compression Point ($G = 0.0\text{ dB}$):</strong> $P_{1\text{dB, in}} \approx -23.3\text{ dBm}$ (output reaches $+0.24\text{ dBFS}$).</li>
+<li><strong>Two-Tone Intermodulation ($G = 0.0\text{ dB}, P_{\text{in}} = -30\text{ dBm}$):</strong> Fundamental output = $-10.00\text{ dBFS}$, IM3 products = $-25.79\text{ dBFS} \implies \Delta = +15.79\text{ dB} \implies \mathbf{IIP_3 \approx -22.1\text{ dBm}}$ (compared to theoretical $P_{1\text{dB}} + 9.6 = -13.7\text{ dBm}$).</li>
 </ul>
 <h3 id="antenna-frequency-response">Antenna Frequency Response</h3>
 <ul>
-<li><strong>Lower Cutoff (<span class="arithmatex">\(f_L\)</span>):</strong> <span class="arithmatex">\(800.0\text{ MHz}\)</span></li>
-<li><strong>Upper Cutoff (<span class="arithmatex">\(f_H\)</span>):</strong> <span class="arithmatex">\(1800.0\text{ MHz}\)</span></li>
-<li><strong>3-dB Bandwidth (<span class="arithmatex">\(BW\)</span>):</strong> <span class="arithmatex">\(1000.0\text{ MHz}\)</span></li>
+<li><strong>Lower Cutoff ($f_L$):</strong> $800.0\text{ MHz}$</li>
+<li><strong>Upper Cutoff ($f_H$):</strong> $1800.0\text{ MHz}$</li>
+<li><strong>3-dB Bandwidth ($BW$):</strong> $1000.0\text{ MHz}$</li>
 </ul>
 <hr />
 <h2 id="4-pre-lab-prediction-table-table-6">4. Pre-Lab Prediction Table (Table 6)</h2>
@@ -926,43 +928,43 @@
 <tbody>
 <tr>
 <td style="text-align: left;">1</td>
-<td style="text-align: left;"><span class="arithmatex">\(NF\)</span> at Max Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(7.0 - 9.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$NF$ at Max Gain</td>
+<td style="text-align: left;">$7.0 - 9.0\text{ dB}$</td>
 <td style="text-align: left;">Dominated by frontend LNA noise figure.</td>
 </tr>
 <tr>
 <td style="text-align: left;">2</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta NF\)</span> for <span class="arithmatex">\(-20\text{ dB}\)</span> Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(+4.0 \text{ to } +6.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$\Delta NF$ for $-20\text{ dB}$ Gain</td>
+<td style="text-align: left;">$+4.0 \text{ to } +6.0\text{ dB}$</td>
 <td style="text-align: left;">Lower gain amplifies ADC quantization noise contribution.</td>
 </tr>
 <tr>
 <td style="text-align: left;">3</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta P_{1\text{dB}}\)</span> for <span class="arithmatex">\(-10\text{ dB}\)</span> Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(+10.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$\Delta P_{1\text{dB}}$ for $-10\text{ dB}$ Gain</td>
+<td style="text-align: left;">$+10.0\text{ dB}$</td>
 <td style="text-align: left;">Prevents pre-ADC saturation, shifting input limit upward.</td>
 </tr>
 <tr>
 <td style="text-align: left;">4</td>
-<td style="text-align: left;"><span class="arithmatex">\(Y\)</span>-Factor (<span class="arithmatex">\(NF=7\text{dB}, ENR=15\text{dB}\)</span>)</td>
-<td style="text-align: left;"><span class="arithmatex">\(8.64\text{ dB}\)</span></td>
-<td style="text-align: left;"><span class="arithmatex">\(Y = 1 + \frac{ENR}{F} = 1 + \frac{31.62}{5.01} = 7.31\)</span>.</td>
+<td style="text-align: left;">$Y$-Factor ($NF=7\text{dB}, ENR=15\text{dB}$)</td>
+<td style="text-align: left;">$8.64\text{ dB}$</td>
+<td style="text-align: left;">$Y = 1 + \frac{ENR}{F} = 1 + \frac{31.62}{5.01} = 7.31$.</td>
 </tr>
 <tr>
 <td style="text-align: left;">5</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta NF\)</span> with <span class="arithmatex">\(10\text{ dB}\)</span> Attenuator</td>
-<td style="text-align: left;"><span class="arithmatex">\(+10.0\text{ dB}\)</span></td>
-<td style="text-align: left;">Passive loss prior to amplification adds directly to <span class="arithmatex">\(NF\)</span>.</td>
+<td style="text-align: left;">$\Delta NF$ with $10\text{ dB}$ Attenuator</td>
+<td style="text-align: left;">$+10.0\text{ dB}$</td>
+<td style="text-align: left;">Passive loss prior to amplification adds directly to $NF$.</td>
 </tr>
 <tr>
 <td style="text-align: left;">6</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta P_{\text{IM3}}\)</span> for <span class="arithmatex">\(+2\text{ dB}\)</span> Input Tone</td>
-<td style="text-align: left;"><span class="arithmatex">\(+6.0\text{ dB}\)</span></td>
-<td style="text-align: left;">IM3 products scale with a characteristic <span class="arithmatex">\(3\text{ dB/dB}\)</span> slope.</td>
+<td style="text-align: left;">$\Delta P_{\text{IM3}}$ for $+2\text{ dB}$ Input Tone</td>
+<td style="text-align: left;">$+6.0\text{ dB}$</td>
+<td style="text-align: left;">IM3 products scale with a characteristic $3\text{ dB/dB}$ slope.</td>
 </tr>
 <tr>
 <td style="text-align: left;">7</td>
-<td style="text-align: left;">Is <span class="arithmatex">\(IIP_3 - P_{1\text{dB}} \approx 9.6\text{ dB}\)</span>?</td>
+<td style="text-align: left;">Is $IIP_3 - P_{1\text{dB}} \approx 9.6\text{ dB}$?</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: left;">Hard ADC clipping violates 3rd-order polynomial assumptions.</td>
 </tr>
