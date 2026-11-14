@@ -1,58 +1,61 @@
-# Software Defined Radio (SDR) Laboratory
+# 📡 Software Defined Radio Laboratory Portal
 
-Welcome to the official documentation portal and report repository for **Team-07** in the Software Defined Radio Laboratory course at the Department of Electrical Engineering.
+Welcome to the official documentation portal and report repository for **Team-01** in the Software Defined Radio Laboratory course at the Department of Electrical Engineering.
 
 !!! info "Lab Portal Overview"
     This website contains all laboratory documentation, including pre-lab preparation, real-time measurement logs, raw `.cf32` data analysis, and post-session reports for **ADALM-Pluto SDR** experiments.
 
 ---
 
-## 👥 Team & Course Identity
+## 📂 Interactive Lab Directory
 
-| Attribute | Details |
-| :--- | :--- |
-| **Course** | Software Defined Radio (SDR) Laboratory |
-| **Department** | Department of Electrical Engineering |
-| **Instructor** | Dr. Seyed Mohammad Karbasi |
-| **Teaching Assistants** | Ali Aghaei, Fatemeh Pourhassan , Ali Majlesi |
-| **Team Identifier** | **Team-01** |
-| **Team Members** | Seyedparham Moghaddasi & Amirali Rajaee|
+<div class="grid cards" markdown>
 
----
+-   :material-tune: **Lab 00: System Setup & Calibration**
+    ---
+    Environment Calibration & Initial Connectivity.
+    <br><br>
+    <span class="status-live">Completed & Published</span>
+    <br><br>
+    [:octicons-arrow-right-24: View Logbook](log.md)
 
-## 🛠️ Hardware & Software Specifications
+-   :material-waveform: **Lab 01: RF Spectrum Monitoring**
+    ---
+    Comprehensive analysis of RF Spectrum and Loopback tests.
+    <br><br>
+    <span class="status-live">Published & Recorded</span>
+    <br><br>
+    [:octicons-arrow-right-24: Read Full Report](Lab1/lab01.md)
 
-### 📡 ADALM-Pluto Transceiver Specifications
-- **RF Transceiver Chip:** Analog Devices AD9363
-- **SoC Architecture:** Xilinx Zynq-7010 (FPGA + Dual ARM Cortex-A9)
-- **Frequency Coverage:** $325\text{ MHz}$ to $3.8\text{ GHz}$ (default RF tuning range)
-- **Reference Oscillator Accuracy:** $\pm 25\text{ ppm}$ TCXO
-- **Network Configuration:** Static IP `192.168.1.10` via LAN/USB
+-   :material-chart-bell-curve-cumulative: **Lab 02: Noise Figure & Nonlinearity**
+    ---
+    Analyzing RF receiver noise figure and dynamic range.
+    <br><br>
+    <span class="status-pending">Pending In-Lab Data</span>
+    <br><br>
+    [:octicons-arrow-right-24: View Pre-Lab](Lab2/prelab.md)
 
-### 💻 Software Infrastructure
-- **Flowgraph Environment:** GNU Radio Companion 3.10+
-- **Offline Post-Processing:** Python 3 (NumPy, SciPy, Matplotlib)
-- **Hardware Interface Drivers:** `libiio` & `pyadi-iio`
-- **Documentation Engine:** MkDocs Material with MathJax rendering
-- **Source Control & Hosting:** Git & GitHub Pages
-
----
-
-## 📂 Laboratory Reports Directory
-
-The course follows a structured three-stage learning model (Pre-Session, In-Session, Post-Session). Below is the master index of all lab reports:
-
-| Lab # | Topic / Title | Pre-Report | In-Lab Data | Post-Report | Action |
-| :---: | :--- | :---: | :---: | :---: | :---: |
-| **Lab 00** | System Setup & Environment Calibration | Completed | Verified | Published | [View Logbook](log.md) |
-| **Lab 01** | **RF Spectrum Monitoring** | Completed | Recorded `.cf32` | **Published** | [**View Lab 01 Report**](Lab1/lab01.md) |
-| **Lab 02** | **RF Receiver Noise Figure & Nonlinearity** | Completed | Pending | Pending | [View Pre-Lab](Lab2/prelab.md) |
-
+</div>
 
 ---
 
+## ⚙️ Interactive System Architecture
 
-## 📁 Quick Links & Navigation
+```mermaid
+graph LR
+    subgraph PC["💻 Host Environment (GNU Radio 3.10+)"]
+        direction TB
+        A[Python 3 Processing] <--> B[libiio / pyadi-iio Drivers]
+    end
+    
+    subgraph SDR["📡 ADALM-Pluto (Xilinx Zynq-7010)"]
+        direction TB
+        C[AD9363 Transceiver]
+    end
 
-- [x] [**Lab 01 Report (`Lab1/lab01.md`)**](Lab1/lab01.md) — Comprehensive analysis of Spectrum Monitoring and Loopback tests.
-- [x] [**Team Measurement Logbook (`log.md`)**](log.md) — Real-time in-lab measurement logs, device parameters, and troubleshooting records.
+    B <==>|Static IP 192.168.1.10 <br> LAN/USB| C
+    C -->|TX: 325 MHz - 3.8 GHz| D((TX Ant))
+    E((RX Ant)) -->|RX: 325 MHz - 3.8 GHz| C
+    
+    classDef hardware fill:#1e1e1e,stroke:#00e676,stroke-width:2px;
+    class SDR hardware;
