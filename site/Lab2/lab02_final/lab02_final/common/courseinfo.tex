@@ -1,0 +1,36 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- course-wide information
+%  Edit this file ONCE per semester; every pre-lab, lab manual and
+%  cheat sheet picks these values up automatically.
+%======================================================================
+
+% --- Names (taken verbatim from the attached lab regulations) ---------
+\newcommand{\SDRcourseFA}{آزمایشگاه رادیوی نرم‌افزار}
+\newcommand{\SDRcourseEN}{Software Defined Radio (SDR) Laboratory}
+\newcommand{\SDRdeptFA}{دانشکدهٔ مهندسی برق}
+\newcommand{\SDRopeningFA}{به نام خدا}
+
+% --- To be filled in by the instructor --------------------------------
+% [INSTRUCTOR] The regulations leave semester / instructor / TAs blank,
+% so they are blank here too.  Example:
+%   \newcommand{\SDRsemesterFA}{نیم‌سال اول ۱۴۰۵-۱۴۰۶}
+\newcommand{\SDRsemesterFA}{}          % empty -> not printed in the footer
+\newcommand{\SDRinstructorFA}{}        % currently unused in student PDFs
+
+% --- Optional university logo -----------------------------------------
+% Put e.g. common/logo.pdf (or .png) and set the file name below.
+% If left empty, a neutral antenna emblem is drawn with TikZ instead.
+\newcommand{\SDRlogofile}{}            % e.g. logo.pdf  (looked up in common/)
+
+% --- Screenshot placeholders ------------------------------------------
+% true  : a dashed frame marks every place where a real GNU Radio
+%         screenshot should be inserted (useful while preparing the course)
+% false : placeholders are hidden; only screenshots that exist are shown
+\newif\ifSDRplaceholders
+\SDRplaceholderstrue
+
+% --- Hardware defaults used across the course --------------------------
+% [INSTRUCTOR] These are the *defaults printed in the manuals*.  They
+% follow the equipment table of the regulations (RTL-SDR for Exp. 1).
+\newcommand{\SDRdefaultFs}{2.048}      % MS/s  (RTL-SDR default rate)

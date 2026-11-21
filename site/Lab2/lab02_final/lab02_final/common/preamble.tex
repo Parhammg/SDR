@@ -1,0 +1,30 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- master preamble.  Do NOT edit per experiment.
+%
+%  Every document defines, BEFORE \input-ing this file:
+%     \def\SDRdoctype{lab}            % lab | prelab | cheat
+%     \def\SDRexpnum{1}               % experiment number (Latin digits)
+%     \def\SDRexptitle{پایش طیف}        % Persian title
+%     \def\SDRexptitleEN{Spectrum Monitoring}
+%  and locates the project root with
+%     \IfFileExists{../common/preamble.tex}{\def\SDRroot{..}}{\def\SDRroot{.}}
+%  so the file compiles both from its own folder (TeXstudio, Overleaf,
+%  latexmk -cd) and from the project root.
+%
+%  Engine: XeLaTeX (run twice: page totals and overlay graphics need it).
+%======================================================================
+\providecommand{\SDRroot}{..}
+\providecommand{\SDRdoctype}{lab}
+\providecommand{\SDRexpnum}{0}
+\providecommand{\SDRexptitle}{}
+\providecommand{\SDRexptitleEN}{}
+\providecommand{\SDRbannerart}{}      % optional TikZ art for the lab banner
+
+\input{\SDRroot/common/courseinfo}
+\input{\SDRroot/common/packages}
+\input{\SDRroot/common/fonts}
+\input{\SDRroot/common/tikzlib}
+\input{\SDRroot/common/style}
+\input{\SDRroot/common/boxes}
+\input{\SDRroot/common/commands}

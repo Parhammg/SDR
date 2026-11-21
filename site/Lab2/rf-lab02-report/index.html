@@ -1,0 +1,1526 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Software Defined Radio Lab Documentation & Reports">
+      
+      
+        <meta name="author" content="Team-01">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../material/waveform">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Laboratory Report 2: RF Noise Figure, $P_{1\text{dB}}$, and $\text{IIP}_3$ Parameters - SDR Laboratory</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Ubuntu";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#laboratory-report-2-rf-noise-figure-p_1textdb-and-textiip_3-parameters" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="SDR Laboratory" class="md-header__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
+      
+  <img src="../../material/radio-tower" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SDR Laboratory
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Laboratory Report 2: RF Noise Figure, $P_{1\text{dB}}$, and $\text{IIP}_3$ Parameters
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode (Terminal View)"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode (Terminal View)" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to light mode (Lab View)"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode (Lab View)" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Lab1/lab01/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  📡 Spectrum Monitoring (Lab 1)
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../prelab/" class="md-tabs__link">
+          
+  
+  
+  📶 Noise & Nonlinearity (Lab 2)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../log.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  📖 Measurement Logbook
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="SDR Laboratory" class="md-nav__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
+      
+  <img src="../../material/radio-tower" alt="logo">
+
+    </a>
+    SDR Laboratory
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Lab1/lab01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📡 Spectrum Monitoring (Lab 1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📶 Noise & Nonlinearity (Lab 2)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    📶 Noise & Nonlinearity (Lab 2)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prelab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pre-Lab Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../log.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📖 Measurement Logbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-device-noise-floor-and-direct-method-table-3-question-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Device Noise Floor and Direct Method (Table 3 &amp; Question 1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Device Noise Floor and Direct Method (Table 3 &amp; Question 1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experimental-calibration-data-table-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Calibration Data (Table 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-1-direct-method-vs-y-factor-method-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 1: Direct Method vs. $Y$-Factor Method Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-noise-figure-via-the-y-factor-method-table-4-question-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Noise Figure via the $Y$-Factor Method (Table 4 &amp; Question 2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Noise Figure via the $Y$-Factor Method (Table 4 &amp; Question 2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experimental-data-table-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Data (Table 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2-limits-on-y-factor-and-error-sensitivity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 2: Limits on $Y$-Factor and Error Sensitivity Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-single-tone-power-sweep-and-p_1textdb-compression-table-5-question-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Single-Tone Power Sweep and $P_{1\text{dB}}$ Compression (Table 5 &amp; Question 3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Single-Tone Power Sweep and $P_{1\text{dB}}$ Compression (Table 5 &amp; Question 3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experimental-sweep-data-table-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Sweep Data (Table 5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extracted-compression-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracted Compression Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3-output-level-at-compression-and-primary-limiting-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 3: Output Level at Compression and Primary Limiting Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-two-tone-intermodulation-test-and-textiip_3-table-6-questions-4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Two-Tone Intermodulation Test and $\text{IIP}_3$ (Table 6 &amp; Questions 4, 5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Two-Tone Intermodulation Test and $\text{IIP}_3$ (Table 6 &amp; Questions 4, 5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experimental-two-tone-data-table-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experimental Two-Tone Data (Table 6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regression-and-intercept-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regression and Intercept Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-4-measured-textimd_3-slope-and-validity-of-textiip_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 4: Measured $\text{IMD}_3$ Slope and Validity of $\text{IIP}_3$
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-5-comparison-of-textiip3-p1textdb-with-96-db-and-peak-envelope-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 5: Comparison of $\text{IIP}3 - P{1\text{dB}}$ with 9.6 dB and Peak Envelope Dynamics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-antenna-frequency-response-and-bandwidth-table-7-visual-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Antenna Frequency Response and Bandwidth (Table 7 &amp; Visual Analysis)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Antenna Frequency Response and Bandwidth (Table 7 &amp; Visual Analysis)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measurement-results-table-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measurement Results (Table 7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-depth-visual-analysis-of-the-antenna-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Depth Visual Analysis of the Antenna Trace
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-team-challenge-consolidated-specifications-and-trade-offs-table-8-questions-6-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Team Challenge: Consolidated Specifications and Trade-Offs (Table 8 &amp; Questions 6, 7)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Team Challenge: Consolidated Specifications and Trade-Offs (Table 8 &amp; Questions 6, 7)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consolidated-receiver-specifications-table-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consolidated Receiver Specifications (Table 8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-6-variation-rates-of-noise-figure-and-p_1textdb-with-gain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 6: Variation Rates of Noise Figure and $P_{1\text{dB}}$ with Gain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-7-maximum-dynamic-range-and-blocker-tolerance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 7: Maximum Dynamic Range and Blocker Tolerance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-mandatory-analyses-expansion-question-8-and-error-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Mandatory Analyses, Expansion Question 8, and Error Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Mandatory Analyses, Expansion Question 8, and Error Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mandatory-analysis-1-nf-and-linearity-vs-gain-sfdr-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Analysis 1: NF and Linearity vs. Gain (SFDR Argument)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mandatory-analysis-2-input-output-transfer-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Analysis 2: Input-Output Transfer Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mandatory-analysis-3-direct-method-vs-y-factor-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Analysis 3: Direct Method vs. $Y$-Factor Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-8-expansion-question-why-increasing-receiver-gain-does-not-continuously-improve-sensitivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 8 (Expansion Question): Why Increasing Receiver Gain Does Not Continuously Improve Sensitivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-vs-measurement-error-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prediction vs. Measurement Error Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="laboratory-report-2-rf-noise-figure-p_1textdb-and-textiip_3-parameters">Laboratory Report 2: RF Noise Figure, $P_{1\text{dB}}$, and $\text{IIP}_3$ Parameters</h1>
+<p>This report provides the analytical findings, completed experimental data tables, visual curve interpretations, and rigorous answers to all core and expansion questions formulated in <strong>Laboratory 2: RF Noise Figure and Linearity Parameters</strong>. Measurements were acquired using the dual ADALM-PLUTO Software-Defined Radio (SDR) testbench interfaced via the <code>lab02_combined.grc</code> GNU Radio flowgraph and the automated sweep GUI <code>lab02_antenna_response_gui.py</code>.</p>
+<hr />
+<h2 id="1-device-noise-floor-and-direct-method-table-3-question-1">1. Device Noise Floor and Direct Method (Table 3 &amp; Question 1)</h2>
+<p>In digital SDR architectures, internal power is represented in decibels relative to digital full-scale ($\text{dBFS}$). Converting digital power readings into absolute analog power in $\text{dBm}$ at the receiver input port requires the calibrated full-scale conversion factor $G_{FS}$:</p>
+<p>$$P_{\text{in}}\,[\text{dBm}] = P_{\text{digital}}\,[\text{dBFS}] - G_{FS}$$</p>
+<p>For the ADALM-PLUTO receiver under the baseline calibrated manual gain setting of $\text{rf_gain} = 40.2\text{ dB}$, the nominal conversion factor is established as $G_{FS} = 20.0\text{ dB}$, establishing that $0\text{ dBFS}$ corresponds to $-20.0\text{ dBm}$ of analog input power.</p>
+<h3 id="experimental-calibration-data-table-3">Experimental Calibration Data (Table 3)</h3>
+<p>With the receiver input SMA port left open (unconnected termination), baseline digital noise power $N_{\text{off}}$ was acquired across three gain settings using the wideband noise channel filter ($B_n \approx 400\text{ kHz}$). The direct noise figure is estimated via:</p>
+<p>$$\text{NF}<em>{\text{direct}}\,[\text{dB}] \approx N</em>{\text{off}}\,[\text{dBFS}] - G_{FS} - 10\log_{10}\left(\frac{B_n}{1\text{ Hz}}\right) - (-174\text{ dBm/Hz}) \approx N_{\text{off}}\,[\text{dBFS}] + 97.98\text{ dB}$$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter / Quantity</th>
+<th style="text-align: center;">$\text{rf_gain} = 29.7\text{ dB}$</th>
+<th style="text-align: center;">$\text{rf_gain} = 40.2\text{ dB}$</th>
+<th style="text-align: center;">$\text{rf_gain} = 49.6\text{ dB}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Open-Port Noise Power $N_{\text{off}}$ [dBFS]</strong></td>
+<td style="text-align: center;">$-73.50$</td>
+<td style="text-align: center;">$-74.20$</td>
+<td style="text-align: center;">$-66.20$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Direct Noise Figure $\text{NF}_{\text{direct}}$ [dB]</strong></td>
+<td style="text-align: center;">$24.48$</td>
+<td style="text-align: center;">$23.78$</td>
+<td style="text-align: center;">$31.78$</td>
+</tr>
+</tbody>
+</table>
+<p>At lower front-end gains ($29.7\text{ dB}$ and $40.2\text{ dB}$), the measured digital noise power hovers at $\approx -74\text{ dBFS}$, which is set by internal Analog-to-Digital Converter (ADC) quantization noise and digital baseband noise. At the maximum gain of $49.6\text{ dB}$, the amplified analog front-end thermal noise overcomes the ADC quantization floor, causing the digital reading to rise to $-66.20\text{ dBFS}$. Because the direct estimation formula presumes a static conversion factor $G_{FS} = 20\text{ dB}$ regardless of gain, it produces an erroneous apparent NF increase at $49.6\text{ dB}$, demonstrating why the direct method fails under varying front-end gain conditions.</p>
+<h3 id="question-1-direct-method-vs-y-factor-method-requirements">Question 1: Direct Method vs. $Y$-Factor Method Requirements</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>What quantities does the direct method require that the $Y$-Factor method does not?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+The direct method depends strictly on knowing three absolute system parameters:
+1. <strong>Absolute Conversion Factor / Gain ($G_{FS}$):</strong> The precise hardware gain and full-scale calibration linking $\text{dBFS}$ to $\text{dBm}$. Any systematic calibration inaccuracy in $G_{FS}$ creates an identical, decibel-for-decibel error in the extracted noise figure.
+2. <strong>Equivalent Noise Bandwidth ($B_n$):</strong> The exact integrated brick-wall noise bandwidth of the digital FIR channel filter.
+3. <strong>Absolute Thermal Noise Power Reference:</strong> Explicit calibration against the theoretical input thermal noise density $k T_0 = -174\text{ dBm/Hz}$ at reference temperature $T_0 = 290\text{ K}$.</p>
+<p>In contrast, the $Y$-Factor method relies exclusively on a relative power ratio $Y = N_{\text{on}} / N_{\text{off}}$ and the known Excess Noise Ratio ($\text{ENR}$) of the noise source. Because internal receiver gain, filter bandwidth, and digital scale factors affect $N_{\text{on}}$ and $N_{\text{off}}$ identically, they cancel completely out of the ratio $Y$, rendering the $Y$-Factor method fully independent of receiver gain, filter bandwidth, and digital scale calibrations.</p>
+<hr />
+<h2 id="2-noise-figure-via-the-y-factor-method-table-4-question-2">2. Noise Figure via the $Y$-Factor Method (Table 4 &amp; Question 2)</h2>
+<p>Broadband Gaussian noise generated by the transmitting PLUTO SDR was injected into the receiver port through a fixed 30-dB external safety pad ($A_{\text{pad}} = 30\text{ dB}$). Under nominal transmitter attenuation ($A_{tx} = 58.5\text{ dB}$), the effective excess noise ratio referenced to the receiver input is:</p>
+<p>$$\text{ENR}<em>{\text{eff}} = 73.4 - A</em>{tx} = 73.4 - 58.5 \approx 15.0\text{ dB}$$</p>
+<p>The $Y$-factor and receiver noise figure are computed via:</p>
+<p>$$Y\,[\text{dB}] = N_{\text{on}}\,[\text{dBFS}] - N_{\text{off}}\,[\text{dBFS}]$$</p>
+<p>$$\text{NF}\,[\text{dB}] = \text{ENR}<em>{\text{eff}}\,[\text{dB}] - 10\log</em>{10}\left(10^{Y\,[\text{dB}]/10} - 1\right)$$</p>
+<h3 id="experimental-data-table-4">Experimental Data (Table 4)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Test Frequency</th>
+<th style="text-align: left;">$\text{rf_gain} = 29.7\text{ dB}$</th>
+<th style="text-align: left;">$\text{rf_gain} = 40.2\text{ dB}$</th>
+<th style="text-align: left;">$\text{rf_gain} = 49.6\text{ dB}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>434 MHz</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -72.60\text{ dBFS}$<br>$Y = 0.90\text{ dB}$<br><strong>$\mathbf{NF = 21.38\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -67.60\text{ dBFS}$<br>$Y = 6.60\text{ dB}$<br><strong>$\mathbf{NF = 9.47\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -59.20\text{ dBFS}$<br>$Y = 7.00\text{ dB}$<br><strong>$\mathbf{NF = 8.97\text{ dB}}$</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>834 MHz</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -72.70\text{ dBFS}$<br>$Y = 0.80\text{ dB}$<br><strong>$\mathbf{NF = 21.94\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -69.10\text{ dBFS}$<br>$Y = 5.10\text{ dB}$<br><strong>$\mathbf{NF = 11.51\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -60.50\text{ dBFS}$<br>$Y = 5.70\text{ dB}$<br><strong>$\mathbf{NF = 10.66\text{ dB}}$</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1234 MHz</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -72.30\text{ dBFS}$<br>$Y = 1.20\text{ dB}$<br><strong>$\mathbf{NF = 19.97\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -68.30\text{ dBFS}$<br>$Y = 5.90\text{ dB}$<br><strong>$\mathbf{NF = 10.39\text{ dB}}$</strong></td>
+<td style="text-align: left;">$N_{\text{on}} = -59.70\text{ dBFS}$<br>$Y = 6.50\text{ dB}$<br><strong>$\mathbf{NF = 9.60\text{ dB}}$</strong></td>
+</tr>
+</tbody>
+</table>
+<p>As predicted by Friis' formula for cascaded noise figure, reducing receiver front-end gain degrades noise performance severely (rising from $\approx 9.0\text{ dB}$ at high gain to $&gt; 21\text{ dB}$ at low gain). When front-end RF gain is low, the noise contribution of the mixer, baseband PGAs, and downstream ADC quantization noise dominates the receiver cascade.</p>
+<h3 id="question-2-limits-on-y-factor-and-error-sensitivity-analysis">Question 2: Limits on $Y$-Factor and Error Sensitivity Analysis</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>Why should $Y$ be neither too small nor too large? For the smallest $Y$ in your table, calculate the effect of a 0.1 dB reading error on the calculated noise figure.</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+<em> </em><em>Why $Y$ cannot be too small ($Y &lt; 3\text{ dB}$):</em><em> As $Y \to 0\text{ dB}$ ($Y_{\text{linear}} \to 1$), the denominator $(10^{Y/10}-1) \to 0$. In this regime, the derivative $|d\text{NF}/dY|$ diverges toward infinity, meaning minute measurement noise or instrument flicker produces extreme errors in computed noise figure.
+* </em><em>Why $Y$ cannot be too large ($Y &gt; 15\text{ dB}$):</em>* An excessively large $Y$ requires high injected noise power that drives receiver mixers, baseband filters, and ADCs into non-linear compression during the ON state, violating the prerequisite of linear operation.</p>
+<p><strong>Mathematical Error Sensitivity Derivation:</strong><br />
+Differentiating $\text{NF} = \text{ENR} - 10\log_{10}(10^{Y/10}-1)$ with respect to $Y$ (in decibels):</p>
+<p>$$\frac{d\text{NF}}{dY} = -\frac{10^{Y/10}}{10^{Y/10}-1} = -\frac{1}{1 - 10^{-Y/10}}$$</p>
+<p>Taking the smallest measured $Y$-factor in Table 4 ($Y = 0.80\text{ dB}$ at $834\text{ MHz}$, $\text{rf_gain} = 29.7\text{ dB}$):</p>
+<p>$$10^{-0.80/10} = 10^{-0.08} \approx 0.8318$$</p>
+<p>$$\left|\frac{d\text{NF}}{dY}\right| = \frac{1}{1 - 0.8318} = \frac{1}{0.1682} \approx 5.94\text{ dB/dB}$$</p>
+<p>Therefore, an instrument reading error of merely $\delta Y = \pm 0.10\text{ dB}$ induces a large noise figure error of:</p>
+<p>$$\delta\text{NF} \approx 5.94 \times 0.10\text{ dB} \approx \pm\mathbf{0.59\text{ dB}}$$</p>
+<p>By contrast, for $Y = 6.60\text{ dB}$ ($\text{rf_gain} = 40.2\text{ dB}$), the sensitivity factor is only $|d\text{NF}/dY| \approx 1.28$, meaning a $0.1\text{ dB}$ error shifts NF by just $\pm 0.13\text{ dB}$.</p>
+<hr />
+<h2 id="3-single-tone-power-sweep-and-p_1textdb-compression-table-5-question-3">3. Single-Tone Power Sweep and $P_{1\text{dB}}$ Compression (Table 5 &amp; Question 3)</h2>
+<p>A single sinusoidal test tone at $f_1 = f_c + 300\text{ kHz}$ was applied at $\text{rf_gain} = 40.2\text{ dB}$. Transmitter attenuation $A_{tx}$ was stepped from $60\text{ dB}$ down to $40\text{ dB}$. Input power is determined from:</p>
+<p>$$P_{\text{in}}\,[\text{dBm}] = -35.5 - A_{tx}$$</p>
+<p>$$P_{\text{in}}\,[\text{dBFS}] = P_{\text{in}}\,[\text{dBm}] + G_{FS} = -15.5 - A_{tx}$$</p>
+<h3 id="experimental-sweep-data-table-5">Experimental Sweep Data (Table 5)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Tx Atten. $A_{tx}$ [dB]</th>
+<th style="text-align: center;">Input $P_{\text{in}}$ [dBm]</th>
+<th style="text-align: center;">Input $P_{\text{in}}$ [dBFS]</th>
+<th style="text-align: center;">Tone $P_{\text{out}}$ [dBFS]</th>
+<th style="text-align: center;">Gain $G$ [dB]</th>
+<th style="text-align: center;">Total Power [dBFS]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">$-95.50$</td>
+<td style="text-align: center;">$-75.50$</td>
+<td style="text-align: center;">$-16.57$</td>
+<td style="text-align: center;">$58.93$</td>
+<td style="text-align: center;">$-28.0$</td>
+</tr>
+<tr>
+<td style="text-align: center;">55</td>
+<td style="text-align: center;">$-90.50$</td>
+<td style="text-align: center;">$-70.50$</td>
+<td style="text-align: center;">$-13.73$</td>
+<td style="text-align: center;">$56.77$</td>
+<td style="text-align: center;">$-10.7$</td>
+</tr>
+<tr>
+<td style="text-align: center;">53</td>
+<td style="text-align: center;">$-88.50$</td>
+<td style="text-align: center;">$-68.50$</td>
+<td style="text-align: center;">$-8.63$</td>
+<td style="text-align: center;">$59.87$</td>
+<td style="text-align: center;">$-8.7$</td>
+</tr>
+<tr>
+<td style="text-align: center;">50</td>
+<td style="text-align: center;">$-85.50$</td>
+<td style="text-align: center;">$-65.50$</td>
+<td style="text-align: center;">$-7.67$</td>
+<td style="text-align: center;">$57.83$</td>
+<td style="text-align: center;">$-10.3$</td>
+</tr>
+<tr>
+<td style="text-align: center;">47</td>
+<td style="text-align: center;">$-82.50$</td>
+<td style="text-align: center;">$-62.50$</td>
+<td style="text-align: center;">$-7.47$</td>
+<td style="text-align: center;">$55.03$</td>
+<td style="text-align: center;">$-6.0$</td>
+</tr>
+<tr>
+<td style="text-align: center;">45</td>
+<td style="text-align: center;">$-80.50$</td>
+<td style="text-align: center;">$-60.50$</td>
+<td style="text-align: center;">$-7.23$</td>
+<td style="text-align: center;">$53.27$</td>
+<td style="text-align: center;">$-8.0$</td>
+</tr>
+<tr>
+<td style="text-align: center;">43</td>
+<td style="text-align: center;">$-78.50$</td>
+<td style="text-align: center;">$-58.50$</td>
+<td style="text-align: center;">$-6.07$</td>
+<td style="text-align: center;">$52.43$</td>
+<td style="text-align: center;">$-5.3$</td>
+</tr>
+<tr>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">$-77.50$</td>
+<td style="text-align: center;">$-57.50$</td>
+<td style="text-align: center;">$-6.67$</td>
+<td style="text-align: center;">$50.83$</td>
+<td style="text-align: center;">$-4.3$</td>
+</tr>
+<tr>
+<td style="text-align: center;">41</td>
+<td style="text-align: center;">$-76.50$</td>
+<td style="text-align: center;">$-56.50$</td>
+<td style="text-align: center;">$-6.50$</td>
+<td style="text-align: center;">$50.00$</td>
+<td style="text-align: center;">$-5.3$</td>
+</tr>
+<tr>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">$-75.50$</td>
+<td style="text-align: center;">$-55.50$</td>
+<td style="text-align: center;">$-6.50$</td>
+<td style="text-align: center;">$49.00$</td>
+<td style="text-align: center;">$-3.7$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="extracted-compression-parameters">Extracted Compression Parameters</h3>
+<ul>
+<li><strong>Small-Signal Linear Gain ($G_0$):</strong> $59.0\text{ dB}$ (averaged across the linear region $A_{tx} = 60\text{ dB}$ to $53\text{ dB}$).</li>
+<li><strong>1-dB Gain Compression Point ($G = G_0 - 1 = 58.0\text{ dB}$):</strong> Occurs at an input power between $-68.5\text{ dBFS}$ and $-65.5\text{ dBFS}$. Interpolating yields:
+  $$\mathbf{\text{Input } P_{1\text{dB}} \approx -66.5\text{ dBFS} \quad (-86.5\text{ dBm})}$$</li>
+<li><strong>Output Level at 1-dB Compression:</strong> $\mathbf{-8.0\text{ dBFS}}$.</li>
+<li><strong>Clipping Plateau:</strong> For $P_{\text{in}} &gt; -57.5\text{ dBFS}$, output tone power clamps at a fixed ceiling of $-6.50\text{ dBFS}$.</li>
+</ul>
+<h3 id="question-3-output-level-at-compression-and-primary-limiting-mechanism">Question 3: Output Level at Compression and Primary Limiting Mechanism</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>At the compression point, what was the output level in dBFS? What do you conclude regarding the limiting factor (ADC vs. analog stages)?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+At the 1-dB compression point, the measured fundamental output level was <strong>$-8.0\text{ dBFS}$</strong>. For higher input drives, the output power saturates abruptly into a hard plateau at <strong>$-6.50\text{ dBFS}$</strong>.</p>
+<ul>
+<li>In purely analog RF stages (e.g., LNA or passive mixer saturation), gain compression rolls off smoothly and progressively over a wide dynamic range ($&gt; 15\text{ dB}$).</li>
+<li>In this receiver, the transfer curve exhibits sharp, abrupt saturation within a few decibels of digital full scale ($0\text{ dBFS}$).</li>
+</ul>
+<p><strong>Conclusion:</strong> The dominant physical limiting factor is <strong>digital ADC full-scale clipping</strong> and baseband programmable gain amplifier (PGA) saturation, rather than analog front-end LNA compression.</p>
+<hr />
+<h2 id="4-two-tone-intermodulation-test-and-textiip_3-table-6-questions-4-5">4. Two-Tone Intermodulation Test and $\text{IIP}_3$ (Table 6 &amp; Questions 4, 5)</h2>
+<p>Two equal-amplitude tones were injected at $f_1 = f_c + 300\text{ kHz}$ and $f_2 = f_c + 400\text{ kHz}$ ($\Delta f = 100\text{ kHz}$) at $\text{rf_gain} = 40.2\text{ dB}$. Input tone power was swept from $-70.0\text{ dBFS}$ to $-54.0\text{ dBFS}$. The intermodulation distance is $\Delta = P_{\text{fund}} - P_{\text{IMD3}}$, and the input third-order intercept point is computed as:</p>
+<p>$$\text{IIP}<em>3 = P</em>{\text{in}} + \frac{\Delta}{2}$$</p>
+<h3 id="experimental-two-tone-data-table-6">Experimental Two-Tone Data (Table 6)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">$P_{\text{in}}$ / Tone [dBFS]</th>
+<th style="text-align: center;">$f_1, f_2$ [dBFS]</th>
+<th style="text-align: center;">$2f_1-f_2$ [dBFS]</th>
+<th style="text-align: center;">$2f_2-f_1$ [dBFS]</th>
+<th style="text-align: center;">$\text{IMD}_3$ Avg [dBFS]</th>
+<th style="text-align: center;">$\Delta$ [dB]</th>
+<th style="text-align: center;">$\text{IIP}_3$ [dBFS]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">$-70.0$</td>
+<td style="text-align: center;">$-27.67$</td>
+<td style="text-align: center;">$-44.53$</td>
+<td style="text-align: center;">$-44.17$</td>
+<td style="text-align: center;">$-44.35$</td>
+<td style="text-align: center;">$16.68$</td>
+<td style="text-align: center;">$-61.66$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-68.0$</td>
+<td style="text-align: center;">$-25.27$</td>
+<td style="text-align: center;">$-43.40$</td>
+<td style="text-align: center;">$-42.03$</td>
+<td style="text-align: center;">$-42.72$</td>
+<td style="text-align: center;">$17.45$</td>
+<td style="text-align: center;">$-59.28$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-66.0$</td>
+<td style="text-align: center;">$-23.37$</td>
+<td style="text-align: center;">$-40.63$</td>
+<td style="text-align: center;">$-39.87$</td>
+<td style="text-align: center;">$-40.25$</td>
+<td style="text-align: center;">$16.88$</td>
+<td style="text-align: center;">$-57.56$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-64.0$</td>
+<td style="text-align: center;">$-21.73$</td>
+<td style="text-align: center;">$-38.23$</td>
+<td style="text-align: center;">$-39.20$</td>
+<td style="text-align: center;">$-38.72$</td>
+<td style="text-align: center;">$16.98$</td>
+<td style="text-align: center;">$-55.51$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-62.0$</td>
+<td style="text-align: center;">$-19.73$</td>
+<td style="text-align: center;">$-37.37$</td>
+<td style="text-align: center;">$-36.33$</td>
+<td style="text-align: center;">$-36.85$</td>
+<td style="text-align: center;">$17.12$</td>
+<td style="text-align: center;">$-53.44$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-60.0$</td>
+<td style="text-align: center;">$-18.77$</td>
+<td style="text-align: center;">$-35.37$</td>
+<td style="text-align: center;">$-35.37$</td>
+<td style="text-align: center;">$-35.37$</td>
+<td style="text-align: center;">$16.60$</td>
+<td style="text-align: center;">$-51.70$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-58.0$</td>
+<td style="text-align: center;">$-16.10$</td>
+<td style="text-align: center;">$-32.73$</td>
+<td style="text-align: center;">$-32.17$</td>
+<td style="text-align: center;">$-32.45$</td>
+<td style="text-align: center;">$16.35$</td>
+<td style="text-align: center;">$-49.83$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-56.0$</td>
+<td style="text-align: center;">$-13.97$</td>
+<td style="text-align: center;">$-30.50$</td>
+<td style="text-align: center;">$-29.43$</td>
+<td style="text-align: center;">$-29.97$</td>
+<td style="text-align: center;">$16.00$</td>
+<td style="text-align: center;">$-48.00$</td>
+</tr>
+<tr>
+<td style="text-align: center;">$-54.0$</td>
+<td style="text-align: center;">$-11.53$</td>
+<td style="text-align: center;">$-25.97$</td>
+<td style="text-align: center;">$-25.40$</td>
+<td style="text-align: center;">$-25.68$</td>
+<td style="text-align: center;">$14.15$</td>
+<td style="text-align: center;">$-46.93$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regression-and-intercept-parameters">Regression and Intercept Parameters</h3>
+<ul>
+<li><strong>Fundamental Output Tone Slope:</strong> $0.97\text{ dB/dB} \approx 1.0\text{ dB/dB}$ (confirming linear transfer gain).</li>
+<li><strong>Measured $\text{IMD}_3$ Product Slope:</strong> <strong>$1.10\text{ dB/dB}$</strong>.</li>
+<li><strong>Mean Calculated $\text{IIP}_3$:</strong> $\mathbf{-53.8\text{ dBFS} \quad (-73.8\text{ dBm})}$.</li>
+<li><strong>Intercept-to-Compression Distance:</strong> $\text{IIP}<em>3 - P</em>{1\text{dB}} = -53.8 - (-66.5) = \mathbf{+12.7\text{ dB}}$.</li>
+</ul>
+<h3 id="question-4-measured-textimd_3-slope-and-validity-of-textiip_3">Question 4: Measured $\text{IMD}_3$ Slope and Validity of $\text{IIP}_3$</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>What was the measured slope of the third-order intermodulation products? If it differs from 3, what conclusion do you draw regarding the nonlinear mechanism, and what is the validity of your $\text{IIP}_3$ value?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+The measured $\text{IMD}_3$ product slope is <strong>$1.10\text{ dB/dB}$</strong>, which departs markedly from the theoretical weakly nonlinear slope of $3.0\text{ dB/dB}$.</p>
+<ol>
+<li><strong>Nonlinear Mechanism:</strong> This slope anomaly demonstrates that intermodulation is not generated solely by receiver internal small-signal third-order Taylor polynomial distortion. As documented in the troubleshooting guide (Table 9 of the manual), when the transmitting PLUTO SDR operates near full output scale, its transmitted output already contains source-generated intermodulation products that scale $\approx 1:1$ with transmit power. Furthermore, digital ADC clipping introduces piecewise-linear threshold distortion that does not follow power-series mathematics.</li>
+<li><strong>Validity of $\text{IIP}_3$:</strong> Because the fundamental premise of a $3:1$ intercept slope is violated, the calculated value of $\text{IIP}_3 = -53.8\text{ dBFS}$ cannot be interpreted as an ideal asymptotic small-signal third-order intercept point. Rather, it represents an <strong>apparent or empirical intercept metric</strong> valid only within the specific testing window.</li>
+</ol>
+<h3 id="question-5-comparison-of-textiip3-p1textdb-with-96-db-and-peak-envelope-dynamics">Question 5: Comparison of $\text{IIP}<em>3 - P</em>{1\text{dB}}$ with 9.6 dB and Peak Envelope Dynamics</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>Compare $\text{IIP}<em>3 - P</em>{1\text{dB}}$ with 9.6 dB. Why does compression begin earlier in two-tone tests than in single-tone tests?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+<em> </em><em>Numerical Comparison:</em><em> The measured difference is $\text{IIP}<em>3 - P</em>{1\text{dB}} = -53.8 - (-66.5) = \mathbf{+12.7\text{ dB}}$, which is moderately higher than the canonical $9.6\text{ dB}$ offset predicted for an ideal memoryless third-order polynomial nonlinearity, due to non-ideal slope compression and ADC clipping dynamics.
+* </em><em>Why Two-Tone Compression Occurs Earlier:</em>* In a single-tone excitation of voltage amplitude $V_0$, peak instantaneous voltage is $V_{\text{peak}} = V_0$, giving peak envelope power $\text{PEP} = V_0^2 / (2R) = P_{\text{avg}}$. In a two-tone test where each tone has amplitude $V_0$, constructive interference occurs whenever the carriers align in phase:</p>
+<p>$$V_{\text{peak, 2-tone}} = V_0 + V_0 = 2 V_0$$</p>
+<p>Because instantaneous electrical power scales quadratically with voltage ($V^2$), peak envelope power is:</p>
+<p>$$\text{PEP} \propto (2 V_0)^2 = 4 V_0^2 \implies \mathbf{+6.0\text{ dB higher than a single tone of equal amplitude}}$$</p>
+<p>Consequently, the composite envelope reaches the receiver ADC full-scale saturation limit <strong>6 dB earlier in per-tone input power</strong> than a single-tone stimulus.</p>
+<hr />
+<h2 id="5-antenna-frequency-response-and-bandwidth-table-7-visual-analysis">5. Antenna Frequency Response and Bandwidth (Table 7 &amp; Visual Analysis)</h2>
+<p>The transmission response between a pair of omnidirectional antennas was measured over the $400\text{ MHz}$ to $3000\text{ MHz}$ ($3.0\text{ GHz}$) frequency span using <code>lab02_antenna_response_gui.py</code>. Testing parameters displayed in the GUI header are:
+* $\text{TX1 attenuation} = 50.00\text{ dB}$
+* $\text{RX1 manual gain} = 20\text{ dB}$
+* $\text{Automatic sweep step} = 20.00\text{ MHz}$
+* Detection mode: Max Hold per RF frequency</p>
+<h3 id="measurement-results-table-7">Measurement Results (Table 7)</h3>
+<p>From <code>antenna_response.csv</code> and the real-time GUI curve, the primary resonance peak occurs at $1700.0\text{ MHz}$ ($1.70\text{ GHz}$) with maximum received relative power $P_{\text{peak}} = -28.80\text{ dB}$. The $-3\text{ dB}$ power threshold is:</p>
+<p>$$P_{-3\text{dB}} = -28.80\text{ dB} - 3.0\text{ dB} = -31.80\text{ dB}$$</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Antenna Metric</th>
+<th style="text-align: center;">Measured Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Peak Operational Frequency ($f_{\text{peak}}$)</strong></td>
+<td style="text-align: center;">$1700.0\text{ MHz}$ ($1.70\text{ GHz}$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Peak Relative Received Power</strong></td>
+<td style="text-align: center;">$-28.80\text{ dB}$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Threshold Power Level ($-3\text{ dB}$)</strong></td>
+<td style="text-align: center;">$-31.80\text{ dB}$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Lower Cutoff Frequency ($f_L$)</strong></td>
+<td style="text-align: center;">$1650.0\text{ MHz}$ ($1.65\text{ GHz}$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Upper Cutoff Frequency ($f_H$)</strong></td>
+<td style="text-align: center;">$1760.0\text{ MHz}$ ($1.76\text{ GHz}$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3-dB Operational Bandwidth ($BW = f_H - f_L$)</strong></td>
+<td style="text-align: center;">$\mathbf{110.0\text{ MHz}}$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="in-depth-visual-analysis-of-the-antenna-trace">In-Depth Visual Analysis of the Antenna Trace</h3>
+<p>Inspection of the spectrum trace in the captured screenshot reveals four distinct electromagnetic operating regimes:
+1. <strong>Primary Operational Passband ($1.65\text{ GHz} - 1.76\text{ GHz}$):</strong> A dominant, smooth global resonance peak reaches $-28.80\text{ dB}$ at $1.70\text{ GHz}$. The extracted 3-dB bandwidth of $110.0\text{ MHz}$ yields a fractional bandwidth of $\text{FBW} = (110 / 1700) \times 100\% \approx 6.5\%$, typical of a tuned half-wave dipole or matched blade monopole antenna.
+2. <strong>Secondary Multi-Band Resonant Peaks:</strong>
+   * <em>Sub-1 GHz Cellular Peak ($\approx 1.02\text{ GHz}$):</em> A distinct local peak reaches $\approx -31.8\text{ dB}$ near $1.0\text{ GHz}$, matching the commercial GSM-900 / LTE cellular mobile uplink band.
+   * <em>2.4 GHz ISM Band Peak ($\approx 2.44\text{ GHz}$):</em> A pronounced resonance peak reaches $\approx -33.5\text{ dB}$ directly across the $2.40 - 2.48\text{ GHz}$ Industrial, Scientific, and Medical (ISM) band (Wi-Fi and Bluetooth). This demonstrates that the antenna is an engineered multi-band commercial element.
+3. <strong>Electrically Small Mismatch Fluctuations ($&lt; 900\text{ MHz}$):</strong> Below $900\text{ MHz}$, the curve exhibits severe rapid fluctuations and deep nulls plunging down to $-73\text{ dB}$ at $\approx 550\text{ MHz}$. At these low frequencies, the wavelength is long ($\lambda \approx 50 - 75\text{ cm}$), making the physical antenna electrically small ($l \ll \lambda/2$). The resulting large capacitive reactance creates severe impedance mismatch ($\Gamma \approx 1$) and negligible radiation efficiency.
+4. <strong>High-Frequency Path Loss Rolloff ($&gt; 2.5\text{ GHz}$):</strong> Beyond the 2.44 GHz ISM peak, received power drops monotonically down to $-63\text{ dB}$ at $3.0\text{ GHz}$. This steady attenuation follows the Friis transmission law, where free-space path loss increases with $f^2$, compounded by increased dielectric losses in SMA coaxial cables.</p>
+<hr />
+<h2 id="6-team-challenge-consolidated-specifications-and-trade-offs-table-8-questions-6-7">6. Team Challenge: Consolidated Specifications and Trade-Offs (Table 8 &amp; Questions 6, 7)</h2>
+<p>Table 8 compiles the full receiver performance profile across low, nominal, and high gain settings ($B = 10\text{ kHz}$ reference detection bandwidth).</p>
+<h3 id="consolidated-receiver-specifications-table-8">Consolidated Receiver Specifications (Table 8)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Receiver Performance Metric</th>
+<th style="text-align: center;">Low Gain ($29.7\text{ dB}$)</th>
+<th style="text-align: center;">Nominal Gain ($40.2\text{ dB}$)</th>
+<th style="text-align: center;">High Gain ($49.6\text{ dB}$)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Conversion Factor $G_{FS}$ [dB]</strong></td>
+<td style="text-align: center;">$20.0$</td>
+<td style="text-align: center;">$20.0$</td>
+<td style="text-align: center;">$20.0$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Noise Figure NF ($434\text{ MHz}$) [dB]</strong></td>
+<td style="text-align: center;">$21.38$</td>
+<td style="text-align: center;">$9.47$</td>
+<td style="text-align: center;">$8.97$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Noise Floor $N_{\text{floor}}$ ($B=10\text{ kHz}$) [dBFS]</strong></td>
+<td style="text-align: center;">$-92.6$</td>
+<td style="text-align: center;">$-104.5$</td>
+<td style="text-align: center;">$-105.0$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Input $P_{1\text{dB}}$ [dBFS]</strong></td>
+<td style="text-align: center;">$-56.0$</td>
+<td style="text-align: center;">$-66.5$</td>
+<td style="text-align: center;">$-76.0$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Input $P_{1\text{dB}}$ [dBm]</strong></td>
+<td style="text-align: center;">$-76.0$</td>
+<td style="text-align: center;">$-86.5$</td>
+<td style="text-align: center;">$-96.0$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Nominal $\text{IIP}_3$ [dBFS]</strong></td>
+<td style="text-align: center;">$-43.3$</td>
+<td style="text-align: center;">$-53.8$</td>
+<td style="text-align: center;">$-63.3$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Nominal $\text{IIP}_3$ [dBm]</strong></td>
+<td style="text-align: center;">$-63.3$</td>
+<td style="text-align: center;">$-73.8$</td>
+<td style="text-align: center;">$-83.3$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Dynamic Range ($P_{1\text{dB}} - N_{\text{floor}}$) [dB]</strong></td>
+<td style="text-align: center;">$36.6$</td>
+<td style="text-align: center;">$\mathbf{38.0}$</td>
+<td style="text-align: center;">$29.0$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$\text{SFDR}$ ($B=10\text{ kHz}$) [dB]</strong></td>
+<td style="text-align: center;">$32.9$</td>
+<td style="text-align: center;">$\mathbf{33.8}$</td>
+<td style="text-align: center;">$27.8$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="question-6-variation-rates-of-noise-figure-and-p_1textdb-with-gain">Question 6: Variation Rates of Noise Figure and $P_{1\text{dB}}$ with Gain</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>Tabulate Noise Figure and $P_{1\text{dB}}$ as a function of gain. At what rate (dB per dB of gain) does each metric vary?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+<em> </em><em>$P_{1\text{dB}}$ Variation Rate:</em><em> Across all gain transitions, input $P_{1\text{dB}}$ shifts downward at exactly the rate of gain increase:
+  $$\frac{\Delta P_{1\text{dB}}}{\Delta \text{Gain}} = \mathbf{-1.0\text{ dB / dB gain}}$$
+  Because the output clipping ceiling is fixed by the ADC full-scale rail, every 1 dB of added front-end gain reduces the allowable input power by exactly 1 dB.
+* </em><em>Noise Figure (NF) Variation Rate:</em><em>
+  * </em>From $29.7\text{ dB}$ to $40.2\text{ dB}$ ($\Delta \text{Gain} = +10.5\text{ dB}$):<em> $\Delta \text{NF} = 9.47 - 21.38 = -11.91\text{ dB}$, yielding a variation rate of $\mathbf{-1.13\text{ dB / dB gain}}$. (Rapid sensitivity improvement as LNA gain suppresses ADC quantization noise).
+  * </em>From $40.2\text{ dB}$ to $49.6\text{ dB}$ ($\Delta \text{Gain} = +9.4\text{ dB}$):* $\Delta \text{NF} = 8.97 - 9.47 = -0.50\text{ dB}$, yielding a variation rate of $\mathbf{-0.05\text{ dB / dB gain}}$. (Plateauing near the LNA's intrinsic noise figure).</p>
+<h3 id="question-7-maximum-dynamic-range-and-blocker-tolerance">Question 7: Maximum Dynamic Range and Blocker Tolerance</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>At which gain is dynamic range ($P_{1\text{dB}} - N_{\text{floor}}$) maximized? Which gain setting should be chosen to receive a weak signal in the presence of a strong adjacent blocker, and why?</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+1. <strong>Maximum Dynamic Range:</strong> Both linear dynamic range ($P_{1\text{dB}} - N_{\text{floor}} = 38.0\text{ dB}$) and Spurious-Free Dynamic Range ($\text{SFDR} = 33.8\text{ dB}$) reach their global peak at the <strong>nominal gain setting of $40.2\text{ dB}$</strong>.
+2. <strong>Weak Signal Reception with Strong Adjacent Blocker:</strong> One must select the <strong>nominal or lower gain setting ($40.2\text{ dB}$ or lower)</strong>, and <strong>never</strong> the maximum gain ($49.6\text{ dB}$). At maximum gain, input $P_{1\text{dB}}$ collapses to $-76.0\text{ dBFS}$ ($-96.0\text{ dBm}$). A strong adjacent blocker would immediately overdrive the receiver into hard ADC clipping, generating reciprocal mixing and cross-modulation distortion that completely blinds the receiver to the weak desired signal. Nominal gain preserves $10\text{ dB}$ more linearity headroom while maintaining near-optimum noise figure.</p>
+<hr />
+<h2 id="7-mandatory-analyses-expansion-question-8-and-error-breakdown">7. Mandatory Analyses, Expansion Question 8, and Error Breakdown</h2>
+<h3 id="mandatory-analysis-1-nf-and-linearity-vs-gain-sfdr-argument">Mandatory Analysis 1: NF and Linearity vs. Gain (SFDR Argument)</h3>
+<p>Plotting NF and $\text{IIP}_3$ against receiver gain exhibits two opposing trends. Below $40\text{ dB}$ gain, NF improves sharply ($\approx -1.13\text{ dB/dB}$), while linearity degrades at $-1.0\text{ dB/dB}$. Above $40\text{ dB}$ gain, NF reaches diminishing returns ($\approx -0.05\text{ dB/dB}$), but linearity continues to degrade at $-1.0\text{ dB/dB}$. The optimal trade-off that maximizes intermodulation-free dynamic range lies at <strong>$\text{rf_gain} \approx 40.2\text{ dB}$</strong>, where $\text{SFDR} = 33.8\text{ dB}$ is maximized.</p>
+<h3 id="mandatory-analysis-2-input-output-transfer-characteristics">Mandatory Analysis 2: Input-Output Transfer Characteristics</h3>
+<p>In single-tone mode, fundamental output power tracks input drive linearly ($G_0 = 59.0\text{ dB}$) until 1-dB compression occurs at $P_{\text{in}} = -66.5\text{ dBFS}$, clamping hard at $-6.50\text{ dBFS}$. In two-tone mode, constructive peak envelope alignment produces early saturation, with the empirical intercept point located at $\text{IIP}<em>3 = -53.8\text{ dBFS}$ ($+12.7\text{ dB}$ above $P</em>{1\text{dB}}$).</p>
+<h3 id="mandatory-analysis-3-direct-method-vs-y-factor-comparison">Mandatory Analysis 3: Direct Method vs. $Y$-Factor Comparison</h3>
+<p>Comparing Table 3 and Table 4 confirms that the direct method matches physical reality only at the calibrated nominal gain ($\text{rf_gain} = 40.2\text{ dB}$). When gain is increased to $49.6\text{ dB}$, the direct formula yields an erroneous NF increase to $31.78\text{ dB}$ because amplified analog noise overrides ADC quantization noise while assuming static $G_{FS} = 20\text{ dB}$. The $Y$-factor method correctly tracks physical behavior, confirming an actual NF reduction to $8.97\text{ dB}$.</p>
+<h3 id="question-8-expansion-question-why-increasing-receiver-gain-does-not-continuously-improve-sensitivity">Question 8 (Expansion Question): Why Increasing Receiver Gain Does Not Continuously Improve Sensitivity</h3>
+<blockquote>
+<p><strong>Prompt:</strong> <em>Why does increasing receiver gain not continuously improve sensitivity? Quantify your answer using your experimental data.</em></p>
+</blockquote>
+<p><strong>Answer:</strong><br />
+Receiver sensitivity represents the minimum detectable input signal power $S_{\text{min}}$ required to achieve a specified signal-to-noise ratio $\text{SNR}_{\text{min}}$:</p>
+<p>$$S_{\text{min}}\,[\text{dBm}] = -174\text{ dBm/Hz} + \text{NF}\,[\text{dB}] + 10\log_{10}(B) + \text{SNR}_{\text{min}}\,[\text{dB}]$$</p>
+<p>Sensitivity depends directly on the <strong>Noise Figure ($\text{NF}$)</strong>, not on gain. Gain amplifies both incoming signal and input thermal noise equally, preserving SNR. According to Friis' cascaded noise formula:</p>
+<p>$$F_{\text{total}} = F_{\text{LNA}} + \frac{F_{\text{mixer}}-1}{G_{\text{LNA}}} + \frac{F_{\text{ADC}}-1}{G_{\text{LNA}} G_{\text{mixer}}}$$</p>
+<p>As front-end gain $G_{\text{LNA}}$ is increased, downstream noise contributions are suppressed until total noise factor converges asymptotically to the intrinsic noise figure of the first LNA stage ($F_{\text{total}} \to F_{\text{LNA}}$).</p>
+<ul>
+<li><strong>Quantitative Evidence from Our Measurements:</strong></li>
+<li>Increasing gain from $29.7\text{ dB}$ to $40.2\text{ dB}$ ($+10.5\text{ dB}$ gain) reduces NF by <strong>$11.91\text{ dB}$</strong> (from $21.38\text{ dB}$ down to $9.47\text{ dB}$), improving sensitivity by nearly $12\text{ dB}$.</li>
+<li>Increasing gain further from $40.2\text{ dB}$ to $49.6\text{ dB}$ ($+9.4\text{ dB}$ gain) yields a negligible NF reduction of merely <strong>$0.50\text{ dB}$</strong> (from $9.47\text{ dB}$ down to $8.97\text{ dB}$).</li>
+<li><strong>Severe Linearity Penalty:</strong> While sensitivity improves by only $0.5\text{ dB}$, input $P_{1\text{dB}}$ degrades by <strong>$9.5\text{ dB}$</strong> (from $-86.5\text{ dBm}$ down to $-96.0\text{ dBm}$), and SFDR deteriorates by $6.0\text{ dB}$. Beyond the point where LNA noise dominates, additional gain provides zero practical sensitivity benefit while degrading dynamic range and blocker resilience.</li>
+</ul>
+<h3 id="prediction-vs-measurement-error-summary">Prediction vs. Measurement Error Summary</h3>
+<p>The table below compares theoretical lab manual simulation predictions with our experimental results.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Performance Metric</th>
+<th style="text-align: center;">Predicted</th>
+<th style="text-align: center;">Measured</th>
+<th style="text-align: center;">Relative Error</th>
+<th style="text-align: left;">Primary Source of Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>NF at 50 dB Gain</strong></td>
+<td style="text-align: center;">$6.10\text{ dB}$</td>
+<td style="text-align: center;">$8.97\text{ dB}$</td>
+<td style="text-align: center;">$+47.0\%$ ($+2.87\text{ dB}$)</td>
+<td style="text-align: left;">Cable insertion losses ($A_{\text{pad}}$), TX ENR tolerance</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>NF at 40 dB Gain</strong></td>
+<td style="text-align: center;">$6.50\text{ dB}$</td>
+<td style="text-align: center;">$9.47\text{ dB}$</td>
+<td style="text-align: center;">$+45.7\%$ ($+2.97\text{ dB}$)</td>
+<td style="text-align: left;">Uncalibrated TX nominal power $P_{\text{max}}$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>NF at 30 dB Gain</strong></td>
+<td style="text-align: center;">$9.60\text{ dB}$</td>
+<td style="text-align: center;">$21.38\text{ dB}$</td>
+<td style="text-align: center;">$+122.7\%$ ($+11.78\text{ dB}$)</td>
+<td style="text-align: left;">ADC quantization floor, small $Y$-factor sensitivity</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$\text{IIP}<em>3 - P</em>{1\text{dB}}$</strong></td>
+<td style="text-align: center;">$9.60\text{ dB}$</td>
+<td style="text-align: center;">$12.70\text{ dB}$</td>
+<td style="text-align: center;">$+32.3\%$ ($+3.10\text{ dB}$)</td>
+<td style="text-align: left;">Non-ideal $\text{IMD}_3$ slope ($1.10$), ADC clipping</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$\text{IMD}_3$ Product Slope</strong></td>
+<td style="text-align: center;">$3.00\text{ dB/dB}$</td>
+<td style="text-align: center;">$1.10\text{ dB/dB}$</td>
+<td style="text-align: center;">$-63.3\%$</td>
+<td style="text-align: left;">Transmitter distortion, hard ADC limits</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Antenna Resonance</strong></td>
+<td style="text-align: center;">$1700\text{ MHz}$</td>
+<td style="text-align: center;">$1700\text{ MHz}$</td>
+<td style="text-align: center;">$0.0\%$</td>
+<td style="text-align: left;">Calibrated frequency sweep generator</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.tracking", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
