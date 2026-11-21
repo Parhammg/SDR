@@ -236,7 +236,7 @@ class lab01_monitor(gr.top_block, Qt.QWidget):
         self._lo_shift_range = qtgui.Range(-500e3, 500e3, 10e3, 0, 200)
         self._lo_shift_win = qtgui.RangeWidget(self._lo_shift_range, self.set_lo_shift, "'lo_shift'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._lo_shift_win)
-        self.iio_pluto_source_0 = iio.fmcomms2_source_fc32('' if '' else iio.get_pluto_uri(), [True, True], 32768)
+        self.iio_pluto_source_0 = iio.fmcomms2_source_fc32("ip:192.168.1.10" if "ip:192.168.1.10" else iio.get_pluto_uri(), [True, True], 32768)
         self.iio_pluto_source_0.set_len_tag_key('packet_len')
         self.iio_pluto_source_0.set_frequency(f_tune)
         self.iio_pluto_source_0.set_samplerate(samp_rate)

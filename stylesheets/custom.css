@@ -1,0 +1,55 @@
+/* Pulsing Live Indicator for Lab Status */
+.status-live {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    color: #00e676; /* Neon Green */
+}
+.status-live::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #00e676;
+    margin-right: 8px;
+    box-shadow: 0 0 8px #00e676;
+    animation: pulse-green 1.5s infinite;
+}
+
+.status-pending {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    color: #ff9100; /* Neon Orange */
+}
+.status-pending::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ff9100;
+    margin-right: 8px;
+    box-shadow: 0 0 8px #ff9100;
+    animation: pulse-orange 1.5s infinite;
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+}
+
+@keyframes pulse-orange {
+    0% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 145, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 145, 0, 0); }
+}
+
+/* Hover effect for grid cards */
+.md-typeset .grid.cards > :is(ul,ol) > li:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 255, 255, 0.15); /* Cyan glow */
+}

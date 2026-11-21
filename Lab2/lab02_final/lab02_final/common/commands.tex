@@ -1,0 +1,108 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- semantic macros (use these instead of ad-hoc formatting)
+%======================================================================
+% English equivalent of a Persian term on first use:
+%     مدولاسیون دامنه \eng{Amplitude Modulation — AM}
+% [INSTRUCTOR] To get the footnote style of the LaTeX template instead,
+% replace the definition by:  \renewcommand{\eng}[1]{\footnote{\lr{#1}}}
+\newcommand{\eng}[1]{(\lr{#1})}
+
+% GNU Radio vocabulary -------------------------------------------------
+\newcommand{\blk}[1]{\lr{\mbox{\sffamily\bfseries\color{sdrDark}#1}}}   % block name
+\newcommand{\prm}[1]{\lr{\mbox{\sffamily\color{sdrHead}#1}}}            % parameter label
+\newcommand{\val}[1]{\lr{\mbox{\ttfamily #1}}}                           % value typed into GRC
+\newcommand{\code}[1]{\lr{\mbox{\ttfamily\detokenize{#1}}}}             % identifiers, file names, commands
+% parameter with its value, read left-to-right as in the GRC properties dialog
+\newcommand{\pv}[2]{\lr{\mbox{{\sffamily\color{sdrHead}#1:}\,{\ttfamily #2}}}}
+\newcommand{\menu}[1]{\lr{\mbox{\sffamily\itshape #1}}}                 % menu entries
+\newcommand{\key}[1]{\lr{\tcbox[on line,boxsep=1pt,left=2.5pt,right=2.5pt,top=0.6pt,bottom=0.6pt,
+     arc=1.5pt,boxrule=0.5pt,colframe=sdrGray,colback=sdrPaper]{\sffamily\footnotesize #1}}}
+\newcommand{\then}{\ensuremath{\,\triangleright\,}}
+
+% quantities:  \q{2.048}{MS/s}  (text; the number is set in math mode so that
+% minus signs and digits are always correct)   and   \un{MHz}  (inside math)
+\newcommand{\q}[2]{\lr{\mbox{$#1$\,#2}}}
+\newcommand{\un}[1]{\,\mathrm{#1}}
+\newcommand{\dBm}{\lr{dBm}}
+\newcommand{\dBFS}{\lr{dBFS}}
+\newcommand{\dB}{\lr{dB}}
+
+% frequently used names
+\newcommand{\GR}{\lr{GNU Radio}}
+\newcommand{\GRC}{\lr{GRC}}
+\newcommand{\IQ}{\lr{I/Q}}
+\newcommand{\FFT}{\lr{FFT}}
+\newcommand{\RTLSDR}{\lr{RTL-SDR}}
+
+% math helpers
+\newcommand{\fs}{f_{s}}
+\newcommand{\fc}{f_{c}}
+\newcommand{\RBW}{\mathrm{RBW}}
+\newcommand{\ENBW}{\mathrm{ENBW}}
+\newcommand{\NF}{\mathrm{NF}}
+
+% clause / section references and numeric ranges written with Persian digits
+% but read left-to-right, e.g.  بند \bnd{۳-۱}   (keeps "3" on the left)
+\makeatletter
+\def\sdr@bnd#1-#2\relax{\hbox{\persianfont #1}\hbox{-}\hbox{\persianfont #2}}
+\newcommand{\bnd}[1]{\lr{\mbox{\sdr@bnd#1\relax}}}
+\makeatother
+
+% \mu may be typed in text mode as well (e.g. \q{10}{\mu s}); it switches to math when needed
+\makeatletter
+\let\sdr@mathmu\mu
+\DeclareRobustCommand{\mu}{\ifmmode\sdr@mathmu\else\ensuremath{\sdr@mathmu}\fi}
+\makeatother
+
+%----------------------------------------------------------------------
+% Compatibility shim: bidi < 39 ships a multicol adaptation
+% (multicol-xetex-bidi.def v1.2, 2019) that reads \mult@gfirstbox in the
+% column-output routine. multicol >= 1.9f (TeX Live 2023) voids those
+% scratch boxes during balancing and leaves the finished columns in
+% \mult@firstbox, so the old shim prints only the last column and silently
+% drops the rest. We restore the correct register. Guarded by bidi version
+% so it stays inert on bidi >= 39 (the version the course targets).
+\makeatletter
+\@ifpackageloaded{bidi}{%
+  \ifdim\bidi@version pt<39pt
+    \def\LTR@column@boxes{%
+        \process@cols\mult@firstbox{%
+           \ifdim\dp\count@>\dimen\tw@
+             \global\dimen\tw@\dp\count@ \fi
+           \mc@col@status@write
+           \box\count@
+           \hss{\columnseprulecolor\vrule
+                  \@width\columnseprule}\hss}%
+         \ifdim\dp\mult@rightbox>\dimen\tw@
+           \global\dimen\tw@\dp\mult@rightbox \fi
+         \mc@lastcol@status@write
+         \box\mult@rightbox}%
+    \def\RTL@column@boxes{%
+      \ifnum\col@number<\tw@
+         \LTR@column@boxes
+      \else
+         \process@cols\mult@firstbox{%
+           \hskip\hsize
+           \hss{\columnseprulecolor\vrule
+                  \@width\columnseprule}\hss}%
+         \hskip\hsize
+         \process@cols\mult@firstbox{%
+           \ifdim\dp\count@>\dimen\tw@
+             \global\dimen\tw@\dp\count@ \fi
+           \hskip-\hsize
+           \mc@col@status@write
+           \box\count@
+           \hskip-\hsize
+           \hskip-\columnsep}%
+         \ifdim\dp\mult@rightbox>\dimen\tw@
+           \global\dimen\tw@\dp\mult@rightbox \fi
+         \hskip-\hsize
+         \mc@lastcol@status@write
+         \box\mult@rightbox
+         \hskip-\hsize
+         \hskip\full@width
+      \fi}%
+  \fi
+}{}%
+\makeatother

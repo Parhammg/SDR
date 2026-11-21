@@ -6,6 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Software Defined Radio Lab Documentation & Reports">
+      
+      
+        <meta name="author" content="Team-01">
       
       
       
@@ -16,7 +20,7 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../material/waveform">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
@@ -42,10 +46,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Ubuntu";--md-code-font:"Fira Code"}</style>
       
     
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -63,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="deep-orange">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -84,12 +90,13 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="SDR Laboratory" class="md-header__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../material/radio-tower" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -119,20 +126,20 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode (Terminal View)"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to dark mode (Terminal View)" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
       </label>
     
   
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to light mode (Lab View)"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      <label class="md-header__button md-icon" title="Switch to light mode (Lab View)" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
       </label>
     
   
@@ -169,6 +176,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -187,14 +196,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
@@ -230,7 +233,7 @@
   
     
   
-  Lab 1 - Spectrum Monitoring
+  📡 Spectrum Monitoring (Lab 1)
 
       </a>
     </li>
@@ -251,7 +254,7 @@
           
   
   
-  Lab 2 - Noise Figure & Nonlinearity
+  📶 Noise & Nonlinearity (Lab 2)
 
         </a>
       </li>
@@ -271,7 +274,7 @@
   
     
   
-  Logbook
+  📖 Measurement Logbook
 
       </a>
     </li>
@@ -281,7 +284,13 @@
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -302,8 +311,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="SDR Laboratory" class="md-nav__button md-logo" aria-label="SDR Laboratory" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../../material/radio-tower" alt="logo">
 
     </a>
     SDR Laboratory
@@ -352,7 +360,7 @@
   <span class="md-ellipsis">
     
   
-    Lab 1 - Spectrum Monitoring
+    📡 Spectrum Monitoring (Lab 1)
   
 
     
@@ -382,6 +390,8 @@
         
       
       
+        
+      
     
     
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
@@ -398,7 +408,7 @@
   <span class="md-ellipsis">
     
   
-    Lab 2 - Noise Figure & Nonlinearity
+    📶 Noise & Nonlinearity (Lab 2)
   
 
     
@@ -414,7 +424,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Lab 2 - Noise Figure & Nonlinearity
+    📶 Noise & Nonlinearity (Lab 2)
   
 
           </label>
@@ -563,7 +573,7 @@
   <a href="#y-factor-simulation-results-lab02_simgrc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Y-Factor Simulation Results (\(lab02\_sim.grc\))
+        Y-Factor Simulation Results ($lab02_sim.grc$)
       
     </span>
   </a>
@@ -638,7 +648,7 @@
   <span class="md-ellipsis">
     
   
-    Logbook
+    📖 Measurement Logbook
   
 
     
@@ -754,7 +764,7 @@
   <a href="#y-factor-simulation-results-lab02_simgrc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Y-Factor Simulation Results (\(lab02\_sim.grc\))
+        Y-Factor Simulation Results ($lab02_sim.grc$)
       
     </span>
   </a>
@@ -810,6 +820,54 @@
           
             <div class="md-content" data-md-component="content">
               
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    📶 Noise & Nonlinearity (Lab 2)
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -822,39 +880,39 @@
 <h2 id="1-summary-of-theoretical-concepts">1. Summary of Theoretical Concepts</h2>
 <p>RF receiver architectures are bounded at lower signal levels by thermal and internal component noise, and at upper levels by non-linear gain saturation and intermodulation distortion.</p>
 <h3 id="noise-figure-nf-and-noise-temperature-te">Noise Figure (NF) and Noise Temperature (Te)</h3>
-<p>The Noise Factor (<span class="arithmatex">\(F\)</span>) and Noise Figure (<span class="arithmatex">\(NF\)</span>) measure the degradation of the Signal-to-Noise Ratio (<span class="arithmatex">\(SNR\)</span>) as a signal propagates through a receiver processing chain:</p>
-<div class="arithmatex">\[F = \frac{SNR_{\text{in}}}{SNR_{\text{out}}} = 1 + \frac{T_e}{T_0}, \quad NF = 10 \log_{10}(F)\]</div>
-<p>The input-referred noise floor (<span class="arithmatex">\(N_{\text{floor}}\)</span>) over bandwidth <span class="arithmatex">\(B\)</span> is expressed as:</p>
-<div class="arithmatex">\[N_{\text{floor}} = -174\text{ dBm/Hz} + NF + 10 \log_{10}(B)\]</div>
+<p>The Noise Factor ($F$) and Noise Figure ($NF$) measure the degradation of the Signal-to-Noise Ratio ($SNR$) as a signal propagates through a receiver processing chain:</p>
+<p>$$F = \frac{SNR_{\text{in}}}{SNR_{\text{out}}} = 1 + \frac{T_e}{T_0}, \quad NF = 10 \log_{10}(F)$$</p>
+<p>The input-referred noise floor ($N_{\text{floor}}$) over bandwidth $B$ is expressed as:</p>
+<p>$$N_{\text{floor}} = -174\text{ dBm/Hz} + NF + 10 \log_{10}(B)$$</p>
 <h3 id="y-factor-noise-measurement-method">Y-Factor Noise Measurement Method</h3>
-<p>The Y-Factor method utilizes a calibrated noise source operating in two states: OFF (<span class="arithmatex">\(T_c \approx T_0\)</span>) and ON (<span class="arithmatex">\(T_h \gg T_0\)</span>), defined by Excess Noise Ratio (<span class="arithmatex">\(ENR\)</span>):</p>
-<div class="arithmatex">\[ENR = \frac{T_h - T_0}{T_0}, \quad Y = \frac{T_h + T_e}{T_0 + T_e} \implies F = \frac{ENR - Y \left(\frac{T_c}{T_0} - 1\right)}{Y - 1}\]</div>
+<p>The Y-Factor method utilizes a calibrated noise source operating in two states: OFF ($T_c \approx T_0$) and ON ($T_h \gg T_0$), defined by Excess Noise Ratio ($ENR$):</p>
+<p>$$ENR = \frac{T_h - T_0}{T_0}, \quad Y = \frac{T_h + T_e}{T_0 + T_e} \implies F = \frac{ENR - Y \left(\frac{T_c}{T_0} - 1\right)}{Y - 1}$$</p>
 <h3 id="third-order-intercept-point-iip3-and-gain-compression-p1db">Third-Order Intercept Point (IIP3) and Gain Compression (P1dB)</h3>
-<p>Under two-tone excitation at <span class="arithmatex">\(f_1\)</span> and <span class="arithmatex">\(f_2\)</span>, 3rd-order non-linearities generate intermodulation products (IM3) at <span class="arithmatex">\(2f_1 - f_2\)</span> and <span class="arithmatex">\(2f_2 - f_1\)</span>.</p>
+<p>Under two-tone excitation at $f_1$ and $f_2$, 3rd-order non-linearities generate intermodulation products (IM3) at $2f_1 - f_2$ and $2f_2 - f_1$.</p>
 <hr />
 <h2 id="2-theoretical-analysis-highlights">2. Theoretical Analysis Highlights</h2>
 <ul>
-<li><strong>Frontend Filter Relocation (Question 1c):</strong> Relocating the <span class="arithmatex">\(3\text{ dB}\)</span> filter to the frontend alters Friis chain hierarchy (Stage 1 = Filter, Stage 2 = LNA, Stage 3 = Mixer/ADC), resulting in <span class="arithmatex">\(NF_{\text{new}} \approx 4.95\text{ dB}\)</span>.</li>
-<li><strong>General Y-Factor Relation (Question 2a):</strong> Exact derivation for <span class="arithmatex">\(T_c \neq T_0\)</span> yields <span class="arithmatex">\(F = \frac{ENR - Y (T_c/T_0 - 1)}{Y - 1}\)</span>.</li>
+<li><strong>Frontend Filter Relocation (Question 1c):</strong> Relocating the $3\text{ dB}$ filter to the frontend alters Friis chain hierarchy (Stage 1 = Filter, Stage 2 = LNA, Stage 3 = Mixer/ADC), resulting in $NF_{\text{new}} \approx 4.95\text{ dB}$.</li>
+<li><strong>General Y-Factor Relation (Question 2a):</strong> Exact derivation for $T_c \neq T_0$ yields $F = \frac{ENR - Y (T_c/T_0 - 1)}{Y - 1}$.</li>
 </ul>
 <hr />
 <h2 id="3-measurement-design-and-simulation-summary">3. Measurement Design and Simulation Summary</h2>
-<h3 id="y-factor-simulation-results-lab02_simgrc">Y-Factor Simulation Results (<span class="arithmatex">\(lab02\_sim.grc\)</span>)</h3>
+<h3 id="y-factor-simulation-results-lab02_simgrc">Y-Factor Simulation Results ($lab02_sim.grc$)</h3>
 <ul>
-<li><strong>At Receiver Gain = 40.0 dB (<span class="arithmatex">\(ENR = 15\text{ dB}\)</span>):</strong> <span class="arithmatex">\(N_{\text{off}} = -41.85\text{ dBFS}\)</span>, <span class="arithmatex">\(N_{\text{on}} = -32.78\text{ dBFS} \implies Y = 9.07\text{ dB} \implies \mathbf{NF \approx 6.50\text{ dB}}\)</span></li>
-<li><strong>At Receiver Gain = 10.0 dB (<span class="arithmatex">\(ENR = 15\text{ dB}\)</span>):</strong> <span class="arithmatex">\(N_{\text{off}} = -51.40\text{ dBFS}\)</span>, <span class="arithmatex">\(N_{\text{on}} = -51.10\text{ dBFS} \implies Y = 0.30\text{ dB} \implies \mathbf{NF \approx 26.46\text{ dB}}\)</span></li>
-<li><em>Design Note:</em> At low gain, <span class="arithmatex">\(Y = 0.30\text{ dB} &lt; 3\text{ dB}\)</span> amplifies readout error sensitivity, justifying the requirement for an <span class="arithmatex">\(ENR \approx 35\text{ dB}\)</span> source per Table 4 design.</li>
+<li><strong>At Receiver Gain = 40.0 dB ($ENR = 15\text{ dB}$):</strong> $N_{\text{off}} = -41.85\text{ dBFS}$, $N_{\text{on}} = -32.78\text{ dBFS} \implies Y = 9.07\text{ dB} \implies \mathbf{NF \approx 6.50\text{ dB}}$</li>
+<li><strong>At Receiver Gain = 10.0 dB ($ENR = 15\text{ dB}$):</strong> $N_{\text{off}} = -51.40\text{ dBFS}$, $N_{\text{on}} = -51.10\text{ dBFS} \implies Y = 0.30\text{ dB} \implies \mathbf{NF \approx 26.46\text{ dB}}$</li>
+<li><em>Design Note:</em> At low gain, $Y = 0.30\text{ dB} &lt; 3\text{ dB}$ amplifies readout error sensitivity, justifying the requirement for an $ENR \approx 35\text{ dB}$ source per Table 4 design.</li>
 </ul>
 <h3 id="linearity-and-intermodulation-results">Linearity and Intermodulation Results</h3>
 <ul>
-<li><strong>Single-Tone 1-dB Compression Point (<span class="arithmatex">\(G = 0.0\text{ dB}\)</span>):</strong> <span class="arithmatex">\(P_{1\text{dB, in}} \approx -23.3\text{ dBm}\)</span> (output reaches <span class="arithmatex">\(+0.24\text{ dBFS}\)</span>).</li>
-<li><strong>Two-Tone Intermodulation (<span class="arithmatex">\(G = 0.0\text{ dB}, P_{\text{in}} = -30\text{ dBm}\)</span>):</strong> Fundamental output = <span class="arithmatex">\(-10.00\text{ dBFS}\)</span>, IM3 products = <span class="arithmatex">\(-25.79\text{ dBFS} \implies \Delta = +15.79\text{ dB} \implies \mathbf{IIP_3 \approx -22.1\text{ dBm}}\)</span> (compared to theoretical <span class="arithmatex">\(P_{1\text{dB}} + 9.6 = -13.7\text{ dBm}\)</span>).</li>
+<li><strong>Single-Tone 1-dB Compression Point ($G = 0.0\text{ dB}$):</strong> $P_{1\text{dB, in}} \approx -23.3\text{ dBm}$ (output reaches $+0.24\text{ dBFS}$).</li>
+<li><strong>Two-Tone Intermodulation ($G = 0.0\text{ dB}, P_{\text{in}} = -30\text{ dBm}$):</strong> Fundamental output = $-10.00\text{ dBFS}$, IM3 products = $-25.79\text{ dBFS} \implies \Delta = +15.79\text{ dB} \implies \mathbf{IIP_3 \approx -22.1\text{ dBm}}$ (compared to theoretical $P_{1\text{dB}} + 9.6 = -13.7\text{ dBm}$).</li>
 </ul>
 <h3 id="antenna-frequency-response">Antenna Frequency Response</h3>
 <ul>
-<li><strong>Lower Cutoff (<span class="arithmatex">\(f_L\)</span>):</strong> <span class="arithmatex">\(800.0\text{ MHz}\)</span></li>
-<li><strong>Upper Cutoff (<span class="arithmatex">\(f_H\)</span>):</strong> <span class="arithmatex">\(1800.0\text{ MHz}\)</span></li>
-<li><strong>3-dB Bandwidth (<span class="arithmatex">\(BW\)</span>):</strong> <span class="arithmatex">\(1000.0\text{ MHz}\)</span></li>
+<li><strong>Lower Cutoff ($f_L$):</strong> $800.0\text{ MHz}$</li>
+<li><strong>Upper Cutoff ($f_H$):</strong> $1800.0\text{ MHz}$</li>
+<li><strong>3-dB Bandwidth ($BW$):</strong> $1000.0\text{ MHz}$</li>
 </ul>
 <hr />
 <h2 id="4-pre-lab-prediction-table-table-6">4. Pre-Lab Prediction Table (Table 6)</h2>
@@ -870,43 +928,43 @@
 <tbody>
 <tr>
 <td style="text-align: left;">1</td>
-<td style="text-align: left;"><span class="arithmatex">\(NF\)</span> at Max Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(7.0 - 9.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$NF$ at Max Gain</td>
+<td style="text-align: left;">$7.0 - 9.0\text{ dB}$</td>
 <td style="text-align: left;">Dominated by frontend LNA noise figure.</td>
 </tr>
 <tr>
 <td style="text-align: left;">2</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta NF\)</span> for <span class="arithmatex">\(-20\text{ dB}\)</span> Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(+4.0 \text{ to } +6.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$\Delta NF$ for $-20\text{ dB}$ Gain</td>
+<td style="text-align: left;">$+4.0 \text{ to } +6.0\text{ dB}$</td>
 <td style="text-align: left;">Lower gain amplifies ADC quantization noise contribution.</td>
 </tr>
 <tr>
 <td style="text-align: left;">3</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta P_{1\text{dB}}\)</span> for <span class="arithmatex">\(-10\text{ dB}\)</span> Gain</td>
-<td style="text-align: left;"><span class="arithmatex">\(+10.0\text{ dB}\)</span></td>
+<td style="text-align: left;">$\Delta P_{1\text{dB}}$ for $-10\text{ dB}$ Gain</td>
+<td style="text-align: left;">$+10.0\text{ dB}$</td>
 <td style="text-align: left;">Prevents pre-ADC saturation, shifting input limit upward.</td>
 </tr>
 <tr>
 <td style="text-align: left;">4</td>
-<td style="text-align: left;"><span class="arithmatex">\(Y\)</span>-Factor (<span class="arithmatex">\(NF=7\text{dB}, ENR=15\text{dB}\)</span>)</td>
-<td style="text-align: left;"><span class="arithmatex">\(8.64\text{ dB}\)</span></td>
-<td style="text-align: left;"><span class="arithmatex">\(Y = 1 + \frac{ENR}{F} = 1 + \frac{31.62}{5.01} = 7.31\)</span>.</td>
+<td style="text-align: left;">$Y$-Factor ($NF=7\text{dB}, ENR=15\text{dB}$)</td>
+<td style="text-align: left;">$8.64\text{ dB}$</td>
+<td style="text-align: left;">$Y = 1 + \frac{ENR}{F} = 1 + \frac{31.62}{5.01} = 7.31$.</td>
 </tr>
 <tr>
 <td style="text-align: left;">5</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta NF\)</span> with <span class="arithmatex">\(10\text{ dB}\)</span> Attenuator</td>
-<td style="text-align: left;"><span class="arithmatex">\(+10.0\text{ dB}\)</span></td>
-<td style="text-align: left;">Passive loss prior to amplification adds directly to <span class="arithmatex">\(NF\)</span>.</td>
+<td style="text-align: left;">$\Delta NF$ with $10\text{ dB}$ Attenuator</td>
+<td style="text-align: left;">$+10.0\text{ dB}$</td>
+<td style="text-align: left;">Passive loss prior to amplification adds directly to $NF$.</td>
 </tr>
 <tr>
 <td style="text-align: left;">6</td>
-<td style="text-align: left;"><span class="arithmatex">\(\Delta P_{\text{IM3}}\)</span> for <span class="arithmatex">\(+2\text{ dB}\)</span> Input Tone</td>
-<td style="text-align: left;"><span class="arithmatex">\(+6.0\text{ dB}\)</span></td>
-<td style="text-align: left;">IM3 products scale with a characteristic <span class="arithmatex">\(3\text{ dB/dB}\)</span> slope.</td>
+<td style="text-align: left;">$\Delta P_{\text{IM3}}$ for $+2\text{ dB}$ Input Tone</td>
+<td style="text-align: left;">$+6.0\text{ dB}$</td>
+<td style="text-align: left;">IM3 products scale with a characteristic $3\text{ dB/dB}$ slope.</td>
 </tr>
 <tr>
 <td style="text-align: left;">7</td>
-<td style="text-align: left;">Is <span class="arithmatex">\(IIP_3 - P_{1\text{dB}} \approx 9.6\text{ dB}\)</span>?</td>
+<td style="text-align: left;">Is $IIP_3 - P_{1\text{dB}} \approx 9.6\text{ dB}$?</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: left;">Hard ADC clipping violates 3rd-order polynomial assumptions.</td>
 </tr>
@@ -929,6 +987,8 @@
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -963,11 +1023,13 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
     
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.tracking", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.tracking", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

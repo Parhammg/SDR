@@ -1,0 +1,57 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- fonts
+%
+%  Persian text : Vazirmatn (SIL OFL), shipped in common/fonts/ so that the
+%                 project compiles identically on Overleaf / TeX Live /
+%                 MiKTeX without installing anything.
+%  Latin text   : TeX Gyre Termes (Times-like, as in the sample manual)
+%  Latin sans   : TeX Gyre Heros  (GNU Radio block names)
+%  Monospace    : Latin Modern Mono (LaTeX default; code and parameters)
+%
+%  [INSTRUCTOR] To use another Persian font (e.g. the faculty's own),
+%  change ONLY the \settextfont line of the first branch below.
+%======================================================================
+\makeatletter
+\newcommand{\sdr@fa@scale}{0.92}
+
+\IfFileExists{\SDRroot/common/fonts/Vazirmatn-Regular.ttf}{%
+  % ---- 1) bundled font files (preferred) ------------------------------
+  \settextfont[Path=\SDRroot/common/fonts/, Extension=.ttf,
+               UprightFont=*-Regular, BoldFont=*-Bold,
+               ItalicFont=*-Regular,  BoldItalicFont=*-Bold,
+               Scale=\sdr@fa@scale]{Vazirmatn}
+  \defpersianfont\SDRblackfont[Path=\SDRroot/common/fonts/, Extension=.ttf,
+               Mapping=parsidigits, Scale=\sdr@fa@scale]{Vazirmatn-Black}
+  \defpersianfont\SDRmediumfont[Path=\SDRroot/common/fonts/, Extension=.ttf,
+               Mapping=parsidigits, Scale=\sdr@fa@scale]{Vazirmatn-Medium}
+}{%
+  % ---- 2) system-installed fonts, in order of preference ----------------
+  \PackageWarningNoLine{sdrlab}{Bundled Vazirmatn fonts not found in
+     common/fonts/ -- falling back to a system font}
+  \IfFontExistsTF{Vazirmatn}{%
+     \settextfont[Scale=\sdr@fa@scale]{Vazirmatn}%
+  }{\IfFontExistsTF{XB Niloofar}{%
+     \settextfont[Scale=1.0]{XB Niloofar}%
+  }{\IfFontExistsTF{Yas}{%
+     \settextfont[Scale=1.0]{Yas}%
+  }{\IfFontExistsTF{FreeSerif}{%
+     \settextfont[Scale=1.0]{FreeSerif}%
+  }{%
+     \PackageError{sdrlab}{No Persian font found}{Copy the Vazirmatn
+       *.ttf files into common/fonts/ or install a Persian font.}%
+  }}}}
+  \let\SDRblackfont\bfseries
+  \let\SDRmediumfont\relax
+}
+
+% ---- Latin companions (all part of TeX Live / MiKTeX / Overleaf) --------
+\IfFontExistsTF{texgyretermes-regular.otf}{%
+  \setlatintextfont[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+     ItalicFont=*-italic, BoldItalicFont=*-bolditalic]{texgyretermes}
+}{}
+\IfFontExistsTF{texgyreheros-regular.otf}{%
+  \setlatinsansfont[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+     ItalicFont=*-italic, BoldItalicFont=*-bolditalic, Scale=0.88]{texgyreheros}
+}{}
+\makeatother
