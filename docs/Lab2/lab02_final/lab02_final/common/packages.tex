@@ -1,0 +1,55 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- packages (engine: XeLaTeX, Persian typesetting: xepersian)
+%  NOTE: xepersian MUST stay the last package loaded.
+%======================================================================
+\PassOptionsToPackage{table}{xcolor}
+
+% --- mathematics -------------------------------------------------------
+\usepackage{amsmath,amssymb}
+
+% --- page geometry, graphics, colour -------------------------------------
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% --- tables --------------------------------------------------------------
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+% --- floats, captions, lists, columns -------------------------------------
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{needspace}
+
+% --- headings, headers and footers ----------------------------------------
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% --- drawings --------------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,
+                shapes.geometric,shapes.misc,decorations.pathmorphing,
+                decorations.pathreplacing,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+% --- boxes and code listings ------------------------------------------------
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+
+% --- hyperlinks / PDF bookmarks (must precede xepersian) ---------------------
+\usepackage[hidelinks,bookmarksnumbered=false]{hyperref}
+
+% --- Persian typesetting (ALWAYS LAST) ---------------------------------------
+%  mathdigits=default : digits inside math stay Latin (as typed in GNU Radio),
+%                       digits in Persian running text are Persian.
+%  localise=on         : enables the Persian command names used in the LaTeX
+%                       template (\قسمت, \زیرقسمت, \شروع{...}, \پایان{...}, ...).
+\usepackage[mathdigits=default,localise=on]{xepersian}

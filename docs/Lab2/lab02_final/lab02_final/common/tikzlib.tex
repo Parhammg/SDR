@@ -1,0 +1,164 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- colours, icons and TikZ styles (shared by all experiments)
+%======================================================================
+\makeatletter
+
+%----------------------------------------------------------------------
+% 1) Colour palette (sampled from the reference lab-manual PDF)
+%----------------------------------------------------------------------
+\definecolor{sdrDark}{HTML}{1A4A5D}    % bands, header box, footer rule
+\definecolor{sdrMid}{HTML}{276F8B}     % wedges, icon badges
+\definecolor{sdrLight}{HTML}{D4EAF3}   % light band, figure panels
+\definecolor{sdrHead}{HTML}{265F65}    % section titles
+\definecolor{sdrTeal}{HTML}{0295AA}    % subsection / lab-part titles
+\definecolor{sdrSky}{HTML}{4F9BBF}     % sub-subsection titles
+\definecolor{sdrBlue}{HTML}{00B0F0}    % diagram blocks
+\definecolor{sdrAmber}{HTML}{FFC000}   % highlighted diagram blocks
+\definecolor{sdrRed}{HTML}{C0392B}     % safety
+\definecolor{sdrOrange}{HTML}{D9822B}  % caution / float streams
+\definecolor{sdrGreen}{HTML}{2E8B57}   % expected observation
+\definecolor{sdrPurple}{HTML}{6A4C93}  % record / raw data
+\definecolor{sdrGray}{HTML}{5F6B73}    % secondary text
+\definecolor{sdrPaper}{HTML}{F4F9FB}   % table stripes, code background
+% GRC stream colours (same convention as GNU Radio Companion ports)
+\definecolor{grcComplex}{HTML}{1F77D0} % complex stream  (blue in GRC)
+\definecolor{grcFloat}{HTML}{F28E2B}   % float stream    (orange in GRC)
+\definecolor{grcMsg}{HTML}{8A8A8A}     % message ports   (grey in GRC)
+
+%----------------------------------------------------------------------
+% 2) Icon set  --  \SDRicon[<size in cm>]{<name>}
+%    Every icon is line art in the unit square [-.5,.5]^2 on a rounded
+%    badge.  The badge colour is \SDRiconcolor (default sdrMid).
+%----------------------------------------------------------------------
+\newcommand{\SDRiconcolor}{sdrMid}
+\newcommand{\sdr@deficon}[2]{\@namedef{sdr@icon@#1}{#2}}
+
+\sdr@deficon{target}{%
+  \draw (0,0) circle (.33); \draw (0,0) circle (.19); \fill (0,0) circle (.07);}
+\sdr@deficon{tools}{%
+  \foreach \a in {0,45,...,315} {\draw[line cap=butt,line width=2.2\pgflinewidth] (\a:.23)--(\a:.36);}
+  \draw (0,0) circle (.23); \fill (0,0) circle (.08);}
+\sdr@deficon{book}{%
+  \draw (0,.22) .. controls (-.12,.33) and (-.26,.33) .. (-.37,.26) -- (-.37,-.24)
+        .. controls (-.26,-.17) and (-.12,-.17) .. (0,-.28)
+        .. controls (.12,-.17) and (.26,-.17) .. (.37,-.24) -- (.37,.26)
+        .. controls (.26,.33) and (.12,.33) .. (0,.22) -- (0,-.28);}
+\sdr@deficon{warn}{%
+  \draw (90:.37)--(210:.37)--(330:.37)--cycle;
+  \draw (0,.12)--(0,-.03); \fill (0,-.115) circle (.038);}
+\sdr@deficon{antenna}{%
+  \draw (0,-.36)--(0,.04); \draw (-.17,-.36)--(0,.04)--(.17,-.36);
+  \fill (0,.09) circle (.055);
+  \draw (.15,-.03) arc (-45:45:.17); \draw (.27,-.11) arc (-45:45:.28);
+  \draw (-.15,-.03) arc (225:135:.17); \draw (-.27,-.11) arc (225:135:.28);}
+\sdr@deficon{flow}{%
+  \draw (-.4,.07) rectangle (-.13,.31); \draw (.13,.07) rectangle (.4,.31);
+  \draw (-.135,-.33) rectangle (.135,-.09);
+  \draw (-.13,.19)--(.13,.19); \draw (.265,.07)--(.265,-.21)--(.135,-.21);}
+\sdr@deficon{steps}{%
+  \draw (-.27,-.37) rectangle (.27,.29); \fill (-.11,.24) rectangle (.11,.38);
+  \draw (-.13,-.07)--(-.04,-.17)--(.14,.07);}
+\sdr@deficon{spectrum}{%
+  \draw (-.37,.34)--(-.37,-.32)--(.38,-.32);
+  \draw (-.31,-.22)--(-.2,-.2)--(-.12,.2)--(-.04,-.19)--(.08,-.21)--(.16,.04)--(.24,-.2)--(.34,-.22);}
+\sdr@deficon{question}{%
+  \draw (0,0) circle (.35);
+  \draw (-.11,.1) .. controls (-.11,.26) and (.13,.26) .. (.12,.09)
+        .. controls (.11,-.01) and (0,-.01) .. (0,-.1);
+  \fill (0,-.2) circle (.038);}
+\sdr@deficon{wrench}{%
+  \draw[line width=2.4\pgflinewidth] (-.3,-.3)--(.06,.06);
+  \draw (.31,.12) arc (-20:250:.17);}
+\sdr@deficon{magnifier}{%
+  \draw (-.06,.06) circle (.24); \draw[line width=2.2\pgflinewidth] (.13,-.13)--(.34,-.34);}
+\sdr@deficon{pencil}{%
+  \draw (-.33,-.33)--(-.26,-.12)--(.2,.34)--(.34,.2)--(-.12,-.26)--cycle;
+  \draw (-.26,-.12)--(-.12,-.26); \draw (.1,.24)--(.24,.1);}
+\sdr@deficon{check}{%
+  \draw (-.33,-.33) rectangle (.33,.33); \draw (-.18,0)--(-.05,-.15)--(.2,.17);}
+\sdr@deficon{clock}{%
+  \draw (0,0) circle (.35); \draw (0,.2)--(0,0)--(.15,-.09);}
+\sdr@deficon{record}{%
+  \draw (0,0) circle (.35); \fill (0,0) circle (.15);}
+\sdr@deficon{eye}{%
+  \draw (-.39,0) .. controls (-.2,.3) and (.2,.3) .. (.39,0)
+        .. controls (.2,-.3) and (-.2,-.3) .. cycle; \fill (0,0) circle (.11);}
+\sdr@deficon{info}{%
+  \draw (0,0) circle (.35); \draw (0,.02)--(0,-.2); \fill (0,.17) circle (.04);}
+\sdr@deficon{bulb}{%
+  \draw (-.1,-.14) .. controls (-.38,.1) and (-.2,.4) .. (0,.4)
+        .. controls (.2,.4) and (.38,.1) .. (.1,-.14) -- cycle;
+  \draw (-.09,-.24)--(.09,-.24); \draw (-.06,-.33)--(.06,-.33);}
+\sdr@deficon{table}{%
+  \draw (-.36,-.3) rectangle (.36,.3); \draw (-.36,.1)--(.36,.1);
+  \draw (-.36,-.1)--(.36,-.1); \draw (-.1,-.3)--(-.1,.3);}
+\sdr@deficon{flask}{%
+  \draw (-.1,.36)--(.1,.36); \draw (-.07,.36)--(-.07,.1)--(-.3,-.3)--(.3,-.3)--(.07,.1)--(.07,.36);
+  \draw (-.2,-.13)--(.2,-.13);}
+\sdr@deficon{list}{%
+  \fill (-.3,.22) circle (.045); \draw (-.16,.22)--(.33,.22);
+  \fill (-.3,0) circle (.045);   \draw (-.16,0)--(.33,0);
+  \fill (-.3,-.22) circle (.045);\draw (-.16,-.22)--(.33,-.22);}
+\sdr@deficon{dot}{\fill (0,0) circle (.14);}
+
+\NewDocumentCommand{\SDRicon}{O{0.60} m}{%
+  \begingroup\beginL
+  \begin{tikzpicture}[x=#1cm,y=#1cm,baseline={(0,-0.25)}]
+    \fill[\SDRiconcolor,rounded corners=#1*0.16cm] (-.5,-.5) rectangle (.5,.5);
+    \begin{scope}[white,line width=#1*1.75pt,line cap=round,line join=round]
+      \@ifundefined{sdr@icon@#2}{\@nameuse{sdr@icon@dot}}{\@nameuse{sdr@icon@#2}}
+    \end{scope}
+  \end{tikzpicture}\endL\endgroup}
+
+%----------------------------------------------------------------------
+% 3) Helpers for text inside TikZ pictures
+%    bidi typesets TikZ pictures left-to-right.  Therefore:
+%      * Latin node text  -> type it directly
+%      * Persian node text -> wrap it in \fa{...}
+%----------------------------------------------------------------------
+\newcommand{\fa}[1]{\rl{#1}}
+% Without this, bidi inserts a right-to-left mark between "." or "-" and a
+% following digit inside nodes, so that "2.048" would be shown as "048.2".
+% Latin text in pictures is set in the Latin sans font with Latin digits.
+\tikzset{every picture/.append style={execute at begin picture={\@nonlatinfalse\sffamily}}}
+
+%----------------------------------------------------------------------
+% 4) Styles for block diagrams and GNU Radio flowgraph schematics
+%----------------------------------------------------------------------
+\tikzset{
+  >={Stealth[length=5.5pt,width=4.5pt]},
+  % --- generic system blocks (hardware / signal chain) ---
+  sdrblk/.style={draw=sdrDark,fill=sdrBlue!22,rounded corners=3pt,
+     line width=0.6pt,minimum height=0.9cm,minimum width=1.5cm,
+     inner sep=4pt,align=center,font=\footnotesize\bfseries},
+  sdrblkhl/.style={sdrblk,fill=sdrAmber!55},
+  sdrblkhw/.style={sdrblk,fill=sdrGray!18},
+  sdrblkpc/.style={sdrblk,fill=sdrGreen!18},
+  sdrpanel/.style={fill=sdrLight,rounded corners=6pt,inner sep=8pt},
+  sdrpaneltitle/.style={font=\footnotesize\bfseries,text=sdrDark},
+  sdrarr/.style={->,line width=0.9pt,draw=sdrDark},
+  sdrnote/.style={font=\scriptsize,text=sdrGray,align=center},
+  % --- GNU Radio Companion style blocks ---
+  grc/.style={draw=sdrDark!80,fill=white,rounded corners=2pt,line width=0.6pt,
+     inner xsep=5pt,inner ysep=4pt,align=left,font=\sffamily\scriptsize,
+     text=black},
+  grcsrc/.style={grc,fill=sdrBlue!14},
+  grcsink/.style={grc,fill=sdrAmber!28},
+  grcfile/.style={grc,fill=sdrPurple!14},
+  grcvar/.style={grc,fill=sdrGray!10,dashed},
+  cplx/.style={->,line width=1.1pt,draw=grcComplex},
+  flt/.style={->,line width=1.1pt,draw=grcFloat},
+  msg/.style={->,line width=0.8pt,draw=grcMsg,dashed},
+  % --- spectrum sketches ---
+  specaxis/.style={->,line width=0.7pt,draw=sdrDark},
+  spectrace/.style={line width=0.9pt,draw=grcComplex,line join=round},
+  spechold/.style={line width=0.9pt,draw=sdrOrange,line join=round},
+  specgrid/.style={line width=0.3pt,draw=sdrGray!35},
+  dimline/.style={<->,line width=0.6pt,draw=sdrRed},
+}
+% Title / parameter lines inside a GRC-style block
+\newcommand{\grcname}[1]{\textbf{#1}}
+\newcommand{\grcp}[2]{{\color{sdrGray}#1:} \texttt{#2}}
+
+\makeatother

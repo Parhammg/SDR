@@ -1,0 +1,714 @@
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- Experiment 8: Noise figure, P1dB and IIP3 -- LAB MANUAL
+%  File : labs/lab_08_nf.tex                 (XeLaTeX, compile twice)
+%
+%  [INSTRUCTOR] QUICK FACTS
+%   * One 3-hour session.
+%   * Receiver under test: ADALM-PLUTO, at several gain settings.
+%   * The team's ADALM-PLUTO is also used as the RF signal/noise source.
+%   * A fixed 30 dB attenuator is mandatory between the transmitter and RX.
+%   * Source levels and ENR are estimated from the Pluto output model;
+%     absolute accuracy depends on the accuracy of P_max calibration.
+%   * Reference flowgraphs: lab08_meas.grc and lab02_combined.grc.
+%======================================================================
+\documentclass[a4paper,11pt]{article}
+\IfFileExists{../common/preamble.tex}{\def\SDRroot{..}}{\def\SDRroot{.}}
+\def\SDRdoctype{lab}
+\def\SDRexpnum{2}
+\def\SDRexptitle{عدد نویز و پارامترهای \lr{RF}}
+\def\SDRexptitleEN{Noise Figure, P1dB and IIP3}
+\input{\SDRroot/common/preamble}
+
+% banner artwork: two tones with third-order products above a noise floor
+\renewcommand{\SDRbannerart}{%
+  \draw[sdrLight!60,line width=0.5pt] (0.25,0.3)--(3.95,0.3);
+  \draw[sdrLight!80,line width=0.6pt,decorate,decoration={random steps,segment length=2pt,amplitude=1.2pt}] (0.25,0.5)--(3.95,0.5);
+  \foreach \x/\h in {1.65/1.85,2.5/1.85} {\draw[white,line width=2.2pt] (\x,0.3)--(\x,\h);}
+  \foreach \x/\h in {0.8/0.95,3.35/0.95} {\draw[sdrAmber,line width=2.2pt] (\x,0.3)--(\x,\h);}}
+
+\begin{document}
+\SDRbanner
+
+\begin{infostrip}
+\begin{tabularx}{\linewidth}{@{}r@{\hspace{1em}}X@{}}
+\textbf{مدت جلسه} & سه ساعت:  ۱۵ دقیقه توضیح و ایمنی، ۹۰ دقیقه بخش‌های ۱ تا ۴، ۳۰ دقیقه پرسش شفاهی و تحویل \\
+\textbf{شرط ورود} & بارگذاری گزارش پیش‌از‌جلسه  \\
+\textbf{خروجی جلسه} &
+جدول‌های کامل‌شده، تصاویر اندازه‌گیری،
+لاگ‌بوک، چک‌لیست راه‌اندازی امضاشده و برگهٔ تسویهٔ تجهیزات \\
+\textbf{دستگاه تحت آزمون} & گیرندهٔ
+\lr{ADALM-PLUTO}
+تیم، در چند تنظیم بهره
+\end{tabularx}
+\end{infostrip}
+
+%======================================================================
+\isection{target}{اهداف آزمایش}
+%======================================================================
+تا پایان جلسه باید:
+
+\begin{objectives}
+\item عدد نویز گیرنده را به روش
+\lr{Y-Factor}
+در چند فرکانس و چند تنظیم بهره اندازه گرفته باشید؛
+\item $P_{\mathrm{1dB}}$
+ورودی را با جاروب سطح توان تک‌تن اندازه گرفته و منحنی خروجی بر حسب ورودی را رسم کرده باشید؛
+\item آزمایش دوتنی را انجام داده و
+$\mathrm{IIP3}$
+را استخراج کرده باشید؛
+\end{objectives}
+
+%======================================================================
+\isection{tools}{تجهیزات و نرم‌افزار مورد نیاز}
+%======================================================================
+
+\begin{notebox}[ساختن سیگنال آزمون با فرستندهٔ \lr{ADALM-PLUTO}]
+در این آزمایش، فرستندهٔ
+\lr{ADALM-PLUTO}
+با فلوگراف
+\code{lab02_combined}
+نویز گوسی، سیگنال تک‌تن یا دوتن تولید می‌کند و از طریق یک تضعیف‌گر ثابت
+\q{30}{dB}
+به درگاه RX گیرنده متصل می‌شود. وجود این تضعیف‌گر بین فرستنده و گیرنده الزامی است؛
+به درگاه فرستنده آنتن وصل نکنید.
+پیش از فعال‌کردن فرستنده، پارامتر
+\code{tx_atten}
+را در بازهٔ \q{44}{dB} تا \q{89.75}{dB} انتخاب و به‌گونه‌ای تنظیم کنید که توان ورودی درگاه RX از
+$-10\,\mathrm{dBm}$
+بیشتر نشود.
+توان سیگنال و
+$\mathrm{ENR}$
+در این روش از توان اسمی فرستنده برآورد می‌شوند و مرجع کالیبره محسوب نمی‌شوند.
+\end{notebox}
+
+%======================================================================
+\isection{warn}{ایمنی و مقررات این آزمایش}
+%======================================================================
+\begin{safetybox}[سطح ورودی گیرنده (آیین‌نامه، بندهای \bnd{۸-۱} و \bnd{۸-۲})]
+\begin{itemize}
+\item توان ورودی درگاه RX هرگز از \q{-10}{dBm} بیشتر نشود. در آزمایش دوتنی، مجموع توان دو تن را حساب کنید.
+\item تضعیف‌گر ثابت \q{30}{dB} میان خروجی فرستندهٔ ADALM-PLUTO و درگاه RX الزامی است؛ به خروجی فرستنده آنتن وصل نکنید.
+\item اتصال‌ها را با دست و بدون فشار ببندید؛ پیش از دست‌زدن به اتصال ورودی گیرنده بدنهٔ دستگاه را لمس کنید.
+\end{itemize}
+\end{safetybox}
+
+\noindent
+
+%======================================================================
+\isection{clock}{نقشهٔ زمانی جلسه}
+%======================================================================
+\begin{table}[H]
+	\centering\small
+	\caption{زمان‌بندی جلسه (مطابق الگوی آیین‌نامه)}
+	\label{tab:timeline8}
+	\begin{tabularx}{\linewidth}{|c|X|c|}
+		\hline
+		\hdrrow \hdr{دقیقه} & \hdr{فعالیت} & \hdr{بخش دستور کار} \\ \hline
+		۰ تا ۱۵ & اراپه پیش گزارش& — \\ \hline
+		۱۵ تا ۳۰ & توضیح مدرس، مرور ایمنی & ایمنی \\ \hline
+		۳۰ تا ۴۵ & اندازه گیری نویز دستگاه& بخش \ref{part:cal} \\ \hline
+		۴۵ تا ۸۰ & عدد نویز به روش \lr{Y-Factor} در چند فرکانس و چند بهره & بخش \ref{part:nf} \\ \hline
+		۸۰ تا ۱۰۰ & جاروب تک‌تن و $P_{\mathrm{1dB}}$ ورودی & بخش \ref{part:p1db} \\ \hline
+		۱۰۰ تا ۱۲۰ & آزمایش دوتنی و $\mathrm{IIP3}$ & بخش \ref{part:ip3} \\ \hline
+		۱۵۰ تا ۱۸۰ & پرسش شفاهی، جمع‌بندی، تکمیل لاگ‌بوک، تحویل تجهیزات & چک‌لیست پایان \\ \hline
+	\end{tabularx}
+\end{table}
+\noindent
+
+%======================================================================
+\isection{book}{مرور کوتاه تئوری}
+%======================================================================
+\begin{equation}
+	\begin{gathered}
+	\mathrm{NF} = \mathrm{ENR_{dB}} - 10\log_{10}\!\big(10^{Y_{\mathrm{dB}}/10} - 1\big), \qquad Y_{\mathrm{dB}} = N_{\mathrm{on}} - N_{\mathrm{off}}, \qquad \mathrm{ENR_{eff}} = \mathrm{ENR} - A \\[1mm]
+	\mathrm{IIP3} = P_{\mathrm{in}} + \frac{\Delta}{2}, \qquad
+	N_{\mathrm{floor}} = -174 + \mathrm{NF} + 10\log_{10}B, \qquad
+	\mathrm{SFDR} = \frac{2}{3}\big(\mathrm{IIP3} - N_{\mathrm{floor}}\big)
+	\end{gathered}
+	\label{eq:recap8}
+\end{equation}
+که
+$N_{\mathrm{on}}$
+و
+$N_{\mathrm{off}}$
+توان نویز خوانده‌شده (بر حسب
+\dBFS)
+با فرستنده در حالت تولید نویز خاموش و روشن،
+$A$
+تضعیف میان نویز فرستنده و گیرنده،
+$P_{\mathrm{in}}$
+توان هر تن در ورودی گیرنده و
+$\Delta$
+فاصلهٔ تن تا محصول مرتبهٔ سوم بر حسب دسی‌بل است.
+
+%======================================================================
+\isection{flow}{معماری سیستم و فلوگراف‌ها}
+%======================================================================
+شکل
+\ref{fig:setup8}
+چیدمان آزمایش را نشان می‌دهد؛ فرستنده و گیرنده هر دو از نوع ADALM-PLUTO هستند.
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[node distance=0.8cm]
+		\node[sdrblkhl,minimum width=2.5cm] (pl) at (0,0)
+			{ADALM-PLUTO\\ \code{lab02_combined}};
+
+		\node[sdrblkhw,minimum width=2.5cm,minimum height=1.3cm,
+			right=1.2cm of pl] (rx)
+			{ADALM-PLUTO\\ \fa{(گیرندهٔ تحت آزمون)}};
+
+		\node[sdrblkpc,minimum width=2.4cm,right=0.8cm of rx] (pc)
+			{\fa{رایانه}\\ \code{lab02_combined}};
+
+		\draw[sdrarr] (pl.east) -- (rx.west);
+
+		\draw[cplx] (rx.east) --
+			node[above,font=\scriptsize,text=black]{USB}
+			(pc.west);
+	\end{tikzpicture}
+	\caption{اتصال فرستندهٔ ADALM-PLUTO به درگاه RX دستگاه ADALM-PLUTO تحت آزمون}
+	\label{fig:setup8}
+\end{figure}
+
+\زیرقسمت{فلوگراف اندازه‌گیری: \lr{lab02\_combined}}
+خروجی گیرنده به پنج «نوارسنج» می‌رود: یک نوار پهنِ بدون سیگنال برای نویز و چهار نوار باریک برای دو تن و دو محصول مرتبهٔ سوم (شکل
+\ref{fig:fg-meas})
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		% RX chain
+		\node[grcsrc,anchor=west] (rx) at (0,0) {\grcname{PlutoSDR}\\ \grcname{Source}\\ \grcp{Gain}{rf\_gain}};
+		\node[grc,anchor=west] (ro) at (3.1,0) {\grcname{Rotator}\\ \grcp{shift}{f\_corr}};
+		\node[grc,anchor=west] (nb) at (6.1,1.5) {\grcname{Freq. Xlating FIR}\\ \grcp{Center}{f\_noise}\\ \grcp{BW}{400 kHz}};
+		\node[grc,anchor=west] (tb) at (6.1,0) {\grcname{Freq. Xlating FIR} $\times 4$\\ $f_1,\ f_2,\ 2f_1{-}f_2,\ 2f_2{-}f_1$\\ \grcp{BW}{10 kHz}};
+		\node[grcsink,anchor=west] (n1) at (10.9,1.5) {\grcname{RMS} $\to$ \grcname{Log10}\\ noise power (dBFS)};
+		\node[grcsink,anchor=west] (n2) at (10.9,0) {\grcname{RMS} $\to$ \grcname{Log10}\\ four tone meters (dBFS)};
+
+		% TX chain
+		\node[grcsink,anchor=west] (s1) at (0,-3.0) {\grcname{Signal Source}\\ \grcp{freq}{f\_1}\\ \grcp{amp}{a\_tone}};
+		\node[grcsink,anchor=west] (s2) at (0,-4.5) {\grcname{Signal Source}\\ \grcp{freq}{f\_2}\\ \grcp{amp}{a\_tone}};
+		\node[grcsink,anchor=west] (ns) at (0,-6.0) {\grcname{Noise Source}\\ \grcp{amp}{a\_noise}};
+		\node[grc,anchor=west] (add1) at (3.6,-3.75) {\grcname{Add}};
+		\node[grc,anchor=west] (add2) at (6.3,-4.8) {\grcname{Add}};
+		\node[grcsrc,anchor=west] (tx) at (9.0,-4.8) {\grcname{PlutoSDR}\\ \grcname{Sink}\\ \grcp{Attenuation}{tx\_atten}};
+
+		% RX connections
+		\draw[cplx] (rx)--(ro);
+		\draw[cplx] (ro.east) -- ++(0.3,0) |- (nb.west);
+		\draw[cplx] (ro.east)--(tb.west);
+		\draw[cplx] (nb)--(n1);
+		\draw[cplx] (tb)--(n2);
+
+		% TX connections
+		\draw[cplx] (s1.east) -- ++(0.3,0) |- (add1.west);
+		\draw[cplx] (s2.east) -- ++(0.3,0) |- (add1.west);
+		\draw[cplx] (add1.east) -- ++(0.3,0) |- (add2.west);
+		\draw[cplx] (ns.east) -- ++(0.3,0) |- (add2.west);
+		\draw[cplx] (add2) -- (tx);
+	\end{tikzpicture}
+	\caption{طرح‌وارهٔ فلوگراف \lr{lab02\_combined} (رسم‌شده؛ تصویر واقعی \GRC{} نیست)}
+	\label{fig:fg-meas}
+\end{figure}
+
+\زیرقسمت{منبع سیگنال و نویز: \lr{lab02\_combined}}
+
+سطح‌های حاصل در ورودی گیرنده (این دو عبارت را در دو
+\blk{QT GUI Label}
+نیز نمایش داده شده اند.):
+\begin{equation}
+	\begin{gathered}
+	P_{\mathrm{tone}} = P_{\max} - A_{\mathrm{tx}} + 20\log_{10}(a_{\mathrm{tone}}) - A_{\mathrm{pad}} \\[1mm]
+	\mathrm{ENR_{dB}} = P_{\max} - A_{\mathrm{tx}} + 20\log_{10}(a_{\mathrm{noise}}) - 10\log_{10}(\fs) - A_{\mathrm{pad}} + 174
+	\end{gathered}
+	\label{eq:srclevels}
+\end{equation}
+با مقادیر پیش‌فرض:
+$P_{\mathrm{tone}} = -35.5 - A_{\mathrm{tx}}$
+دسی‌بل‌میلی‌وات برای هر تن و
+$\mathrm{ENR} = 73.4 - A_{\mathrm{tx}}$
+دسی‌بل؛ مثلاً
+\pv{tx\_atten}{58.5}
+یعنی
+$\mathrm{ENR} \approx 15\un{dB}$.
+
+\begin{table}[H]
+	\centering\small
+	\caption{تعریف پارامترهای رابطهٔ (۲)}
+	\label{tab:src-params}
+	\begin{tabularx}{\linewidth}{|c|X|c|}
+		\hline
+		\hdrrow \hdr{پارامتر} & \hdr{مفهوم} & \hdr{واحد} \\ \hline
+		$P_{\max}$ & توان خروجی اسمی فرستنده در دامنهٔ دیجیتال کامل (\lr{Full Scale}) & \lr{dBm} \\ \hline
+		$A_{\mathrm{tx}}$ & میزان تضعیف اعمال‌شده به فرستندهٔ \lr{Pluto} & \lr{dB} \\ \hline
+		$a_{\mathrm{tone}}$ & دامنهٔ دیجیتال سیگنال سینوسی تولیدشده & بدون واحد \\ \hline
+		$a_{\mathrm{noise}}$ & دامنهٔ دیجیتال نویز گوسی تولیدشده & بدون واحد \\ \hline
+		$f_s$ & نرخ نمونه‌برداری سیگنال & \lr{Hz} \\ \hline
+		$A_{\mathrm{pad}}$ & تضعیف مسیر خارجی، شامل تلفات کابل & \lr{dB} \\ \hline
+		$P_{\mathrm{tone}}$ & توان تخمینی هر تن در ورودی گیرنده & \lr{dBm} \\ \hline
+		$\mathrm{ENR}_{\mathrm{dB}}$ & نسبت نویز اضافی مؤثر در ورودی گیرنده & \lr{dB} \\ \hline
+	\end{tabularx}
+\end{table}
+
+%======================================================================
+\clearpage
+\isection{steps}{شرح آزمایش}
+%======================================================================
+
+\labpart[۱۵ دقیقه]{اندازه‌گیری نویز دستگاه}\label{part:cal}
+\begin{steps}
+\item درگاه RX گیرنده را بدون اتصال باز بگذارید.
+فلوگراف
+\code{lab02_combined.grc}
+را با
+\pv{rf\_gain}{40.2}
+اجرا کنید و مقدار «توان نویز» را برحسب
+$\mathrm{dBFS}$
+بخوانید. این مقدار را با
+$N_{\mathrm{off}}$
+نشان دهید. مطمئن شوید طیف نویز فاقد قله یا خط طیفی ثابت
+ناشی از تداخل یا سیگنال ناخواسته است.
+ 
+\item \textbf{آشنایی با مقیاس \lr{dBFS} و ضریب تبدیل کالیبره‌شده}
+
+در گیرنده‌های دیجیتال \lr{SDR}، سطح سیگنال معمولاً برحسب مقیاس زیر نمایش داده می‌شود:
+\[dBFS\]
+این مقیاس، سطح سیگنال دیجیتال را نسبت به حداکثر دامنه قابل نمایش توسط مبدل آنالوگ به دیجیتال بیان می‌کند:
+\lr{Decibels\ relative\ to\ Full\ Scale}. در این مقیاس، مقدار \(0\,\mathrm{dBFS}\) نشان‌دهنده سطح متناظر با دامنه تمام‌مقیاس است:
+
+\lr{Full\ Scale}
+و مقادیر منفی، سطوح پایین‌تر از این مقدار را نشان می‌دهند. بنابراین، برخلاف واحد \(\mathrm{dBm}\)، مقیاس \(\mathrm{dBFS}\) به‌تنهایی بیانگر توان مطلق سیگنال نیست و برای تبدیل آن به واحدهای توان مطلق، به کالیبراسیون گیرنده نیاز است.
+
+برای برقراری ارتباط بین سطح دیجیتال اندازه‌گیری‌شده برحسب \(\mathrm{dBFS}\) و توان متناظر آن در ورودی گیرنده برحسب \(\mathrm{dBm}\)، از ضریب تبدیل کالیبره‌شده \(G_{\mathrm{FS}}\) استفاده می‌شود. این ضریب، اختلاف سطح مرجع تمام‌مقیاس دیجیتال با توان متناظر آن در ورودی گیرنده را مشخص می‌کند. به عبارت دیگر، \(G_{\mathrm{FS}}\) یک مقدار تجربی است که با انجام کالیبراسیون در تنظیم بهره مشخص گیرنده به دست می‌آید و امکان تبدیل مقادیر اندازه‌گیری‌شده در حوزه دیجیتال به مقادیر توان مطلق را فراهم می‌کند.
+
+در این آزمایش، با توجه به کالیبراسیون انجام‌شده و تنظیم بهره انتخاب‌شده برای گیرنده، مقدار ضریب تبدیل برابر با رابطه زیر در نظر گرفته می‌شود:
+
+\[
+G_{\mathrm{FS}}=20\,\mathrm{dB}
+\]
+
+بنابراین، رابطه تبدیل سطح دیجیتال به توان متناظر در ورودی گیرنده به‌صورت زیر خواهد بود:
+
+\[
+P_{\mathrm{in}}[\mathrm{dBm}]
+=
+P_{\mathrm{digital}}[\mathrm{dBFS}]
+-
+G_{\mathrm{FS}}.
+\]
+
+در نتیجه، در این تنظیم کالیبراسیون، سطح \(0\,\mathrm{dBFS}\) معادل توان \(-20\,\mathrm{dBm}\) در ورودی گیرنده است. لازم است توجه شود که این مقدار یک ویژگی ثابت برای تمام گیرنده‌ها نیست و با تغییر تنظیم بهره یا شرایط کالیبراسیون، ممکن است تغییر کند.
+\item با فرض اینکه در همین تنظیم بهره، ضریب تبدیلِ کالیبره‌شده
+$G_{\mathrm{FS}}=20\,\mathrm{dB}$
+باشد، توان نویز ارجاع‌شده به ورودی گیرنده از رابطهٔ زیر به دست می‌آید:
+\[
+N_{\mathrm{in}}[\mathrm{dBm}]
+=
+N_{\mathrm{off}}[\mathrm{dBFS}]
+-
+G_{\mathrm{FS}}
+=
+N_{\mathrm{off}}[\mathrm{dBFS}]-20.
+\]
+با استفاده از این تبدیل، عدد نویز گیرنده را به روش مستقیم
+به‌صورت تقریبی برآورد کنید:
+\[
+\mathrm{NF}[\mathrm{dB}]
+\approx
+N_{\mathrm{off}}[\mathrm{dBFS}]
+-
+20
+-
+10\log_{10}\!\left(\frac{B_n}{1\,\mathrm{Hz}}\right)
++
+174,
+\]
+
+که در آن
+$B_n \approx 400\un{kHz}$
+پهنای باند معادل نویز است و مقدار
+$-174\,\mathrm{dBm/Hz}$
+برای چگالی توان نویز حرارتی در دمای مرجع
+$T_0 \approx 290\,\mathrm{K}$
+در نظر گرفته شده است. در نتیجه:
+\[
+\mathrm{NF}[\mathrm{dB}]
+\approx
+N_{\mathrm{off}}[\mathrm{dBFS}]+97.98.
+\]
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{کالیبراسیون سطح (فرکانس: \blank[1.6cm] \lr{MHz})}
+	\label{tab:cal}
+	\begin{tabularx}{\linewidth}{|X|Y|Y|Y|}
+		\hline
+		\hdrrow \hdr{کمیت} & \hdr{\code{rf_gain} = $49.6$} & \hdr{\code{rf_gain} = $40.2$} & \hdr{\code{rf_gain} = $29.7$} \\ \hline
+		توان نویز با درگاه RX باز (\dBFS) & \rowstrut & & \\ \hline
+		عدد نویز به روش مستقیم (\lr{dB}) & \rowstrut & & \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{question}
+روش مستقیم به چه کمیت‌هایی نیاز دارد که روش
+\lr{Y-Factor}
+به آن‌ها نیاز ندارد؟ .
+\end{question}
+
+\labpart[۳۵ دقیقه]{عدد نویز به روش \lr{Y-Factor}}\label{part:nf}
+\begin{steps}
+\item فلوگراف 
+\lr{lab02\_combined}
+را اجرا کنید تا نویز گوسی تولید شود. سیگنال را با کابل
+\lr{loop back} 
+به درگاه 
+RX 
+برسانید و
+$\mathrm{ENR}$
+مؤثر را در فرکانس کار از رابطهٔ
+\eqref{eq:srclevels}
+محاسبه کنید.
+\item با
+\pv{rf\_gain}{40.2}:
+منبع نویز خاموش، عدد «توان نویز» را پس از آرام‌گرفتن بخوانید
+($N_{\mathrm{off}}$)؛
+منبع نویز روشن، دوباره بخوانید
+($N_{\mathrm{on}}$).
+هر خواندن را دو بار تکرار کنید.
+\item \textbf{انتخاب \lr{ENR}.} تضعیف را چنان برگزینید که
+$Y$
+میان ۳ و ۱۵ دسی‌بل باشد و «سطح کل» در حالت روشن از
+\q{-10}{\dBFS}
+بالاتر نرود.
+\item \textbf{آزمون خطی‌بودن.} تضعیف را
+\q{3}{dB}
+کم کنید:
+$N_{\mathrm{on}}$
+(پس از کم‌کردن سهم
+$N_{\mathrm{off}}$)
+باید
+\q{3}{dB}
+بالا برود. اگر نرفت، گیرنده در حال تراکم است و باید
+$\mathrm{ENR}$
+را کم کنید.
+\item عدد نویز را حساب کنید. اندازه گیری ها را در جدول 
+\ref{tab:nf}
+وارد کنید.
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{عدد نویز به روش \lr{Y-Factor} (هر خانه: $\mathrm{ENR}$ مؤثر، $Y$ و عدد نویز بر حسب دسی‌بل)}
+	\label{tab:nf}
+	\begin{tabularx}{\linewidth}{|X|Y|Y|Y|}
+		\hline
+		\hdrrow \hdr{فرکانس} & \hdr{\code{rf_gain} = $49.6$} & \hdr{\code{rf_gain} = $40.2$} & \hdr{\code{rf_gain} = $29.7$} \\ \hline
+		\lr{434 MHz} & \rowstrut & & \\ \hline
+		
+	\end{tabularx}
+\end{table}
+
+\begin{expectbox}
+عدد نویز با کم‌شدن بهره بالا می‌رود: ابتدا آهسته و سپس تقریباً دسی‌بل به دسی‌بل، چون نویز مبدل غالب می‌شود. در مدل گیرندهٔ تکلیف شبیه‌سازی، عدد نویز در بهره‌های ۵۰، ۴۰، ۳۰ و ۲۰ دسی‌بل به‌ترتیب
+$6.1$،
+$6.5$،
+$9.6$
+و
+\q{17.3}{dB}
+بود؛ گیرندهٔ واقعی شما اعداد دیگری می‌دهد ولی همین روند را دارد. تضعیف‌گر پیش از گیرنده عدد نویز را به اندازهٔ تلفات خود بالا می‌برد.
+\end{expectbox}
+
+\begin{question}
+چرا باید
+$Y$
+نه خیلی کوچک باشد و نه خیلی بزرگ؟ برای کوچک‌ترین
+$Y$
+جدول خود، اثر خطای
+\q{0.1}{dB}
+در خواندن را بر عدد نویز حساب کنید.
+\end{question}
+
+\labpart[۲۰ دقیقه]{جاروب تک‌تن و $P_{\mathrm{1dB}}$ ورودی}\label{part:p1db}
+\begin{steps}
+\item \pv{rf\_gain}{40.2}.
+یک تن در
+$f_c + 300\un{kHz}$
+با پایین‌ترین سطح جدول
+\ref{tab:p1db}
+بدهید.
+\item سطح را با گام‌های
+\q{5}{dB}
+و نزدیک تراکم با گام‌های یک دسی‌بل بالا ببرید. در هر گام عدد نوارسنج
+$f_1$
+را بنویسید. مقادیر نوارسنج را بررسی کنید: محصولات ناخواسته از چه سطحی پدیدار می‌شوند؟
+\item از \emph{هیچ} گامی که ورودی را از
+\q{-10}{dBm}
+بالاتر می‌برد استفاده نکنید.
+
+\item بهرهٔ هر گام (خروجی منهای ورودی) را حساب و
+$P_{\mathrm{1dB}}$
+ورودی را بخوانید: توانی که در آن بهره یک دسی‌بل از مقدار سیگنال‌کوچک کمتر است.
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{جاروب تک‌تن (\code{rf_gain} = \blank[1cm] ، فرکانس: \blank[1.4cm] \lr{MHz})}
+	\label{tab:p1db}
+	\begin{tabularx}{\linewidth}{|X|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|}
+		\hline
+		\hdrrow \hdr{تضعیف Tx (\lr{dB})} & \rowstrut & & & & & & & & & \\ \hline
+		خروجی (\dBFS) & \rowstrut & & & & & & & & & \\ \hline
+		بهره (\lr{dB}) & \rowstrut & & & & & & & & & \\ \hline
+		سطح کل (\dBFS) & \rowstrut & & & & & & & & & \\ \hline
+	\end{tabularx}
+\end{table}
+\noindent
+{\small بهرهٔ سیگنال‌کوچک: \blank[1.6cm] \lr{dB} \hfill $P_{\mathrm{1dB}}$ ورودی: \blank[1.6cm] \lr{dBFS} \hfill سطح خروجی در آن نقطه: \blank[1.6cm] \dBFS}
+
+\begin{expectbox}
+تا پیش از تراکم، خروجی دسی‌بل به دسی‌بل ورودی را دنبال می‌کند. در گیرنده‌ای که مبدل محدودکننده است، تراکم وقتی آغاز می‌شود که سطح خروجی به چند دسی‌بلیِ مقیاس کامل می‌رسد و سپس بسیار تند پیش می‌رود؛ در مدل شبیه‌سازی،
+$P_{\mathrm{1dB}}$
+حدود دو دسی‌بل بالاتر از سطحی بود که تن به مقیاس کامل می‌رسد، و با هر ده دسی‌بل افزایش بهره ده دسی‌بل پایین می‌آمد.
+\end{expectbox}
+
+\begin{question}
+در نقطهٔ تراکم، سطح خروجی چند
+\dBFS{}
+بود؟ از این عدد چه نتیجه‌ای دربارهٔ عامل محدودکننده (مبدل یا طبقه‌های آنالوگ) می‌گیرید؟
+\end{question}
+
+\labpart[۲۰ دقیقه]{آزمایش دوتنی و $\mathrm{IIP3}$}\label{part:ip3}
+\begin{steps}
+\item دو تن هم‌سطح در
+$f_c + 300\un{kHz}$
+و
+$f_c + 400\un{kHz}$
+بدهید. توان هر تن را
+\q{20}{dB}
+پایین‌تر از
+$P_{\mathrm{1dB}}$
+بخش پیش بگذارید و مطمئن شوید دو عدد نوارسنج
+$f_1$
+و
+$f_2$
+حداکثر نیم دسی‌بل با هم فرق دارند.
+\item توان هر دو تن را با گام‌های
+\q{2}{dB}
+بالا ببرید (تا حداکثر
+\q{4}{dB}
+پایین‌تر از
+$P_{\mathrm{1dB}}$)
+و در هر گام چهار عدد نوارسنج را بنویسید. از داده‌های اندازه‌گیری یکی از گام‌ها ثبت تهیه کنید.
+\item \textbf{آزمون شیب.} در بازه‌ای که محصولات مرتبهٔ سوم دست‌کم
+\q{10}{dB}
+از کف خود بالاترند، ببینید آیا با هر
+\q{2}{dB}
+افزایش ورودی حدود
+\q{6}{dB}
+بالا می‌روند.
+\item اگر شیب نزدیک سه است، از یکی از آن گام‌ها
+$\mathrm{IIP3} = P_{\mathrm{in}} + \Delta/2$
+را حساب کنید. اگر نیست، سطحی را که محصولات در آن از کف بیرون می‌زنند گزارش کنید.
+\item \textbf{آزمون منبع.} بهرهٔ گیرنده را
+\q{10}{dB}
+کم کنید: اگر محصولات از گیرنده باشند باید به‌شدت کم شوند؛ اگر تغییری نکنند، از منبع می‌آیند.
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{آزمایش دوتنی (\code{rf_gain} = \blank[1cm] ، فاصلهٔ دو تن \q{100}{kHz})}
+	\label{tab:ip3}
+	\begin{tabularx}{\linewidth}{|X|Y|Y|Y|Y|Y|Y|Y|Y|}
+		\hline
+		\hdrrow \hdr{توان هر تن در ورودی (\lr{dBFS})} & \rowstrut & & & & & & & \\ \hline
+		نوارسنج $f_1$ و $f_2$ (\dBFS) & \rowstrut & & & & & & & \\ \hline
+		نوارسنج $2f_1 - f_2$ (\dBFS) & \rowstrut & & & & & & & \\ \hline
+		نوارسنج $2f_2 - f_1$ (\dBFS) & \rowstrut & & & & & & & \\ \hline
+		$\Delta$ (\lr{dB}) & \rowstrut & & & & & & & \\ \hline
+		$\mathrm{IIP3}$ (\lr{dBFS}) & \rowstrut & & & & & & & \\ \hline
+	\end{tabularx}
+\end{table}
+\noindent
+{\small شیب محصولات مرتبهٔ سوم: \blank[1.4cm] دسی‌بل بر دسی‌بل \hfill $\mathrm{IIP3}$: \blank[1.6cm] \lr{dBm} \hfill $\mathrm{IIP3} - P_{\mathrm{1dB}}$: \blank[1.4cm] \lr{dB}}
+
+\begin{expectbox}
+در مدل شبیه‌سازی دو رفتار دیده شد. در بهرهٔ کم، که طبقهٔ آنالوگ محدودکننده بود، محصولات با شیب سه بالا می‌رفتند و
+$\mathrm{IIP3}$
+حدود
+\q{9.6}{dB}
+بالاتر از
+$P_{\mathrm{1dB}}$
+به دست می‌آمد. در بهرهٔ زیاد، که مبدل محدودکننده بود، تا وقتی قلهٔ مجموع دو تن به مقیاس کامل نمی‌رسید هیچ محصولی بالاتر از کف دیده نمی‌شد و سپس ناگهان پدیدار می‌شد (حدود ۶ تا
+\q{8}{dB}
+پایین‌تر از
+$P_{\mathrm{1dB}}$
+برای هر تن). گیرندهٔ واقعی می‌تواند هر یک از این دو رفتار یا آمیزه‌ای از آن‌ها را نشان دهد.
+\end{expectbox}
+
+\begin{question}
+شیب اندازه‌گیری‌شده چقدر بود؟ اگر با سه فرق دارد، چه نتیجه‌ای دربارهٔ سازوکار غیرخطی گیرندهٔ خود می‌گیرید و عدد
+$\mathrm{IIP3}$
+شما چه اعتباری دارد؟
+\end{question}
+\begin{question}
+$\mathrm{IIP3} - P_{\mathrm{1dB}}$
+را با
+\q{9.6}{dB}
+مقایسه کنید. چرا در آزمایش دوتنی، تراکم زودتر از آزمایش تک‌تن آغاز می‌شود؟ (به قلهٔ مجموع دو تن فکر کنید.)
+\end{question}
+\labpart[۳۰ دقیقه]{اندازه‌گیری پاسخ فرکانسی آنتن با کد 
+\code{lab02_antenna_response_gui.py}}
+\label{part:antenna_response}
+
+
+هدف: اندازه‌گیری پاسخ فرکانسی آنتن در بازهٔ
+ \q{400}{MHz}
+  تا 
+  \q{3}{GHz}
+   و محاسبهٔ پهنای باند سه‌دسی‌بلی آن.
+
+\begin{steps}
+\item به پورت فرستنده و گیرنده دستگاه آنتن وصل کنید. چون سیگنال از دو آنتن می گذرد پاسخ فرکانسی بر حسب 
+dB
+بدست آمده، دو برابر پاسخ فرکانسی یک آنتن است. 
+\item	کد پایتون
+	\lr{lab02\_antenna\_response\_gui.py}
+	را در
+	\lr{command line}
+	که محیط
+	\lr{radioconda}
+	در آن فعال شده است، اجرا کنید. این کد یک رابط گرافیکی نمایش می‌دهد که برای اندازه‌گیری پاسخ فرکانسی آنتن طراحی شده است. برای شروع اندازه‌گیری، دکمه
+	\lr{Start Sweep: 400-3000MHz}
+	را فشار دهید و صبر کنید تا با جاروب فرکانس، پاسخ فرکانسی آنتن تا
+	\lr{3 GHz}
+	رسم شود.
+
+\item	بیشینه پاسخ فرکانسی آنتن را از روی نمودار مشخص کنید. سپس دو فرکانس را در دو طرف قله بیابید که مقدار پاسخ در آن‌ها
+	$3\,\mathrm{dB}$
+	کمتر از مقدار بیشینه باشد. این دو فرکانس به‌ترتیب فرکانس قطع پایین
+	($f_L$)
+	و فرکانس قطع بالا
+	($f_H$)
+	نامیده می‌شوند. توجه کنید که معیار افت سه دسی‌بل، معادل کاهش توان به نصف مقدار بیشینه است.
+
+	پهنای باند سه‌دسی‌بلی آنتن را با استفاده از رابطه زیر محاسبه کنید و نتایج را در جدول بنویسید:
+	\[
+		BW = f_H - f_L
+	\]
+	\begin{table}[H]
+	\centering\small
+	\caption{نتایج اندازه‌گیری فرکانس‌های قطع و پهنای باند سه‌دسی‌بلی آنتن}
+	\label{tab:antenna_bandwidth}
+	\begin{tabularx}{\linewidth}{|>{\hsize=0.9\hsize\linewidth=\hsize}X|>{\hsize=1.1\hsize\linewidth=\hsize}X|}
+		\hline
+		\hdrrow \hdr{کمیت} & \hdr{مقدار بر حسب $\mathrm{MHz}$} \\ \hline
+		فرکانس قطع پایین، $f_L$ & \rowstrut \\ \hline
+		فرکانس قطع بالا، $f_H$ & \rowstrut \\ \hline
+		پهنای باند سه‌دسی‌بلی، $\mathrm{BW} = f_H - f_L$ & \rowstrut \\ \hline
+	\end{tabularx}
+\end{table}
+\end{steps}
+
+
+%======================================================================
+\isection{wrench}{خطایابی}
+%======================================================================
+\begin{table}[H]
+	\centering\small
+	\caption{نشانه‌ها، علت‌های محتمل و راه‌حل‌ها}
+	\label{tab:trouble8}
+	\begin{tabularx}{\linewidth}{|X|X|X|}
+		\hline
+		\hdrrow \hdr{نشانه} & \hdr{علت محتمل} & \hdr{راه‌حل} \\ \hline
+		$Y$ نزدیک صفر است & $\mathrm{ENR}$ برای این عدد نویز بسیار کم است؛ تولید نویز فرستنده فعال نشده & تضعیف اعمال‌شده به Pluto را کم کنید؛ روشن بودن تولید نویز را بررسی کنید \\ \hline
+		عدد نویز منفی یا بسیار کوچک & تراکم یا بریدگی در حالت روشن؛ $\mathrm{ENR}$ نادرست؛ خط ثابتی در نوار نویز & آزمون خطی‌بودن را انجام دهید؛ مقدار نوارسنج نویز را دوباره بررسی کنید \\ \hline
+		عدد «توان نویز» پیوسته تغییر می‌کند & میانگین‌گیر هنوز آرام نگرفته؛ بهرهٔ خودکار روشن است & چند ثانیه صبر کنید؛ \pv{AGC}{False} \\ \hline
+		نوارسنج تن عدد کف را نشان می‌دهد & تن در نوار نیست (آفست فرکانس دو دستگاه) & با \code{f_corr} تن را روی \q{300}{kHz} در نوارسنج مربوط قرار دهید \\ \hline
+		دو تن هم‌سطح نیستند & تلفات نابرابر دو شاخه؛ پاسخ فرکانسی & سطح یکی از کانال‌ها را اصلاح کنید تا اختلاف کمتر از نیم دسی‌بل شود \\ \hline
+		محصولات مرتبهٔ سوم با تغییر بهرهٔ گیرنده عوض نمی‌شوند & محصولات در سیگنال ارسالی فرستندهٔ Pluto وجود دارند & سطح خروجی فرستنده را کاهش دهید و دوباره اندازه‌گیری کنید \\ \hline
+		نوارسنج در سطوح ورودی زیاد به مقیاس کامل نزدیک می‌شود & احتمال بریدگی مبدل & سطح ورودی را کم کنید و عدد نوارسنج را دوباره بخوانید \\ \hline
+		عدد نویز با مقدار مورد انتظار اختلاف دارد & توان اسمی فرستنده دقیق نیست & مقدار \code{p_max} را با یک اندازه‌گیری مرجع اصلاح کنید \\ \hline
+		تراکم در آزمون منبع هم دیده می‌شود & خروجی فرستندهٔ Pluto در حال تراکم است & دامنهٔ سیگنال ارسالی را کم کنید و مقدار تضعیف را دوباره تنظیم کنید \\ \hline
+	\end{tabularx}
+\end{table}
+
+%======================================================================
+\isection{pencil}{تحلیل نتایج و گزارش پس‌از‌جلسه}
+%======================================================================
+گزارش حداکثر ۷ روز پس از جلسه، در قالب اجباری آیین‌نامه (بند
+\bnd{۴-۲})
+تحویل می‌شود:
+\code{/lab02/report.pdf}
+و
+\code{/lab02/report.html}.
+
+\زیرقسمت{تحلیل‌های الزامی این آزمایش}
+\begin{enumerate}
+\item \textbf{عدد نویز و $\mathrm{IIP3}$ بر حسب بهره.} با داده‌های خودتان و داده‌های تیم‌های دیگر، عدد نویز و
+$\mathrm{IIP3}$
+(یا
+$P_{\mathrm{1dB}}$)
+را بر حسب بهرهٔ گیرنده در یک نمودار رسم کنید و نقطهٔ کاری بهینه را با استدلال
+$\mathrm{SFDR}$
+تعیین کنید.
+\item \textbf{منحنی خروجی بر حسب ورودی.} منحنی جاروب تک‌تن و خط‌های آزمایش دوتنی را روی یک نمودار رسم و
+$P_{\mathrm{1dB}}$
+و (در صورت اعتبار) نقطهٔ تقاطع را روی آن نشان دهید.
+\item \textbf{مقایسهٔ روش‌ها.} عدد نویز به روش مستقیم و روش
+\lr{Y-Factor}
+با فرستندهٔ
+\lr{ADALM-PLUTO}
+را مقایسه و اختلاف‌ها را توجیه کنید.
+\end{enumerate}
+
+
+\زیرقسمت{سایر اجزای الزامی}
+\begin{itemize}
+\item پاسخ پرسش‌های ۱ تا 5 همین دستور کار و جدول «پیش‌بینی در برابر اندازه‌گیری» با خطای نسبی و منبع کمّی هر خطا.
+\end{itemize}
+
+%======================================================================
+\isection{bulb}{تمرین‌های تکمیلی (اختیاری)}
+%======================================================================
+\begin{enumerate}
+\item \textbf{تقویت‌کنندهٔ کم‌نویز.} اگر تقویت‌کنندهٔ کم‌نویزی در اختیار دارید، عدد نویز و
+$P_{\mathrm{1dB}}$
+زنجیرهٔ «تقویت‌کننده و گیرنده» را اندازه بگیرید و با رابطهٔ فریس مقایسه کنید.
+\item \textbf{عدد نویز بر حسب فرکانس.} عدد نویز را در ده فرکانس اندازه بگیرید و رسم کنید.
+\item \textbf{فاصلهٔ دو تن.} آزمایش دوتنی را با فاصله‌های ۱۰، ۱۰۰ و ۵۰۰ کیلوهرتز تکرار کنید؛ آیا نتیجه به فاصله بستگی دارد؟
+\item \textbf{مرتبهٔ دوم.} سطح مؤلفهٔ
+$f_1 + f_2$
+یا
+$f_2 - f_1$
+را نیز اندازه بگیرید و نقطهٔ تقاطع مرتبهٔ دوم را برآورد کنید.
+\end{enumerate}
+
+%======================================================================
+\isection{list}{چک‌لیست پایان جلسه}
+%======================================================================
+\begin{checklist}
+\item فرستندهٔ ADALM-PLUTO خاموش و همهٔ فلوگراف‌ها متوقف است.
+\item لاگ‌بوک جلسه
+(\code{/lab08/log.md})
+با مشاهدات، خطاها، تلفات مسیرها،
+$\mathrm{ENR}$
+به‌کاررفته و نقش اعضا در مخزن ثبت شده است.
+
+\item نتیجهٔ تیم روی تابلوی مشترک کلاس نوشته شده است.
+\end{checklist}
+
+%======================================================================
+\isection{book}{مراجع}
+%======================================================================
+\begin{latin}\small
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=1pt]
+\item D. M. Pozar, \textit{Microwave Engineering}, 4th ed. Hoboken, NJ: Wiley, 2012.
+\item Keysight Technologies, ``Noise figure measurement accuracy: the Y-factor method,'' Application Note.
+\item B. Razavi, \textit{RF Microelectronics}, 2nd ed. Upper Saddle River, NJ: Prentice Hall, 2012.
+\item GNU Radio project, GNU Radio Wiki: block documentation. [Online]. Available: https://wiki.gnuradio.org
+\end{enumerate}
+\end{latin}
+
+\end{document}
