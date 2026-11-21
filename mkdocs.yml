@@ -58,6 +58,10 @@ nav:
   - 📡 Spectrum Monitoring (Lab 1): Lab1/lab01.md
   - 📶 Noise & Nonlinearity (Lab 2):
       - Pre-Lab Report: Lab2/prelab.md
+      - Lab Report: Lab2/lab02.md 
+  - FM (Lab 3) :
+      - Pre-Lab Report: Lab3/prelab.md
+      - Lab Report: Lab3/lab03.md
   - 📖 Measurement Logbook: log.md
 
 markdown_extensions:
