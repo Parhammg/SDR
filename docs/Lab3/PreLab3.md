@@ -1,4 +1,4 @@
-# Pre-Lab Report 2: FM Radio, Stereo MPX, and RDS
+# Pre-Lab Report 3: FM Radio, Stereo MPX, and RDS
 **Course:** Software-Defined Radio (SDR) Laboratory  
 **Topic:** Coherent and Non-Coherent Demodulation, Multiplex Stereo, and RDS Data Decoding  
 
