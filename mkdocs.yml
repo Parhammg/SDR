@@ -4,22 +4,13 @@ site_author: "Team-01"
 
 theme:
   name: material
-  
-  # 📡 1. HARDWARE VIBE: Add an RF/Signal Logo and Favicon
-  logo: material/radio-tower
-  favicon: material/waveform
-
-  # 💻 2. LINUX & GNURADIO AESTHETIC: Custom Fonts
-  # Ubuntu gives it a clean, Linux-native feel. Fira Code makes code/data look beautiful.
+  language: en
+  icon:
+    logo: material/radio-tower
   font:
     text: Ubuntu
     code: Fira Code
-    
-  language: en
-  
-  # 🎨 3. COLOR PALETTE: Terminal & Radar Vibes
   palette:
-    # Light Mode: Clean, scientific, and readable
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: blue grey
@@ -27,8 +18,6 @@ theme:
       toggle:
         icon: material/weather-night
         name: Switch to dark mode (Terminal View)
-        
-    # Dark Mode: High-contrast terminal / radar aesthetic
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: black
@@ -36,82 +25,60 @@ theme:
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode (Lab View)
-
-  # 🚀 4. LIVE & INTERACTIVE FEATURES
   features:
-    - navigation.instant          # SPA Mode: Zero-refresh page loads (Makes the site feel "live")
-    - navigation.instant.progress # Shows a loading bar during quick transitions
-    - navigation.tabs             # Top navigation tabs
-    - navigation.tabs.sticky      # Keeps top tabs visible when scrolling down
-    - navigation.sections         # Groups sidebar items into neat categories
-    - navigation.path             # Breadcrumb navigation at the top of pages (Home > Lab 1)
-    - navigation.tracking         # URL dynamically updates as you scroll past headers
-    - navigation.top              # Back to top button
-    - toc.follow                  # Table of Contents scrolls with you
-    - search.suggest              # Search auto-complete drop-downs
-    - search.highlight            # Highlights your search terms in yellow on the page
-    - content.code.copy           # Copy buttons on Python/C++ code blocks
-    - content.tabs.link           # Clicking a tab on one page switches them on all pages
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.tracking
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
 
 nav:
   - Home: index.md
-  - 📡 Spectrum Monitoring (Lab 1): Lab1/lab01.md
-  - 📶 Noise & Nonlinearity (Lab 2):
+  - 📡 Lab 1 - Spectrum Monitoring: Lab1/lab01.md
+  - 📶 Lab 2 - Noise & Nonlinearity:
       - Pre-Lab Report: Lab2/prelab.md
-      - Lab Report: Lab2/rf-lab02-report.md 
-  - FM (Lab 3) :
+      - Lab Report: Lab2/rf-lab02-report.md
+  - 📻 Lab 3 - FM Radio & RDS:
       - Pre-Lab Report: Lab3/PreLab3.md
-      - Lab Report: Lab3/lab03.md
-  - 📖 Measurement Logbook: log.md
+  - 📖 Logbook: log.md
 
 markdown_extensions:
-  - admonition                    # Info/Warning/Success color boxes
-  - attr_list                     # Add CSS classes directly to markdown elements
-  - md_in_html                    # Allows you to write markdown inside HTML tags
-  - tables                        # Standard markdown tables
-  
-  # Math & Equations
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.details
   - pymdownx.arithmatex:
       generic: true
-      
-  # Advanced Code Blocks
-  - pymdownx.details              # Allows collapsible (accordion) boxes
-  - pymdownx.superfences          # Advanced code highlighting 
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-      
-  # 🗂️ 5. ESSENTIAL UI UPGRADES (Needed for a beautiful layout)
-  - pymdownx.tabbed:              # Enables Content Tabs (Perfect for Hardware vs Software specs)
-      alternate_style: true
-  - pymdownx.tasklist:            # Renders beautiful interactive checkboxes for your Quick Links
-      custom_checkbox: true
-  - pymdownx.emoji:               # Enables Material Design Icons (e.g. :material-memory:)
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.magiclink            # Automatically turns raw URLs into clickable links
-
-
-# Add this under extra_javascript:
-extra_css:
-  - stylesheets/custom.css
-
-# Add this to markdown_extensions:
-markdown_extensions:
-  - pymdownx.blocks.caption
-  - pymdownx.blocks.html
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.magiclink
 
-# Add this anywhere in the root level to configure Mermaid:
-extra_javascript:
-  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
-
+extra_css:
+  - stylesheets/custom.css
 
 extra_javascript:
   - javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"

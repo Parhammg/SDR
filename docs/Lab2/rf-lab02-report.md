@@ -1,8 +1,9 @@
-# Laboratory Report 2: RF Noise Figure, $P_{1\text{dB}}$, and $\text{IIP}_3$ Parameters
+# :material-chart-bell-curve-cumulative: Laboratory Report 2: RF Noise Figure, $P_{1\text{dB}}$, and $\text{IIP}_3$ Parameters
 
-This report provides the analytical findings, completed experimental data tables, visual curve interpretations, and rigorous answers to all core and expansion questions formulated in **Laboratory 2: RF Noise Figure and Linearity Parameters**. Measurements were acquired using the dual ADALM-PLUTO Software-Defined Radio (SDR) testbench interfaced via the `lab02_combined.grc` GNU Radio flowgraph and the automated sweep GUI `lab02_antenna_response_gui.py`.
+[:material-file-pdf-box: Download Full Report (PDF)](lab02_report.pdf){ .md-button .md-button--primary target="_blank" }
 
----
+!!! abstract "Report Overview"
+    This report presents the analytical findings, experimental data tables, visual curve interpretations, and answers to all core and expansion questions for **Laboratory 2: RF Noise Figure and Linearity Parameters**. Measurements were acquired using the dual ADALM-PLUTO SDR testbench via `lab02_combined.grc` and `lab02_antenna_response_gui.py`.
 
 ## 1. Device Noise Floor and Direct Method (Table 3 & Question 1)
 
@@ -10,88 +11,107 @@ In digital SDR architectures, internal power is represented in decibels relative
 
 $$P_{\text{in}}\,[\text{dBm}] = P_{\text{digital}}\,[\text{dBFS}] - G_{FS}$$
 
-For the ADALM-PLUTO receiver under the baseline calibrated manual gain setting of $\text{rf\_gain} = 40.2\text{ dB}$, the nominal conversion factor is established as $G_{FS} = 20.0\text{ dB}$, establishing that $0\text{ dBFS}$ corresponds to $-20.0\text{ dBm}$ of analog input power.
+For the ADALM-PLUTO receiver under the baseline calibrated manual gain setting of `rf_gain = 40.2 dB`, the nominal conversion factor is $G_{FS} = 20.0\text{ dB}$, establishing that $0\text{ dBFS}$ corresponds to $-20.0\text{ dBm}$ of analog input power.
 
 ### Experimental Calibration Data (Table 3)
+
 With the receiver input SMA port left open (unconnected termination), baseline digital noise power $N_{\text{off}}$ was acquired across three gain settings using the wideband noise channel filter ($B_n \approx 400\text{ kHz}$). The direct noise figure is estimated via:
 
-$$\text{NF}_{\text{direct}}\,[\text{dB}] \approx N_{\text{off}}\,[\text{dBFS}] - G_{FS} - 10\log_{10}\left(\frac{B_n}{1\text{ Hz}}\right) - (-174\text{ dBm/Hz}) \approx N_{\text{off}}\,[\text{dBFS}] + 97.98\text{ dB}$$
+$$\text{NF}_{\text{direct}}\,[\text{dB}] \approx N_{\text{off}}\,[\text{dBFS}] - G_{FS} - 10\log_{10}\!\left(\frac{B_n}{1\text{ Hz}}\right) - (-174\text{ dBm/Hz}) \approx N_{\text{off}}\,[\text{dBFS}] + 97.98\text{ dB}$$
 
-| Parameter / Quantity | $\text{rf\_gain} = 29.7\text{ dB}$ | $\text{rf\_gain} = 40.2\text{ dB}$ | $\text{rf\_gain} = 49.6\text{ dB}$ |
+| Parameter / Quantity | `rf_gain = 29.7 dB` | `rf_gain = 40.2 dB` | `rf_gain = 49.6 dB` |
 | :--- | :---: | :---: | :---: |
 | **Open-Port Noise Power $N_{\text{off}}$ [dBFS]** | $-73.50$ | $-74.20$ | $-66.20$ |
 | **Direct Noise Figure $\text{NF}_{\text{direct}}$ [dB]** | $24.48$ | $23.78$ | $31.78$ |
 
-At lower front-end gains ($29.7\text{ dB}$ and $40.2\text{ dB}$), the measured digital noise power hovers at $\approx -74\text{ dBFS}$, which is set by internal Analog-to-Digital Converter (ADC) quantization noise and digital baseband noise. At the maximum gain of $49.6\text{ dB}$, the amplified analog front-end thermal noise overcomes the ADC quantization floor, causing the digital reading to rise to $-66.20\text{ dBFS}$. Because the direct estimation formula presumes a static conversion factor $G_{FS} = 20\text{ dB}$ regardless of gain, it produces an erroneous apparent NF increase at $49.6\text{ dB}$, demonstrating why the direct method fails under varying front-end gain conditions.
+At lower front-end gains ($29.7\text{ dB}$ and $40.2\text{ dB}$), the measured digital noise power hovers at $\approx -74\text{ dBFS}$, which is set by internal ADC quantization noise and digital baseband noise. At the maximum gain of $49.6\text{ dB}$, the amplified analog front-end thermal noise overcomes the ADC quantization floor, causing the digital reading to rise to $-66.20\text{ dBFS}$. Because the direct estimation formula presumes a static conversion factor $G_{FS} = 20\text{ dB}$ regardless of gain, it produces an erroneous apparent NF increase at $49.6\text{ dB}$, demonstrating why the direct method fails under varying front-end gain conditions.
 
 ### Question 1: Direct Method vs. $Y$-Factor Method Requirements
-> **Prompt:** *What quantities does the direct method require that the $Y$-Factor method does not?*
 
-**Answer:**  
-The direct method depends strictly on knowing three absolute system parameters:
-1. **Absolute Conversion Factor / Gain ($G_{FS}$):** The precise hardware gain and full-scale calibration linking $\text{dBFS}$ to $\text{dBm}$. Any systematic calibration inaccuracy in $G_{FS}$ creates an identical, decibel-for-decibel error in the extracted noise figure.
+!!! question "Prompt"
+    What quantities does the direct method require that the $Y$-Factor method does not?
+
+**Answer:** The direct method depends strictly on knowing three absolute system parameters:
+
+1. **Absolute Conversion Factor / Gain ($G_{FS}$):** The precise hardware gain and full-scale calibration linking $\text{dBFS}$ to $\text{dBm}$. Any systematic calibration inaccuracy in $G_{FS}$ creates an identical, dB-for-dB error in the extracted noise figure.
 2. **Equivalent Noise Bandwidth ($B_n$):** The exact integrated brick-wall noise bandwidth of the digital FIR channel filter.
 3. **Absolute Thermal Noise Power Reference:** Explicit calibration against the theoretical input thermal noise density $k T_0 = -174\text{ dBm/Hz}$ at reference temperature $T_0 = 290\text{ K}$.
 
-In contrast, the $Y$-Factor method relies exclusively on a relative power ratio $Y = N_{\text{on}} / N_{\text{off}}$ and the known Excess Noise Ratio ($\text{ENR}$) of the noise source. Because internal receiver gain, filter bandwidth, and digital scale factors affect $N_{\text{on}}$ and $N_{\text{off}}$ identically, they cancel completely out of the ratio $Y$, rendering the $Y$-Factor method fully independent of receiver gain, filter bandwidth, and digital scale calibrations.
-
----
+In contrast, the $Y$-Factor method relies exclusively on a relative power ratio $Y = N_{\text{on}} / N_{\text{off}}$ and the known Excess Noise Ratio ($\text{ENR}$) of the noise source. Because internal receiver gain, filter bandwidth, and digital scale factors affect $N_{\text{on}}$ and $N_{\text{off}}$ identically, they cancel completely out of $Y$, rendering the $Y$-Factor method independent of receiver gain, filter bandwidth, and digital scale calibrations.
 
 ## 2. Noise Figure via the $Y$-Factor Method (Table 4 & Question 2)
 
-Broadband Gaussian noise generated by the transmitting PLUTO SDR was injected into the receiver port through a fixed 30-dB external safety pad ($A_{\text{pad}} = 30\text{ dB}$). Under nominal transmitter attenuation ($A_{tx} = 58.5\text{ dB}$), the effective excess noise ratio referenced to the receiver input is:
+Broadband Gaussian noise generated by the transmitting PLUTO SDR was injected into the receiver port through a fixed $30\text{ dB}$ external safety pad ($A_{\text{pad}} = 30\text{ dB}$). Under nominal transmitter attenuation ($A_{tx} = 58.5\text{ dB}$), the effective excess noise ratio referenced to the receiver input is:
 
-$$\text{ENR}_{\text{eff}} = 73.4 - A_{tx} = 73.4 - 58.5 \approx 15.0\text{ dB}$$
+$$
+\text{ENR}_{\text{eff}} = 73.4 - A_{tx} = 73.4 - 58.5 \approx 15.0\text{ dB}
+$$
 
 The $Y$-factor and receiver noise figure are computed via:
 
-$$Y\,[\text{dB}] = N_{\text{on}}\,[\text{dBFS}] - N_{\text{off}}\,[\text{dBFS}]$$
+$$
+Y\,[\text{dB}] = N_{\text{on}}\,[\text{dBFS}] - N_{\text{off}}\,[\text{dBFS}]
+$$
 
-$$\text{NF}\,[\text{dB}] = \text{ENR}_{\text{eff}}\,[\text{dB}] - 10\log_{10}\left(10^{Y\,[\text{dB}]/10} - 1\right)$$
+$$
+\text{NF}\,[\text{dB}] = \text{ENR}_{\text{eff}}\,[\text{dB}] - 10\log_{10}\!\left(10^{Y\,[\text{dB}]/10} - 1\right)
+$$
 
 ### Experimental Data (Table 4)
 
-| Test Frequency | $\text{rf\_gain} = 29.7\text{ dB}$ | $\text{rf\_gain} = 40.2\text{ dB}$ | $\text{rf\_gain} = 49.6\text{ dB}$ |
+| Test Frequency | `rf_gain = 29.7 dB` | `rf_gain = 40.2 dB` | `rf_gain = 49.6 dB` |
 | :--- | :--- | :--- | :--- |
-| **434 MHz** | $N_{\text{on}} = -72.60\text{ dBFS}$<br>$Y = 0.90\text{ dB}$<br>**$\mathbf{NF = 21.38\text{ dB}}$** | $N_{\text{on}} = -67.60\text{ dBFS}$<br>$Y = 6.60\text{ dB}$<br>**$\mathbf{NF = 9.47\text{ dB}}$** | $N_{\text{on}} = -59.20\text{ dBFS}$<br>$Y = 7.00\text{ dB}$<br>**$\mathbf{NF = 8.97\text{ dB}}$** |
-| **834 MHz** | $N_{\text{on}} = -72.70\text{ dBFS}$<br>$Y = 0.80\text{ dB}$<br>**$\mathbf{NF = 21.94\text{ dB}}$** | $N_{\text{on}} = -69.10\text{ dBFS}$<br>$Y = 5.10\text{ dB}$<br>**$\mathbf{NF = 11.51\text{ dB}}$** | $N_{\text{on}} = -60.50\text{ dBFS}$<br>$Y = 5.70\text{ dB}$<br>**$\mathbf{NF = 10.66\text{ dB}}$** |
-| **1234 MHz** | $N_{\text{on}} = -72.30\text{ dBFS}$<br>$Y = 1.20\text{ dB}$<br>**$\mathbf{NF = 19.97\text{ dB}}$** | $N_{\text{on}} = -68.30\text{ dBFS}$<br>$Y = 5.90\text{ dB}$<br>**$\mathbf{NF = 10.39\text{ dB}}$** | $N_{\text{on}} = -59.70\text{ dBFS}$<br>$Y = 6.50\text{ dB}$<br>**$\mathbf{NF = 9.60\text{ dB}}$** |
+| **434 MHz** | $N_{\text{on}} = -72.60\text{ dBFS}$<br>$Y = 0.90\text{ dB}$<br>$\mathbf{NF = 21.38\text{ dB}}$ | $N_{\text{on}} = -67.60\text{ dBFS}$<br>$Y = 6.60\text{ dB}$<br>$\mathbf{NF = 9.47\text{ dB}}$ | $N_{\text{on}} = -59.20\text{ dBFS}$<br>$Y = 7.00\text{ dB}$<br>$\mathbf{NF = 8.97\text{ dB}}$ |
+| **834 MHz** | $N_{\text{on}} = -72.70\text{ dBFS}$<br>$Y = 0.80\text{ dB}$<br>$\mathbf{NF = 21.94\text{ dB}}$ | $N_{\text{on}} = -69.10\text{ dBFS}$<br>$Y = 5.10\text{ dB}$<br>$\mathbf{NF = 11.51\text{ dB}}$ | $N_{\text{on}} = -60.50\text{ dBFS}$<br>$Y = 5.70\text{ dB}$<br>$\mathbf{NF = 10.66\text{ dB}}$ |
+| **1234 MHz** | $N_{\text{on}} = -72.30\text{ dBFS}$<br>$Y = 1.20\text{ dB}$<br>$\mathbf{NF = 19.97\text{ dB}}$ | $N_{\text{on}} = -68.30\text{ dBFS}$<br>$Y = 5.90\text{ dB}$<br>$\mathbf{NF = 10.39\text{ dB}}$ | $N_{\text{on}} = -59.70\text{ dBFS}$<br>$Y = 6.50\text{ dB}$<br>$\mathbf{NF = 9.60\text{ dB}}$ |
 
 As predicted by Friis' formula for cascaded noise figure, reducing receiver front-end gain degrades noise performance severely (rising from $\approx 9.0\text{ dB}$ at high gain to $> 21\text{ dB}$ at low gain). When front-end RF gain is low, the noise contribution of the mixer, baseband PGAs, and downstream ADC quantization noise dominates the receiver cascade.
 
 ### Question 2: Limits on $Y$-Factor and Error Sensitivity Analysis
-> **Prompt:** *Why should $Y$ be neither too small nor too large? For the smallest $Y$ in your table, calculate the effect of a 0.1 dB reading error on the calculated noise figure.*
 
-**Answer:**  
-* **Why $Y$ cannot be too small ($Y < 3\text{ dB}$):** As $Y \to 0\text{ dB}$ ($Y_{\text{linear}} \to 1$), the denominator $(10^{Y/10}-1) \to 0$. In this regime, the derivative $|d\text{NF}/dY|$ diverges toward infinity, meaning minute measurement noise or instrument flicker produces extreme errors in computed noise figure.
+!!! question "Prompt"
+    Why should $Y$ be neither too small nor too large? For the smallest $Y$ in your table, calculate the effect of a $0.1\text{ dB}$ reading error on the calculated noise figure.
+
+**Answer:**
+
+* **Why $Y$ cannot be too small ($Y < 3\text{ dB}$):** As $Y \to 0\text{ dB}$ ($Y_{\text{linear}} \to 1$), the denominator $(10^{Y/10}-1) \to 0$. In this regime, $\vert{}d\text{NF}/dY\vert{}$ diverges toward infinity, meaning minute measurement noise or instrument flicker produces extreme errors in computed noise figure.
 * **Why $Y$ cannot be too large ($Y > 15\text{ dB}$):** An excessively large $Y$ requires high injected noise power that drives receiver mixers, baseband filters, and ADCs into non-linear compression during the ON state, violating the prerequisite of linear operation.
 
-**Mathematical Error Sensitivity Derivation:**  
-Differentiating $\text{NF} = \text{ENR} - 10\log_{10}(10^{Y/10}-1)$ with respect to $Y$ (in decibels):
+**Mathematical Error Sensitivity Derivation:** Differentiating $\text{NF} = \text{ENR} - 10\log_{10}(10^{Y/10}-1)$ with respect to $Y$ (in decibels):
 
-$$\frac{d\text{NF}}{dY} = -\frac{10^{Y/10}}{10^{Y/10}-1} = -\frac{1}{1 - 10^{-Y/10}}$$
+$$
+\frac{d\text{NF}}{dY} = -\frac{10^{Y/10}}{10^{Y/10}-1} = -\frac{1}{1 - 10^{-Y/10}}
+$$
 
-Taking the smallest measured $Y$-factor in Table 4 ($Y = 0.80\text{ dB}$ at $834\text{ MHz}$, $\text{rf\_gain} = 29.7\text{ dB}$):
+Taking the smallest measured $Y$-factor in Table 4 ($Y = 0.80\text{ dB}$ at $834\text{ MHz}$, `rf_gain = 29.7 dB`):
 
-$$10^{-0.80/10} = 10^{-0.08} \approx 0.8318$$
+$$
+10^{-0.80/10} = 10^{-0.08} \approx 0.8318
+$$
 
-$$\left|\frac{d\text{NF}}{dY}\right| = \frac{1}{1 - 0.8318} = \frac{1}{0.1682} \approx 5.94\text{ dB/dB}$$
+$$
+\left|\frac{d\text{NF}}{dY}\right| = \frac{1}{1 - 0.8318} = \frac{1}{0.1682} \approx 5.94\text{ dB/dB}
+$$
 
 Therefore, an instrument reading error of merely $\delta Y = \pm 0.10\text{ dB}$ induces a large noise figure error of:
 
-$$\delta\text{NF} \approx 5.94 \times 0.10\text{ dB} \approx \pm\mathbf{0.59\text{ dB}}$$
+$$
+\delta\text{NF} \approx 5.94 \times 0.10\text{ dB} \approx \pm 0.59\text{ dB}
+$$
 
-By contrast, for $Y = 6.60\text{ dB}$ ($\text{rf\_gain} = 40.2\text{ dB}$), the sensitivity factor is only $|d\text{NF}/dY| \approx 1.28$, meaning a $0.1\text{ dB}$ error shifts NF by just $\pm 0.13\text{ dB}$.
-
----
+By contrast, for $Y = 6.60\text{ dB}$ (`rf_gain = 40.2 dB`), the sensitivity factor is only $|d\text{NF}/dY| \approx 1.28$, meaning a $0.1\text{ dB}$ error shifts NF by just $\pm 0.13\text{ dB}$.
 
 ## 3. Single-Tone Power Sweep and $P_{1\text{dB}}$ Compression (Table 5 & Question 3)
 
-A single sinusoidal test tone at $f_1 = f_c + 300\text{ kHz}$ was applied at $\text{rf\_gain} = 40.2\text{ dB}$. Transmitter attenuation $A_{tx}$ was stepped from $60\text{ dB}$ down to $40\text{ dB}$. Input power is determined from:
+A single sinusoidal test tone at $f_1 = f_c + 300\text{ kHz}$ was applied at `rf_gain = 40.2 dB`. Transmitter attenuation $A_{tx}$ was stepped from $60\text{ dB}$ down to $40\text{ dB}$. Input power is determined from:
 
-$$P_{\text{in}}\,[\text{dBm}] = -35.5 - A_{tx}$$
+$$
+P_{\text{in}}\,[\text{dBm}] = -35.5 - A_{tx}
+$$
 
-$$P_{\text{in}}\,[\text{dBFS}] = P_{\text{in}}\,[\text{dBm}] + G_{FS} = -15.5 - A_{tx}$$
+$$
+P_{\text{in}}\,[\text{dBFS}] = P_{\text{in}}\,[\text{dBm}] + G_{FS} = -15.5 - A_{tx}
+$$
 
 ### Experimental Sweep Data (Table 5)
 
@@ -99,40 +119,46 @@ $$P_{\text{in}}\,[\text{dBFS}] = P_{\text{in}}\,[\text{dBm}] + G_{FS} = -15.5 - 
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | 60 | $-95.50$ | $-75.50$ | $-16.57$ | $58.93$ | $-28.0$ |
 | 55 | $-90.50$ | $-70.50$ | $-13.73$ | $56.77$ | $-10.7$ |
-| 53 | $-88.50$ | $-68.50$ | $-8.63$  | $59.87$ | $-8.7$  |
-| 50 | $-85.50$ | $-65.50$ | $-7.67$  | $57.83$ | $-10.3$ |
-| 47 | $-82.50$ | $-62.50$ | $-7.47$  | $55.03$ | $-6.0$  |
-| 45 | $-80.50$ | $-60.50$ | $-7.23$  | $53.27$ | $-8.0$  |
-| 43 | $-78.50$ | $-58.50$ | $-6.07$  | $52.43$ | $-5.3$  |
-| 42 | $-77.50$ | $-57.50$ | $-6.67$  | $50.83$ | $-4.3$  |
-| 41 | $-76.50$ | $-56.50$ | $-6.50$  | $50.00$ | $-5.3$  |
-| 40 | $-75.50$ | $-55.50$ | $-6.50$  | $49.00$ | $-3.7$  |
+| 53 | $-88.50$ | $-68.50$ | $-8.63$ | $59.87$ | $-8.7$ |
+| 50 | $-85.50$ | $-65.50$ | $-7.67$ | $57.83$ | $-10.3$ |
+| 47 | $-82.50$ | $-62.50$ | $-7.47$ | $55.03$ | $-6.0$ |
+| 45 | $-80.50$ | $-60.50$ | $-7.23$ | $53.27$ | $-8.0$ |
+| 43 | $-78.50$ | $-58.50$ | $-6.07$ | $52.43$ | $-5.3$ |
+| 42 | $-77.50$ | $-57.50$ | $-6.67$ | $50.83$ | $-4.3$ |
+| 41 | $-76.50$ | $-56.50$ | $-6.50$ | $50.00$ | $-5.3$ |
+| 40 | $-75.50$ | $-55.50$ | $-6.50$ | $49.00$ | $-3.7$ |
 
 ### Extracted Compression Parameters
+
 * **Small-Signal Linear Gain ($G_0$):** $59.0\text{ dB}$ (averaged across the linear region $A_{tx} = 60\text{ dB}$ to $53\text{ dB}$).
-* **1-dB Gain Compression Point ($G = G_0 - 1 = 58.0\text{ dB}$):** Occurs at an input power between $-68.5\text{ dBFS}$ and $-65.5\text{ dBFS}$. Interpolating yields:
-  $$\mathbf{\text{Input } P_{1\text{dB}} \approx -66.5\text{ dBFS} \quad (-86.5\text{ dBm})}$$
-* **Output Level at 1-dB Compression:** $\mathbf{-8.0\text{ dBFS}}$.
+* **1-dB Gain Compression Point ($G = G_0 - 1 = 58.0\text{ dB}$):** Occurs between $-68.5\text{ dBFS}$ and $-65.5\text{ dBFS}$. Interpolating yields:
+
+$$
+\text{Input } P_{1\text{dB}} \approx -66.5\text{ dBFS} \quad (-86.5\text{ dBm})
+$$
+
+* **Output Level at 1-dB Compression:** $-8.0\text{ dBFS}$.
 * **Clipping Plateau:** For $P_{\text{in}} > -57.5\text{ dBFS}$, output tone power clamps at a fixed ceiling of $-6.50\text{ dBFS}$.
 
 ### Question 3: Output Level at Compression and Primary Limiting Mechanism
-> **Prompt:** *At the compression point, what was the output level in dBFS? What do you conclude regarding the limiting factor (ADC vs. analog stages)?*
 
-**Answer:**  
-At the 1-dB compression point, the measured fundamental output level was **$-8.0\text{ dBFS}$**. For higher input drives, the output power saturates abruptly into a hard plateau at **$-6.50\text{ dBFS}$**.
+!!! question "Prompt"
+    At the compression point, what was the output level in dBFS? What do you conclude regarding the limiting factor (ADC vs. analog stages)?
+
+**Answer:** At the 1-dB compression point, the measured fundamental output level was $-8.0\text{ dBFS}$. For higher input drives, the output power saturates abruptly into a hard plateau at $-6.50\text{ dBFS}$.
 
 * In purely analog RF stages (e.g., LNA or passive mixer saturation), gain compression rolls off smoothly and progressively over a wide dynamic range ($> 15\text{ dB}$).
 * In this receiver, the transfer curve exhibits sharp, abrupt saturation within a few decibels of digital full scale ($0\text{ dBFS}$).
 
 **Conclusion:** The dominant physical limiting factor is **digital ADC full-scale clipping** and baseband programmable gain amplifier (PGA) saturation, rather than analog front-end LNA compression.
 
----
-
 ## 4. Two-Tone Intermodulation Test and $\text{IIP}_3$ (Table 6 & Questions 4, 5)
 
-Two equal-amplitude tones were injected at $f_1 = f_c + 300\text{ kHz}$ and $f_2 = f_c + 400\text{ kHz}$ ($\Delta f = 100\text{ kHz}$) at $\text{rf\_gain} = 40.2\text{ dB}$. Input tone power was swept from $-70.0\text{ dBFS}$ to $-54.0\text{ dBFS}$. The intermodulation distance is $\Delta = P_{\text{fund}} - P_{\text{IMD3}}$, and the input third-order intercept point is computed as:
+Two equal-amplitude tones were injected at $f_1 = f_c + 300\text{ kHz}$ and $f_2 = f_c + 400\text{ kHz}$ ($\Delta f = 100\text{ kHz}$) at `rf_gain = 40.2 dB`. Input tone power was swept from $-70.0\text{ dBFS}$ to $-54.0\text{ dBFS}$. The intermodulation distance is $\Delta = P_{\text{fund}} - P_{\text{IMD3}}$, and the input third-order intercept point is computed as:
 
-$$\text{IIP}_3 = P_{\text{in}} + \frac{\Delta}{2}$$
+$$
+\text{IIP}_3 = P_{\text{in}} + \frac{\Delta}{2}
+$$
 
 ### Experimental Two-Tone Data (Table 6)
 
@@ -149,49 +175,60 @@ $$\text{IIP}_3 = P_{\text{in}} + \frac{\Delta}{2}$$
 | $-54.0$ | $-11.53$ | $-25.97$ | $-25.40$ | $-25.68$ | $14.15$ | $-46.93$ |
 
 ### Regression and Intercept Parameters
+
 * **Fundamental Output Tone Slope:** $0.97\text{ dB/dB} \approx 1.0\text{ dB/dB}$ (confirming linear transfer gain).
-* **Measured $\text{IMD}_3$ Product Slope:** **$1.10\text{ dB/dB}$**.
-* **Mean Calculated $\text{IIP}_3$:** $\mathbf{-53.8\text{ dBFS} \quad (-73.8\text{ dBm})}$.
-* **Intercept-to-Compression Distance:** $\text{IIP}_3 - P_{1\text{dB}} = -53.8 - (-66.5) = \mathbf{+12.7\text{ dB}}$.
+* **Measured $\text{IMD}_3$ Product Slope:** $1.10\text{ dB/dB}$.
+* **Mean Calculated $\text{IIP}_3$:** $-53.8\text{ dBFS}$ ($-73.8\text{ dBm}$).
+* **Intercept-to-Compression Distance:** $\text{IIP}_3 - P_{1\text{dB}} = -53.8 - (-66.5) = +12.7\text{ dB}$.
 
 ### Question 4: Measured $\text{IMD}_3$ Slope and Validity of $\text{IIP}_3$
-> **Prompt:** *What was the measured slope of the third-order intermodulation products? If it differs from 3, what conclusion do you draw regarding the nonlinear mechanism, and what is the validity of your $\text{IIP}_3$ value?*
 
-**Answer:**  
-The measured $\text{IMD}_3$ product slope is **$1.10\text{ dB/dB}$**, which departs markedly from the theoretical weakly nonlinear slope of $3.0\text{ dB/dB}$.
+!!! question "Prompt"
+    What was the measured slope of the third-order intermodulation products? If it differs from 3, what conclusion do you draw regarding the nonlinear mechanism, and what is the validity of your $\text{IIP}_3$ value?
+
+**Answer:** The measured $\text{IMD}_3$ product slope is $1.10\text{ dB/dB}$, which departs markedly from the theoretical weakly nonlinear slope of $3.0\text{ dB/dB}$.
 
 1. **Nonlinear Mechanism:** This slope anomaly demonstrates that intermodulation is not generated solely by receiver internal small-signal third-order Taylor polynomial distortion. As documented in the troubleshooting guide (Table 9 of the manual), when the transmitting PLUTO SDR operates near full output scale, its transmitted output already contains source-generated intermodulation products that scale $\approx 1:1$ with transmit power. Furthermore, digital ADC clipping introduces piecewise-linear threshold distortion that does not follow power-series mathematics.
 2. **Validity of $\text{IIP}_3$:** Because the fundamental premise of a $3:1$ intercept slope is violated, the calculated value of $\text{IIP}_3 = -53.8\text{ dBFS}$ cannot be interpreted as an ideal asymptotic small-signal third-order intercept point. Rather, it represents an **apparent or empirical intercept metric** valid only within the specific testing window.
 
-### Question 5: Comparison of $\text{IIP}_3 - P_{1\text{dB}}$ with 9.6 dB and Peak Envelope Dynamics
-> **Prompt:** *Compare $\text{IIP}_3 - P_{1\text{dB}}$ with 9.6 dB. Why does compression begin earlier in two-tone tests than in single-tone tests?*
+### Question 5: Comparison of $\text{IIP}_3 - P_{1\text{dB}}$ with $9.6\text{ dB}$ and Peak Envelope Dynamics
 
-**Answer:**  
-* **Numerical Comparison:** The measured difference is $\text{IIP}_3 - P_{1\text{dB}} = -53.8 - (-66.5) = \mathbf{+12.7\text{ dB}}$, which is moderately higher than the canonical $9.6\text{ dB}$ offset predicted for an ideal memoryless third-order polynomial nonlinearity, due to non-ideal slope compression and ADC clipping dynamics.
+!!! question "Prompt"
+    Compare $\text{IIP}_3 - P_{1\text{dB}}$ with $9.6\text{ dB}$. Why does compression begin earlier in two-tone tests than in single-tone tests?
+
+**Answer:**
+
+* **Numerical Comparison:** The measured difference is $\text{IIP}_3 - P_{1\text{dB}} = +12.7\text{ dB}$, which is moderately higher than the canonical $9.6\text{ dB}$ offset predicted for an ideal memoryless third-order polynomial nonlinearity, due to non-ideal slope compression and ADC clipping dynamics.
 * **Why Two-Tone Compression Occurs Earlier:** In a single-tone excitation of voltage amplitude $V_0$, peak instantaneous voltage is $V_{\text{peak}} = V_0$, giving peak envelope power $\text{PEP} = V_0^2 / (2R) = P_{\text{avg}}$. In a two-tone test where each tone has amplitude $V_0$, constructive interference occurs whenever the carriers align in phase:
 
-$$V_{\text{peak, 2-tone}} = V_0 + V_0 = 2 V_0$$
+$$
+V_{\text{peak, 2-tone}} = V_0 + V_0 = 2 V_0
+$$
 
 Because instantaneous electrical power scales quadratically with voltage ($V^2$), peak envelope power is:
 
-$$\text{PEP} \propto (2 V_0)^2 = 4 V_0^2 \implies \mathbf{+6.0\text{ dB higher than a single tone of equal amplitude}}$$
+$$
+\text{PEP} \propto (2 V_0)^2 = 4 V_0^2 \implies +6.0\text{ dB higher than a single tone of equal amplitude}
+$$
 
 Consequently, the composite envelope reaches the receiver ADC full-scale saturation limit **6 dB earlier in per-tone input power** than a single-tone stimulus.
 
----
-
 ## 5. Antenna Frequency Response and Bandwidth (Table 7 & Visual Analysis)
 
-The transmission response between a pair of omnidirectional antennas was measured over the $400\text{ MHz}$ to $3000\text{ MHz}$ ($3.0\text{ GHz}$) frequency span using `lab02_antenna_response_gui.py`. Testing parameters displayed in the GUI header are:
-* $\text{TX1 attenuation} = 50.00\text{ dB}$
-* $\text{RX1 manual gain} = 20\text{ dB}$
-* $\text{Automatic sweep step} = 20.00\text{ MHz}$
-* Detection mode: Max Hold per RF frequency
+The transmission response between a pair of omnidirectional antennas was measured over $400\text{ MHz}$ to $3000\text{ MHz}$ ($3.0\text{ GHz}$) using `lab02_antenna_response_gui.py`:
+
+* **TX1 Attenuation:** $50.00\text{ dB}$
+* **RX1 Manual Gain:** $20\text{ dB}$
+* **Automatic Sweep Step:** $20.00\text{ MHz}$
+* **Detection Mode:** Max Hold per RF frequency
 
 ### Measurement Results (Table 7)
+
 From `antenna_response.csv` and the real-time GUI curve, the primary resonance peak occurs at $1700.0\text{ MHz}$ ($1.70\text{ GHz}$) with maximum received relative power $P_{\text{peak}} = -28.80\text{ dB}$. The $-3\text{ dB}$ power threshold is:
 
-$$P_{-3\text{dB}} = -28.80\text{ dB} - 3.0\text{ dB} = -31.80\text{ dB}$$
+$$
+P_{-3\text{dB}} = -28.80\text{ dB} - 3.0\text{ dB} = -31.80\text{ dB}
+$$
 
 | Antenna Metric | Measured Value |
 | :--- | :---: |
@@ -203,15 +240,13 @@ $$P_{-3\text{dB}} = -28.80\text{ dB} - 3.0\text{ dB} = -31.80\text{ dB}$$
 | **3-dB Operational Bandwidth ($BW = f_H - f_L$)** | $\mathbf{110.0\text{ MHz}}$ |
 
 ### In-Depth Visual Analysis of the Antenna Trace
-Inspection of the spectrum trace in the captured screenshot reveals four distinct electromagnetic operating regimes:
+
 1. **Primary Operational Passband ($1.65\text{ GHz} - 1.76\text{ GHz}$):** A dominant, smooth global resonance peak reaches $-28.80\text{ dB}$ at $1.70\text{ GHz}$. The extracted 3-dB bandwidth of $110.0\text{ MHz}$ yields a fractional bandwidth of $\text{FBW} = (110 / 1700) \times 100\% \approx 6.5\%$, typical of a tuned half-wave dipole or matched blade monopole antenna.
 2. **Secondary Multi-Band Resonant Peaks:**
-   * *Sub-1 GHz Cellular Peak ($\approx 1.02\text{ GHz}$):* A distinct local peak reaches $\approx -31.8\text{ dB}$ near $1.0\text{ GHz}$, matching the commercial GSM-900 / LTE cellular mobile uplink band.
-   * *2.4 GHz ISM Band Peak ($\approx 2.44\text{ GHz}$):* A pronounced resonance peak reaches $\approx -33.5\text{ dB}$ directly across the $2.40 - 2.48\text{ GHz}$ Industrial, Scientific, and Medical (ISM) band (Wi-Fi and Bluetooth). This demonstrates that the antenna is an engineered multi-band commercial element.
-3. **Electrically Small Mismatch Fluctuations ($< 900\text{ MHz}$):** Below $900\text{ MHz}$, the curve exhibits severe rapid fluctuations and deep nulls plunging down to $-73\text{ dB}$ at $\approx 550\text{ MHz}$. At these low frequencies, the wavelength is long ($\lambda \approx 50 - 75\text{ cm}$), making the physical antenna electrically small ($l \ll \lambda/2$). The resulting large capacitive reactance creates severe impedance mismatch ($\Gamma \approx 1$) and negligible radiation efficiency.
-4. **High-Frequency Path Loss Rolloff ($> 2.5\text{ GHz}$):** Beyond the 2.44 GHz ISM peak, received power drops monotonically down to $-63\text{ dB}$ at $3.0\text{ GHz}$. This steady attenuation follows the Friis transmission law, where free-space path loss increases with $f^2$, compounded by increased dielectric losses in SMA coaxial cables.
-
----
+    * *Sub-1 GHz Cellular Peak ($\approx 1.02\text{ GHz}$):* A distinct local peak reaches $\approx -31.8\text{ dB}$ near $1.0\text{ GHz}$, matching the commercial GSM-900 / LTE cellular mobile uplink band.
+    * *2.4 GHz ISM Band Peak ($\approx 2.44\text{ GHz}$):* A pronounced resonance peak reaches $\approx -33.5\text{ dB}$ across the $2.40 - 2.48\text{ GHz}$ ISM band (Wi-Fi and Bluetooth), confirming a multi-band commercial design.
+3. **Electrically Small Mismatch Fluctuations ($< 900\text{ MHz}$):** Below $900\text{ MHz}$, the curve exhibits severe rapid fluctuations and deep nulls plunging down to $-73\text{ dB}$ at $\approx 550\text{ MHz}$. At these low frequencies ($\lambda \approx 50 - 75\text{ cm}$), the antenna is electrically small ($l \ll \lambda/2$), causing severe impedance mismatch ($\Gamma \approx 1$) and negligible radiation efficiency.
+4. **High-Frequency Path Loss Rolloff ($> 2.5\text{ GHz}$):** Beyond the $2.44\text{ GHz}$ ISM peak, received power drops monotonically down to $-63\text{ dB}$ at $3.0\text{ GHz}$, following Friis free-space path loss ($\propto f^2$) compounded by SMA coaxial dielectric losses.
 
 ## 6. Team Challenge: Consolidated Specifications and Trade-Offs (Table 8 & Questions 6, 7)
 
@@ -232,57 +267,73 @@ Table 8 compiles the full receiver performance profile across low, nominal, and 
 | **$\text{SFDR}$ ($B=10\text{ kHz}$) [dB]** | $32.9$ | $\mathbf{33.8}$ | $27.8$ |
 
 ### Question 6: Variation Rates of Noise Figure and $P_{1\text{dB}}$ with Gain
-> **Prompt:** *Tabulate Noise Figure and $P_{1\text{dB}}$ as a function of gain. At what rate (dB per dB of gain) does each metric vary?*
 
-**Answer:**  
+!!! question "Prompt"
+    Tabulate Noise Figure and $P_{1\text{dB}}$ as a function of gain. At what rate (dB per dB of gain) does each metric vary?
+
+**Answer:**
+
 * **$P_{1\text{dB}}$ Variation Rate:** Across all gain transitions, input $P_{1\text{dB}}$ shifts downward at exactly the rate of gain increase:
-  $$\frac{\Delta P_{1\text{dB}}}{\Delta \text{Gain}} = \mathbf{-1.0\text{ dB / dB gain}}$$
-  Because the output clipping ceiling is fixed by the ADC full-scale rail, every 1 dB of added front-end gain reduces the allowable input power by exactly 1 dB.
+
+$$
+\frac{\Delta P_{1\text{dB}}}{\Delta \text{Gain}} = -1.0\text{ dB / dB gain}
+$$
+
+Because the output clipping ceiling is fixed by the ADC full-scale rail, every $1\text{ dB}$ of added front-end gain reduces the allowable input power by exactly $1\text{ dB}$.
+
 * **Noise Figure (NF) Variation Rate:**
-  * *From $29.7\text{ dB}$ to $40.2\text{ dB}$ ($\Delta \text{Gain} = +10.5\text{ dB}$):* $\Delta \text{NF} = 9.47 - 21.38 = -11.91\text{ dB}$, yielding a variation rate of $\mathbf{-1.13\text{ dB / dB gain}}$. (Rapid sensitivity improvement as LNA gain suppresses ADC quantization noise).
-  * *From $40.2\text{ dB}$ to $49.6\text{ dB}$ ($\Delta \text{Gain} = +9.4\text{ dB}$):* $\Delta \text{NF} = 8.97 - 9.47 = -0.50\text{ dB}$, yielding a variation rate of $\mathbf{-0.05\text{ dB / dB gain}}$. (Plateauing near the LNA's intrinsic noise figure).
+    * *From $29.7\text{ dB}$ to $40.2\text{ dB}$ ($\Delta \text{Gain} = +10.5\text{ dB}$):* $\Delta \text{NF} = -11.91\text{ dB} \implies \mathbf{-1.13\text{ dB / dB gain}}$ (rapid sensitivity improvement as LNA gain suppresses ADC quantization noise).
+    * *From $40.2\text{ dB}$ to $49.6\text{ dB}$ ($\Delta \text{Gain} = +9.4\text{ dB}$):* $\Delta \text{NF} = -0.50\text{ dB} \implies \mathbf{-0.05\text{ dB / dB gain}}$ (plateauing near the LNA's intrinsic noise figure).
 
 ### Question 7: Maximum Dynamic Range and Blocker Tolerance
-> **Prompt:** *At which gain is dynamic range ($P_{1\text{dB}} - N_{\text{floor}}$) maximized? Which gain setting should be chosen to receive a weak signal in the presence of a strong adjacent blocker, and why?*
 
-**Answer:**  
-1. **Maximum Dynamic Range:** Both linear dynamic range ($P_{1\text{dB}} - N_{\text{floor}} = 38.0\text{ dB}$) and Spurious-Free Dynamic Range ($\text{SFDR} = 33.8\text{ dB}$) reach their global peak at the **nominal gain setting of $40.2\text{ dB}$**.
-2. **Weak Signal Reception with Strong Adjacent Blocker:** One must select the **nominal or lower gain setting ($40.2\text{ dB}$ or lower)**, and **never** the maximum gain ($49.6\text{ dB}$). At maximum gain, input $P_{1\text{dB}}$ collapses to $-76.0\text{ dBFS}$ ($-96.0\text{ dBm}$). A strong adjacent blocker would immediately overdrive the receiver into hard ADC clipping, generating reciprocal mixing and cross-modulation distortion that completely blinds the receiver to the weak desired signal. Nominal gain preserves $10\text{ dB}$ more linearity headroom while maintaining near-optimum noise figure.
+!!! question "Prompt"
+    At which gain is dynamic range ($P_{1\text{dB}} - N_{\text{floor}}$) maximized? Which gain setting should be chosen to receive a weak signal in the presence of a strong adjacent blocker, and why?
 
----
+**Answer:**
+
+1. **Maximum Dynamic Range:** Both linear dynamic range ($38.0\text{ dB}$) and Spurious-Free Dynamic Range ($\text{SFDR} = 33.8\text{ dB}$) reach their global peak at the **nominal gain setting of $40.2\text{ dB}$**.
+2. **Weak Signal Reception with Strong Adjacent Blocker:** Select the **nominal or lower gain setting ($40.2\text{ dB}$ or lower)**, and **never** maximum gain ($49.6\text{ dB}$). At maximum gain, input $P_{1\text{dB}}$ collapses to $-76.0\text{ dBFS}$ ($-96.0\text{ dBm}$); a strong adjacent blocker would immediately overdrive the receiver into hard ADC clipping, generating reciprocal mixing and cross-modulation distortion that blinds the receiver. Nominal gain preserves $10\text{ dB}$ more linearity headroom while maintaining near-optimum noise figure.
 
 ## 7. Mandatory Analyses, Expansion Question 8, and Error Breakdown
 
 ### Mandatory Analysis 1: NF and Linearity vs. Gain (SFDR Argument)
-Plotting NF and $\text{IIP}_3$ against receiver gain exhibits two opposing trends. Below $40\text{ dB}$ gain, NF improves sharply ($\approx -1.13\text{ dB/dB}$), while linearity degrades at $-1.0\text{ dB/dB}$. Above $40\text{ dB}$ gain, NF reaches diminishing returns ($\approx -0.05\text{ dB/dB}$), but linearity continues to degrade at $-1.0\text{ dB/dB}$. The optimal trade-off that maximizes intermodulation-free dynamic range lies at **$\text{rf\_gain} \approx 40.2\text{ dB}$**, where $\text{SFDR} = 33.8\text{ dB}$ is maximized.
+
+Plotting NF and $\text{IIP}_3$ against receiver gain exhibits two opposing trends. Below $40\text{ dB}$ gain, NF improves sharply ($\approx -1.13\text{ dB/dB}$) while linearity degrades at $-1.0\text{ dB/dB}$. Above $40\text{ dB}$ gain, NF reaches diminishing returns ($\approx -0.05\text{ dB/dB}$), but linearity continues to degrade at $-1.0\text{ dB/dB}$. The optimal trade-off lies at `rf_gain = 40.2 dB`, where $\text{SFDR} = 33.8\text{ dB}$ is maximized.
 
 ### Mandatory Analysis 2: Input-Output Transfer Characteristics
-In single-tone mode, fundamental output power tracks input drive linearly ($G_0 = 59.0\text{ dB}$) until 1-dB compression occurs at $P_{\text{in}} = -66.5\text{ dBFS}$, clamping hard at $-6.50\text{ dBFS}$. In two-tone mode, constructive peak envelope alignment produces early saturation, with the empirical intercept point located at $\text{IIP}_3 = -53.8\text{ dBFS}$ ($+12.7\text{ dB}$ above $P_{1\text{dB}}$).
+
+In single-tone mode, fundamental output power tracks input drive linearly ($G_0 = 59.0\text{ dB}$) until 1-dB compression occurs at $P_{\text{in}} = -66.5\text{ dBFS}$, clamping hard at $-6.50\text{ dBFS}$. In two-tone mode, constructive peak envelope alignment produces early saturation, with the empirical intercept point at $\text{IIP}_3 = -53.8\text{ dBFS}$ ($+12.7\text{ dB}$ above $P_{1\text{dB}}$).
 
 ### Mandatory Analysis 3: Direct Method vs. $Y$-Factor Comparison
-Comparing Table 3 and Table 4 confirms that the direct method matches physical reality only at the calibrated nominal gain ($\text{rf\_gain} = 40.2\text{ dB}$). When gain is increased to $49.6\text{ dB}$, the direct formula yields an erroneous NF increase to $31.78\text{ dB}$ because amplified analog noise overrides ADC quantization noise while assuming static $G_{FS} = 20\text{ dB}$. The $Y$-factor method correctly tracks physical behavior, confirming an actual NF reduction to $8.97\text{ dB}$.
 
-### Question 8 (Expansion Question): Why Increasing Receiver Gain Does Not Continuously Improve Sensitivity
-> **Prompt:** *Why does increasing receiver gain not continuously improve sensitivity? Quantify your answer using your experimental data.*
+Comparing Table 3 and Table 4 confirms that the direct method matches physical reality only at the calibrated nominal gain (`rf_gain = 40.2 dB`). At $49.6\text{ dB}$, the direct formula yields an erroneous NF increase to $31.78\text{ dB}$ because amplified analog noise overrides ADC quantization noise while assuming static $G_{FS} = 20\text{ dB}$. The $Y$-factor method correctly tracks physical behavior, confirming an actual NF reduction to $8.97\text{ dB}$.
 
-**Answer:**  
-Receiver sensitivity represents the minimum detectable input signal power $S_{\text{min}}$ required to achieve a specified signal-to-noise ratio $\text{SNR}_{\text{min}}$:
+### Question 8 (Expansion Question): Why Increasing Gain Does Not Continuously Improve Sensitivity
 
-$$S_{\text{min}}\,[\text{dBm}] = -174\text{ dBm/Hz} + \text{NF}\,[\text{dB}] + 10\log_{10}(B) + \text{SNR}_{\text{min}}\,[\text{dB}]$$
+!!! question "Prompt"
+    Why does increasing receiver gain not continuously improve sensitivity? Quantify your answer using your experimental data.
 
-Sensitivity depends directly on the **Noise Figure ($\text{NF}$)**, not on gain. Gain amplifies both incoming signal and input thermal noise equally, preserving SNR. According to Friis' cascaded noise formula:
+**Answer:** Receiver sensitivity is governed by the minimum detectable input signal power $S_{\text{min}}$:
 
-$$F_{\text{total}} = F_{\text{LNA}} + \frac{F_{\text{mixer}}-1}{G_{\text{LNA}}} + \frac{F_{\text{ADC}}-1}{G_{\text{LNA}} G_{\text{mixer}}}$$
+$$
+S_{\text{min}}\,[\text{dBm}] = -174\text{ dBm/Hz} + \text{NF}\,[\text{dB}] + 10\log_{10}(B) + \text{SNR}_{\text{min}}\,[\text{dB}]
+$$
 
-As front-end gain $G_{\text{LNA}}$ is increased, downstream noise contributions are suppressed until total noise factor converges asymptotically to the intrinsic noise figure of the first LNA stage ($F_{\text{total}} \to F_{\text{LNA}}$).
+Sensitivity depends directly on the **Noise Figure ($\text{NF}$)**, not on gain. Gain amplifies both signal and input thermal noise equally, preserving SNR. According to Friis' cascaded noise formula:
 
-* **Quantitative Evidence from Our Measurements:**
-  * Increasing gain from $29.7\text{ dB}$ to $40.2\text{ dB}$ ($+10.5\text{ dB}$ gain) reduces NF by **$11.91\text{ dB}$** (from $21.38\text{ dB}$ down to $9.47\text{ dB}$), improving sensitivity by nearly $12\text{ dB}$.
-  * Increasing gain further from $40.2\text{ dB}$ to $49.6\text{ dB}$ ($+9.4\text{ dB}$ gain) yields a negligible NF reduction of merely **$0.50\text{ dB}$** (from $9.47\text{ dB}$ down to $8.97\text{ dB}$).
-* **Severe Linearity Penalty:** While sensitivity improves by only $0.5\text{ dB}$, input $P_{1\text{dB}}$ degrades by **$9.5\text{ dB}$** (from $-86.5\text{ dBm}$ down to $-96.0\text{ dBm}$), and SFDR deteriorates by $6.0\text{ dB}$. Beyond the point where LNA noise dominates, additional gain provides zero practical sensitivity benefit while degrading dynamic range and blocker resilience.
+$$
+F_{\text{total}} = F_{\text{LNA}} + \frac{F_{\text{mixer}}-1}{G_{\text{LNA}}} + \frac{F_{\text{ADC}}-1}{G_{\text{LNA}} G_{\text{mixer}}}
+$$
+
+Once $G_{\text{LNA}}$ is large enough to suppress downstream noise contributions, $F_{\text{total}} \to F_{\text{LNA}}$ asymptotically.
+
+* **Quantitative Evidence:**
+    * Increasing gain from $29.7\text{ dB}$ to $40.2\text{ dB}$ ($+10.5\text{ dB}$) reduces NF by $11.91\text{ dB}$ (from $21.38\text{ dB}$ to $9.47\text{ dB}$), improving sensitivity by nearly $12\text{ dB}$.
+    * Increasing gain from $40.2\text{ dB}$ to $49.6\text{ dB}$ ($+9.4\text{ dB}$) reduces NF by merely $0.50\text{ dB}$ (from $9.47\text{ dB}$ to $8.97\text{ dB}$).
+* **Linearity Penalty:** Simultaneously, input $P_{1\text{dB}}$ degrades by $9.5\text{ dB}$ (from $-86.5\text{ dBm}$ to $-96.0\text{ dBm}$) and SFDR drops by $6.0\text{ dB}$.
 
 ### Prediction vs. Measurement Error Summary
-The table below compares theoretical lab manual simulation predictions with our experimental results.
 
 | Performance Metric | Predicted | Measured | Relative Error | Primary Source of Error |
 | :--- | :---: | :---: | :---: | :--- |
