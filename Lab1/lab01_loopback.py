@@ -67,7 +67,7 @@ class lab01_loopback(gr.top_block, Qt.QWidget):
         ##################################################
         self.samp_rate = samp_rate = 2600000
         self.lo_shift = lo_shift = 0
-        self.fc = fc = 945e6
+        self.fc = fc = 434e6
         self.uri = uri = "ip:192.168.1.10"
         self.tx_att = tx_att = 60
         self.rf_gain = rf_gain = 10
@@ -109,7 +109,7 @@ class lab01_loopback(gr.top_block, Qt.QWidget):
         self._rec_callback(self.rec)
         _rec_check_box.stateChanged.connect(lambda i: self.set_rec(self._rec_choices[bool(i)]))
         self.top_layout.addWidget(_rec_check_box)
-        self._fc_range = qtgui.Range(325e6, 3.8e9, 16e6, 945e6, 200)
+        self._fc_range = qtgui.Range(325e6, 3.8e9, 16e6, 434e6, 200)
         self._fc_win = qtgui.RangeWidget(self._fc_range, self.set_fc, "'fc'", "counter", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._fc_win)
         self._f_tx_range = qtgui.Range(-1e6, 1e6, 50e3, 250e3, 200)
@@ -263,7 +263,7 @@ class lab01_loopback(gr.top_block, Qt.QWidget):
         self.iio_pluto_sink_0.set_samplerate(samp_rate)
         self.iio_pluto_sink_0.set_attenuation(0, tx_att)
         self.iio_pluto_sink_0.set_filter_params('Off', '', 0, 0)
-        self.epy_block_0 = epy_block_0.blk(team_id="Team_01", lab_id="lab01", fc=f_tune, fs=samp_rate, gain=rf_gain, record=rec, max_seconds=rec_sec, out_dir=".")
+        self.epy_block_0 = epy_block_0.blk(team="Team-01", lab=1, fc=f_tune, fs=samp_rate, gain=rf_gain, record=rec, max_seconds=rec_sec, folder="recordings")
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, f_tx, 0.5, 0, 0)
 
 

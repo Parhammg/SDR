@@ -67,6 +67,7 @@ class lab01_monitor(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate = 2600000
         self.lo_shift = lo_shift = 0
         self.fc = fc = 945e6
+        self.uri = uri = "ip:192.168.1.10"
         self.rf_gain = rf_gain = 20
         self.rec_sec = rec_sec =  min(4.0, 80e6/(8*samp_rate))
         self.rec = rec = False
@@ -236,7 +237,7 @@ class lab01_monitor(gr.top_block, Qt.QWidget):
         self._lo_shift_range = qtgui.Range(-500e3, 500e3, 10e3, 0, 200)
         self._lo_shift_win = qtgui.RangeWidget(self._lo_shift_range, self.set_lo_shift, "'lo_shift'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._lo_shift_win)
-        self.iio_pluto_source_0 = iio.fmcomms2_source_fc32("ip:192.168.1.10" if "ip:192.168.1.10" else iio.get_pluto_uri(), [True, True], 32768)
+        self.iio_pluto_source_0 = iio.fmcomms2_source_fc32(uri if uri else iio.get_pluto_uri(), [True, True], 32768)
         self.iio_pluto_source_0.set_len_tag_key('packet_len')
         self.iio_pluto_source_0.set_frequency(f_tune)
         self.iio_pluto_source_0.set_samplerate(samp_rate)
@@ -246,7 +247,7 @@ class lab01_monitor(gr.top_block, Qt.QWidget):
         self.iio_pluto_source_0.set_rfdc(True)
         self.iio_pluto_source_0.set_bbdc(True)
         self.iio_pluto_source_0.set_filter_params('Off', '', 0, 0)
-        self.epy_block_0 = epy_block_0.blk(team_id="Team_01", lab_id="lab01", fc=f_tune, fs=samp_rate, gain=rf_gain, record=rec, max_seconds=rec_sec, out_dir=".")
+        self.epy_block_0 = epy_block_0.blk(team="Team-01", lab=1, fc=f_tune, fs=samp_rate, gain=rf_gain, record=rec, max_seconds=rec_sec, folder="recordings")
 
 
         ##################################################
@@ -292,6 +293,12 @@ class lab01_monitor(gr.top_block, Qt.QWidget):
     def set_fc(self, fc):
         self.fc = fc
         self.set_f_tune(int(self.fc + self.lo_shift))
+
+    def get_uri(self):
+        return self.uri
+
+    def set_uri(self, uri):
+        self.uri = uri
 
     def get_rf_gain(self):
         return self.rf_gain

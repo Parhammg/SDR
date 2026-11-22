@@ -1,0 +1,244 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- page layout, banners, headers/footers, headings, lists,
+%  captions and tables.  The visual language reproduces the reference
+%  lab-manual PDF: teal banner with angled wedges, icon headings,
+%  dark header box, thick footer rule with "page x of y".
+%======================================================================
+\makeatletter
+
+%----------------------------------------------------------------------
+% 1) Document type
+%----------------------------------------------------------------------
+\newcommand{\sdr@doctypeFA}{دستور کار}
+\newcommand{\sdr@doctypeEN}{Lab Manual}
+\newcommand{\sdr@pw}{21}                       % page width in cm
+% experiment number in Persian digits (independent of font digit mapping)
+\newcommand{\SDRexpnumFA}{\ifcase\SDRexpnum ۰\or ۱\or ۲\or ۳\or ۴\or ۵\or ۶\or ۷\or ۸\or ۹\else\SDRexpnum\fi}
+\ifdefstring{\SDRdoctype}{prelab}{%
+  \renewcommand{\sdr@doctypeFA}{راهنمای پیش‌از‌جلسه}%
+  \renewcommand{\sdr@doctypeEN}{Pre-Lab}}{}
+\ifdefstring{\SDRdoctype}{cheat}{%
+  \renewcommand{\sdr@doctypeFA}{برگه‌ی مرجع سریع}%
+  \renewcommand{\sdr@doctypeEN}{Cheat Sheet}%
+  \renewcommand{\sdr@pw}{29.7}}{}
+
+%----------------------------------------------------------------------
+% 2) Geometry and paragraph settings
+%----------------------------------------------------------------------
+\ifdefstring{\SDRdoctype}{cheat}{%
+  \geometry{a4paper,landscape,left=0.75cm,right=0.75cm,top=1.6cm,bottom=1.05cm,
+            headheight=13pt,headsep=0.15cm,footskip=0.55cm}
+  \linespread{1.12}
+  \setlength{\parindent}{0pt}\setlength{\parskip}{1.5pt}
+  \setlength{\columnsep}{0.42cm}
+}{%
+  \geometry{a4paper,left=2cm,right=2cm,top=2.35cm,bottom=2.85cm,
+            headheight=14pt,headsep=0.5cm,footskip=1.1cm}
+  \linespread{1.26}
+  \setlength{\parindent}{1.4em}\setlength{\parskip}{2pt plus 1pt}
+}
+\raggedbottom
+\tolerance=1800 \emergencystretch=2.5em \hfuzz=1pt
+\hypersetup{pdftitle={SDR Lab - Experiment \SDRexpnum\space- \SDRexptitleEN\space(\sdr@doctypeEN)},
+            pdfsubject={\SDRcourseEN}}
+
+%----------------------------------------------------------------------
+% 3) Footer, running header and first-page banners (TikZ overlays)
+%----------------------------------------------------------------------
+\newcommand{\sdr@semester}{\ifdefempty{\SDRsemesterFA}{}{\ — \SDRsemesterFA}}
+\newcommand{\sdr@emblem}[2]{% #1 = x, #2 = y (cm)
+  \ifdefempty{\SDRlogofile}{%
+    \begin{scope}[shift={(#1,#2)}]
+      \fill[sdrLight] (0,0) circle (0.58); \draw[sdrMid,line width=0.9pt] (0,0) circle (0.58);
+      \begin{scope}[sdrDark,line width=0.95pt,line cap=round,line join=round,scale=1.08,yshift=0.07cm]
+        \@nameuse{sdr@icon@antenna}
+      \end{scope}
+    \end{scope}}{%
+    \node at (#1,#2) {\includegraphics[height=1.2cm]{\SDRroot/common/\SDRlogofile}};}}
+
+\newcommand{\sdr@footer}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.south west)},x=1cm,y=1cm]
+    \draw[sdrDark,line width=2.4pt] (0,2.0)--(21,2.0);
+    \sdr@emblem{19.05}{1.08}
+    \node[align=center,inner sep=0pt,text=sdrDark,font=\footnotesize] at (10.5,1.08)
+      {\fa{\bfseries\SDRcourseFA\ \lr{(SDR)}}\\[2pt]\fa{\color{sdrMid}\SDRdeptFA\sdr@semester}};
+    \node[anchor=west,inner sep=0pt,text=sdrDark,font=\footnotesize] at (2.0,1.08)
+      {\fa{\bfseries صفحه‌ی \thepage{} از \pageref*{LastPage}}};
+  \end{tikzpicture}}
+
+\newcommand{\sdr@header}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.north west)},x=1cm,y=1cm]
+    \draw[sdrDark,line width=0.9pt] (0,-1.3)--(21,-1.3);
+    \node[anchor=east,fill=sdrDark,text=white,rounded corners=4pt,inner xsep=11pt,
+          inner ysep=4.5pt,font=\footnotesize] at (19.0,-1.3)
+      {\fa{\bfseries آزمایش \SDRexpnumFA: \SDRexptitle\ \ |\ \ \sdr@doctypeFA}};
+  \end{tikzpicture}}
+
+% --- full banner (lab manual) ---
+\newcommand{\sdr@banner@lab}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.north west)},x=1cm,y=1cm]
+    \fill[sdrLight] (0,-1.7) rectangle (21,-4.6);
+    \fill[sdrDark]  (0,-4.6) rectangle (21,-5.7);
+    \fill[sdrMid]   (17.7,-0.9)--(21,-0.9)--(21,-6.4)--cycle;
+    \fill[sdrDark]  (17.2,-1.7)--(17.7,-0.9)--(18.18,-1.7)--cycle;
+    \fill[sdrMid]   (0,-0.9)--(3.3,-6.4)--(0,-6.4)--cycle;
+    \fill[sdrDark!60!black] (2.88,-5.7)--(3.3,-6.4)--(3.3,-5.7)--cycle;
+    \node[anchor=east,inner sep=0pt,text=sdrDark] at (16.95,-1.3) {\fa{\bfseries\SDRopeningFA}};
+    \begin{scope}[shift={(3.75,-4.3)}]
+      \clip[rounded corners=2pt] (0,0) rectangle (4.2,2.3);
+      \fill[sdrDark!88!black] (0,0) rectangle (4.2,2.3);
+      \SDRbannerart
+    \end{scope}
+    \node[anchor=east,inner sep=0pt,text=sdrDark] at (17.3,-3.2)
+      {\fa{\SDRblackfont\fontsize{40}{44}\selectfont آزمایش \SDRexpnumFA}};
+    \node[fill=sdrMid,text=white,rounded corners=3pt,inner xsep=9pt,inner ysep=4pt] (dt) at (10.15,-2.85)
+      {\fa{\bfseries\large\sdr@doctypeFA}};
+    \node[anchor=north,text=sdrMid,inner sep=4pt,font=\sffamily] at (dt.south) {\sdr@doctypeEN};
+    \node[anchor=east,inner sep=0pt,text=white] at (19.3,-5.15) {\fa{\bfseries\Large\SDRexptitle}};
+    \node[anchor=west,inner sep=0pt,text=sdrLight,font=\sffamily\large] at (3.75,-5.15) {\SDRexptitleEN};
+  \end{tikzpicture}}
+
+% --- compact banner (pre-lab: no cover page, no table of contents) ---
+\newcommand{\sdr@banner@prelab}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.north west)},x=1cm,y=1cm]
+    \fill[sdrLight] (0,-0.95) rectangle (21,-2.75);
+    \fill[sdrDark]  (0,-2.75) rectangle (21,-3.45);
+    \fill[sdrMid]   (18.75,-0.45)--(21,-0.45)--(21,-3.9)--cycle;
+    \fill[sdrMid]   (0,-0.45)--(2.25,-3.9)--(0,-3.9)--cycle;
+    \node[anchor=east,inner sep=0pt,text=sdrDark,font=\footnotesize] at (18.5,-0.66) {\fa{\bfseries\SDRopeningFA}};
+    \node[anchor=east,inner sep=0pt,text=sdrDark] at (18.75,-1.86)
+      {\fa{{\SDRblackfont\fontsize{25}{29}\selectfont آزمایش \SDRexpnumFA}%
+           \hspace{0.55em}{\color{sdrMid}\fontsize{22}{26}\selectfont|}\hspace{0.55em}%
+           {\bfseries\fontsize{19}{24}\selectfont\SDRexptitle}}};
+    \node[anchor=west,fill=sdrMid,text=white,rounded corners=3pt,inner xsep=9pt,inner ysep=4pt] at (2.55,-1.86)
+      {\fa{\bfseries\sdr@doctypeFA}};
+    \node[anchor=east,inner sep=0pt,text=white,font=\small] at (19.6,-3.1) {\fa{\bfseries\SDRcourseFA}};
+    \node[anchor=west,inner sep=0pt,text=sdrLight,font=\sffamily\small] at (2.25,-3.1)
+      {\sdr@doctypeEN\ \textperiodcentered\ \SDRexptitleEN};
+  \end{tikzpicture}}
+
+% --- slim bar (cheat sheet, landscape, every page) ---
+\newcommand{\sdr@header@cheat}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.north west)},x=1cm,y=1cm]
+    \fill[sdrDark] (0,-0.35) rectangle (29.7,-1.25);
+    \fill[sdrMid]  (27.95,-0.35)--(29.7,-0.35)--(29.7,-1.25)--(28.5,-1.25)--cycle;
+    \fill[sdrMid]  (0,-0.35)--(1.2,-0.35)--(1.75,-1.25)--(0,-1.25)--cycle;
+    \node[anchor=east,inner sep=0pt,text=white] at (27.6,-0.8)
+      {\fa{\bfseries\large\sdr@doctypeFA\ \ |\ \ آزمایش \SDRexpnumFA: \SDRexptitle}};
+    \node[anchor=west,inner sep=0pt,text=sdrLight,font=\sffamily\small] at (2.2,-0.8)
+      {SDR Lab\ \textperiodcentered\ \sdr@doctypeEN\ \textperiodcentered\ \SDRexptitleEN};
+  \end{tikzpicture}}
+\newcommand{\sdr@footer@cheat}{%
+  \begin{tikzpicture}[remember picture,overlay,shift={(current page.south west)},x=1cm,y=1cm]
+    \draw[sdrDark,line width=1.2pt] (0.75,0.72)--(28.95,0.72);
+    \node[anchor=east,inner sep=0pt,text=sdrDark,font=\scriptsize] at (28.95,0.42)
+      {\fa{\bfseries\SDRcourseFA\ \lr{(SDR)}\sdr@semester}};
+    \node[anchor=west,inner sep=0pt,text=sdrDark,font=\scriptsize] at (0.75,0.42)
+      {\fa{\bfseries صفحه‌ی \thepage{} از \pageref*{LastPage}}};
+  \end{tikzpicture}}
+
+\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{sdrmain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyhead[C]{\sdr@header}\fancyfoot[C]{\sdr@footer}}
+\fancypagestyle{sdrfirstlab}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyhead[C]{\sdr@banner@lab}\fancyfoot[C]{\sdr@footer}}
+\fancypagestyle{sdrfirstprelab}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyhead[C]{\sdr@banner@prelab}\fancyfoot[C]{\sdr@footer}}
+\fancypagestyle{sdrcheat}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyhead[C]{\sdr@header@cheat}\fancyfoot[C]{\sdr@footer@cheat}}
+
+% \SDRbanner : put right after \begin{document}
+\newcommand{\SDRbanner}{%
+  \ifdefstring{\SDRdoctype}{cheat}{\pagestyle{sdrcheat}}{%
+    \pagestyle{sdrmain}%
+    \ifdefstring{\SDRdoctype}{prelab}%
+      {\thispagestyle{sdrfirstprelab}\vspace*{1.75cm}}%
+      {\thispagestyle{sdrfirstlab}\vspace*{4.35cm}}}}
+
+%----------------------------------------------------------------------
+% 4) Headings.  Sections carry an icon and no number (as in the reference
+%    manual);  \isection{<icon>}{<title>}  ==  \section with an icon.
+%    The Persian aliases of xepersian (\قسمت, \زیرقسمت, \زیرزیرقسمت) used in
+%    the LaTeX template keep working and get the same formatting.
+%----------------------------------------------------------------------
+\setcounter{secnumdepth}{0}
+\newcommand{\sdr@nexticon}{dot}
+\newcommand{\secicon}[1]{\gdef\sdr@nexticon{#1}}
+\newcommand{\isection}[2]{\secicon{#1}\section{#2}}
+\ifdefstring{\SDRdoctype}{cheat}{%
+  \titleformat{\section}[block]{\normalsize\bfseries\color{sdrHead}}{}{0pt}{}
+  \titlespacing*{\section}{0pt}{3pt}{1pt}
+}{%
+  \titleformat{\section}[block]{\fontsize{15.5}{21}\selectfont\bfseries\color{sdrHead}}{}{0pt}%
+     {\SDRicon[0.66]{\sdr@nexticon}\hspace{0.45em}}[\gdef\sdr@nexticon{dot}]
+  \titlespacing*{\section}{0pt}{15pt plus 3pt minus 2pt}{5pt plus 1pt}
+}
+\titleformat{\subsection}[block]{\fontsize{12}{17.5}\selectfont\bfseries\color{sdrTeal}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{9pt plus 2pt minus 1pt}{2pt}
+\titleformat{\subsubsection}[block]{\normalsize\bfseries\color{sdrSky}}{}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{6pt plus 2pt}{1pt}
+
+% --- numbered parts of the experiment:  \labpart[<time>]{<title>} ---
+\newcounter{labpart}
+\newcommand{\labpart}[2][]{%
+  \par\addvspace{14pt plus 3pt}\needspace{6\baselineskip}%
+  \refstepcounter{labpart}%
+  \begin{tcolorbox}[enhanced,boxrule=0pt,frame hidden,arc=2pt,colback=sdrTeal!9,
+       borderline east={3.5pt}{0pt}{sdrTeal},left=8pt,right=12pt,top=4pt,bottom=4pt,
+       boxsep=0pt,before skip=0pt,after skip=6pt]
+    {\fontsize{12}{17.5}\selectfont\bfseries\color{sdrTeal!70!black}بخش \thelabpart: #2}%
+    \ifstrempty{#1}{}{\hfill{\renewcommand{\SDRiconcolor}{sdrTeal}\SDRicon[0.38]{clock}}%
+       \hspace{0.3em}{\small\color{sdrGray}#1}}%
+  \end{tcolorbox}\nopagebreak}
+
+%----------------------------------------------------------------------
+% 5) Lists
+%----------------------------------------------------------------------
+\def\sdr@alph#1{\ifcase#1\or الف\or ب\or پ\or ت\or ث\or ج\or چ\or ح\or خ\or د\or ذ\or ر\or ز\or ژ\fi}
+\newcommand*{\sdralph}[1]{\expandafter\sdr@alph\csname c@#1\endcsname}
+\AddEnumerateCounter{\sdralph}{\sdr@alph}{الف}
+\DeclareRobustCommand{\sdr@stepbadge}[1]{%
+  \tikz[baseline=(n.base)]\node[circle,fill=sdrMid,text=white,inner sep=0.6pt,
+        minimum size=1.35em,font=\scriptsize](n){\fa{\bfseries #1}};}
+\DeclareRobustCommand{\sdr@checkbox}{\tikz[baseline=0.02em]\draw[sdrDark,line width=0.7pt,rounded corners=1pt]
+        (0,0) rectangle (0.75em,0.75em);}
+
+\setlist{itemsep=1.5pt plus 1pt,parsep=1pt,topsep=3pt plus 1pt,partopsep=0pt}
+% (the bullet is drawn with TikZ: a math-mode label would trigger bidi notices)
+\DeclareRobustCommand{\sdr@bullet}{\tikz[baseline=-0.6ex]\fill[sdrMid] (0,0)--(0.42em,0.25em)--(0.42em,-0.25em)--cycle;}
+\setlist[itemize,1]{label=\sdr@bullet,leftmargin=1.5em}
+\setlist[itemize,2]{label={\color{sdrMid}--},leftmargin=1.3em}
+\setlist[enumerate,1]{label=\arabic*.,leftmargin=1.9em}
+\setlist[enumerate,2]{label=(\sdralph*),leftmargin=2.3em}
+% numbered procedure steps (use [resume] to continue numbering)
+\newlist{steps}{enumerate}{2}
+\setlist[steps,1]{label=\sdr@stepbadge{\arabic*},ref=\arabic*,leftmargin=2.2em,labelsep=0.55em,
+                  itemsep=3pt plus 1pt,topsep=4pt}
+\setlist[steps,2]{label=(\sdralph*),ref=\thestepsi-\sdralph*,leftmargin=2.3em,itemsep=1pt,topsep=2pt}
+% tick-box list
+\newlist{checklist}{itemize}{1}
+\setlist[checklist,1]{label=\sdr@checkbox,leftmargin=1.9em,itemsep=2pt}
+% learning-outcome list
+\newlist{objectives}{itemize}{1}
+\setlist[objectives,1]{label={{\renewcommand{\SDRiconcolor}{sdrTeal}\SDRicon[0.3]{target}}},
+                       leftmargin=1.9em,itemsep=1.5pt}
+
+%----------------------------------------------------------------------
+% 6) Captions and tables
+%----------------------------------------------------------------------
+\captionsetup{font=small,labelfont={bf,color=sdrDark},labelsep=colon,
+              justification=centering,skip=5pt}
+\renewcommand{\arraystretch}{1.2}
+\arrayrulecolor{sdrDark!45}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+% X column that never produces overfull lines when it holds unbreakable items (parameter lists)
+\newcolumntype{Z}{>{\tolerance=10000\emergencystretch=5em\hbadness=10000\arraybackslash}X}
+\newcommand{\hdrrow}{\rowcolor{sdrDark}}
+\newcommand{\hdr}[1]{\textbf{\color{white}#1}}
+\newcommand{\subhdrrow}{\rowcolor{sdrLight}}
+\newcommand{\rowstrut}{\rule{0pt}{1.65em}}       % taller rows for hand-written entries
+\newcommand{\blank}[1][2.5cm]{\makebox[#1]{\dotfill}}
+
+\makeatother

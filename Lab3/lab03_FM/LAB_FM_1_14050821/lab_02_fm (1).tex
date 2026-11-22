@@ -1,0 +1,1624 @@
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- Experiment 2: FM radio, demodulation, stereo and RDS
+%  LAB MANUAL for BOTH sessions (weeks 3 and 4 of the regulations)
+%  File : labs/lab_02_fm.tex                 (XeLaTeX, compile twice)
+%
+%  [INSTRUCTOR] QUICK FACTS (details: instructor/instructor_notes_02_fm.md)
+%   * Session 1 = Parts 1-5 (two detectors, cabled NBFM link, threshold,
+%     team challenge "own deviation").  Session 2 = Parts 6-9 (WFM mono,
+%     stereo, RDS, challenge "RDS versus level").  The second challenge is
+%     my design: the regulations list one team challenge for this experiment
+%     but the session pattern has a challenge slot in every session.
+%   * Receiver: RTL-SDR.  Transmitter: written for ADALM-PLUTO ("PlutoSDR
+%     Sink"); Table tab:txhw maps the parameters to HackRF / USRP.  [HW]
+%   * Transmission is CABLED ONLY: TX port -> 30 dB attenuator -> receiver.
+%     You must hand out the list of allowed carrier frequencies (f_tx).
+%     A stock Pluto tunes 325 MHz - 3.8 GHz, so the default f_tx is 434 MHz.
+%   * All six flowgraphs exist as reference files in instructor/lab02/ and
+%     compile with grcc (GNU Radio 3.10.9).  Both simulations were run; the
+%     hardware flowgraphs were NOT run (no hardware in my test environment).
+%   * Session 2 needs gr-rds on the lab PCs and the two helper files
+%     code/lab02/sdrlab_rds_counter.py and instructor/lab02/lab02_stereo_rds_tx.grc
+%     (the latter is handed to the students as a ready-made signal source).
+%   * Numbers quoted in "expected observation" boxes come from my GNU Radio
+%     simulations with ideal noise; real hardware will differ by a few dB.
+%======================================================================
+\documentclass[a4paper,11pt]{article}
+\IfFileExists{../common/preamble.tex}{\def\SDRroot{..}}{\def\SDRroot{.}}
+\def\SDRdoctype{lab}
+\def\SDRexpnum{2}
+\def\SDRexptitle{رادیو \lr{FM}}
+% [orig] \def\SDRexptitle{رادیو \lr{FM}، استریو و \lr{RDS}}
+\def\SDRexptitleEN{FM Radio}
+% [orig] \def\SDRexptitleEN{FM Radio, Stereo and RDS}
+\input{\SDRroot/common/preamble}
+
+% banner artwork: stereo multiplex spectrum (drawn, not a screenshot)
+\renewcommand{\SDRbannerart}{%
+  \draw[sdrLight!40,line width=0.4pt] (0.2,0.45)--(4.0,0.45);
+  \fill[sdrBlue!70] (0.3,0.45)--(0.4,1.75)--(1.1,1.75)--(1.2,0.45)--cycle;
+  \draw[sdrAmber,line width=1.2pt] (1.5,0.45)--(1.5,1.35);
+  \fill[sdrAmber!80] (1.8,0.45)--(1.88,1.4)--(2.62,1.4)--(2.65,0.45)--(2.68,1.4)--(3.42,1.4)--(3.5,0.45)--cycle;
+  \fill[sdrGreen!60!white] (3.68,0.45) rectangle (3.98,0.85);
+  \node[text=white,font=\tiny] at (0.75,0.25) {L+R}; \node[text=white,font=\tiny] at (1.5,0.25) {19};
+  \node[text=white,font=\tiny] at (2.65,0.25) {L$-$R}; \node[text=white,font=\tiny] at (3.83,0.25) {RDS};}
+
+\begin{document}
+\SDRbanner
+
+\begin{infostrip}
+\begin{tabularx}{\linewidth}{@{}r@{\hspace{1em}}X@{}}
+\textbf{دو جلسه} & جلسهٔ اول (بخش‌های ۱ و ۲؛ بخش ۳ اختیاری): دمدولاسیون همدوس و ناهمدوس و پیوند کابلی
+% [orig] \textbf{دو جلسه} & جلسهٔ اول (بخش‌های ۱ تا ۳): دمدولاسیون همدوس و ناهمدوس و پیوند کابلی
+% [orig] \textbf{دو جلسه} & جلسهٔ اول (بخش‌های ۱ تا ۵): دمدولاسیون همدوس و ناهمدوس و پیوند کابلی
+\lr{NBFM}.
+% جلسهٔ دوم (بخش‌های ۶ تا ۹):
+% \lr{WFM}
+% مونو و استریو و
+% \lr{RDS}. \\
+\\
+\textbf{شرط ورود} & برای هر جلسه: گزارش پیش‌از‌جلسهٔ همان جلسه و کوئیز ورودی \\
+\textbf{خروجی هر جلسه} & فایل‌های خام \IQ{} با نام استاندارد
+(\code{lab02})،
+فلوگراف‌ها، تصاویر نمایشگر، لاگ‌بوک، چک‌لیست راه‌اندازی امضاشده و برگهٔ تسویهٔ تجهیزات \\
+\textbf{تازه در این آزمایش} & نخستین ارسال رادیویی درس: فقط کابلی و با تضعیف‌گر (فقط در بخش اختیاری ۳)
+% [orig] \textbf{تازه در این آزمایش} & نخستین ارسال رادیویی درس: فقط کابلی و با تضعیف‌گر
+\end{tabularx}
+\end{infostrip}
+
+%======================================================================
+\isection{target}{اهداف آزمایش}
+%======================================================================
+\noindent\textbf{جلسهٔ اول.} تا پایان جلسه باید:
+\begin{objectives}
+\item یک ایستگاه
+\lr{FM}
+تجاری را با آشکارساز ناهمدوس و آشکارساز همدوس دریافت و کیفیت شنیداری و نسبت سیگنال به نویز خروجی آن دو را مقایسه کرده باشید؛
+\item یک سیگنال
+\lr{NBFM}
+ساخت خودتان را از راه کابل و تضعیف‌گر فرستاده باشید (اختیاری)؛
+% [orig] ساخت خودتان را از راه کابل و تضعیف‌گر فرستاده باشید؛
+% [orig] ساخت خودتان را از راه کابل و تضعیف‌گر فرستاده و با
+% \lr{SDR}
+% دوم دریافت کرده باشید؛
+% \item دادهٔ لازم برای رسم
+% $\mathrm{SNR}$
+% خروجی بر حسب
+% $\mathrm{SNR}$
+% ورودی و تعیین آستانهٔ
+% \lr{FM}
+% را ضبط کرده باشید؛
+% \item در چالش تیمی، اثر انحراف فرکانس اختصاصی تیم را بر پهنای باند و کیفیت سنجیده باشید.
+\end{objectives}
+% \noindent\textbf{جلسهٔ دوم.} تا پایان جلسه باید:
+% \begin{objectives}
+% \item گیرندهٔ
+% \lr{WFM}
+% مونو ساخته و اجزای طیف باند پایهٔ استریو را با فرکانس اندازه‌گیری‌شده مشخص کرده باشید؛
+% \item با بازیابی پایلوت و دو برابر کردن فرکانس آن، صدای استریو را بازسازی و جداسازی دو کانال را اندازه گرفته باشید؛
+% \item \lr{RDS}
+% را دیکد و نام ایستگاه
+% \eng{PS}
+% و شناسهٔ برنامه
+% \eng{PI}
+% را استخراج کرده باشید؛
+% \item دادهٔ لازم برای تحلیل نرخ خطای دیکد
+% \lr{RDS}
+% در برابر سطح سیگنال را ضبط کرده باشید.
+% \end{objectives}
+
+%======================================================================
+\isection{tools}{تجهیزات و نرم‌افزار مورد نیاز}
+%======================================================================
+\begin{table}[H]
+	\centering\small
+	\caption{تجهیزات هر تیم در آزمایش ۲}
+	\label{tab:equip2}
+	\begin{tabularx}{\linewidth}{|r|c|X|}
+		\hline
+		\hdrrow \hdr{قلم} & \hdr{تعداد} & \hdr{کاربرد} \\ \hline
+		گیرندهٔ \lr{Pluto SDR} با کابل رابط \lr{USB} و آنتن & ۱ & گیرنده در هر دو جلسه \\ \hline
+% [orig] 		گیرندهٔ \RTLSDR{} با کابل رابط \lr{USB} و آنتن \lr{VHF} & ۱ & گیرنده در هر دو جلسه \\ \hline
+		\lr{SDR} فرستنده (\lr{ADALM-PLUTO}، یا \lr{HackRF}، یا \lr{USRP}) & ۱ & فرستندهٔ پیوند کابلی (بخش اختیاری ۳) \\ \hline
+% [orig] 		\lr{SDR} فرستنده (\lr{ADALM-PLUTO}، یا \lr{HackRF}، یا \lr{USRP}) & ۱ & فرستندهٔ پیوند کابلی \\ \hline
+		تضعیف‌گر ثابت \q{30}{dB} و کابل \lr{RF} & ۱ & اتصال فرستنده به گیرنده (بخش اختیاری ۳) \\ \hline
+% [orig] 		تضعیف‌گر ثابت \q{30}{dB} و کابل \lr{RF} & ۱ & اتصال فرستنده به گیرنده (الزامی) \\ \hline
+% 		بار ۵۰ اهمی & ۱ & بستن درگاه فرستنده هنگامی که به گیرنده وصل نیست \\ \hline
+		هدفون & ۱ & شنیدن خروجی (به‌ویژه استریو) \\ \hline
+		رایانه با \GR{} \lr{3.10}، \lr{Python} و \lr{Git} & ۱ & اجرای هم‌زمان فلوگراف فرستنده و گیرنده \\ \hline
+% [orig] 		رایانه با \GR{} \lr{3.10}، ماژول \lr{gr-rds} (جلسهٔ دوم)، \lr{Python} و \lr{Git} & ۱ & اجرای هم‌زمان فلوگراف فرستنده و گیرنده \\ \hline
+		فایل \code{sdrlab_iq_recorder.py} & — & بلوک ضبط \\ \hline
+% [orig] 		فایل‌های \code{sdrlab_iq_recorder.py}، \code{sdrlab_rds_counter.py} و \code{lab02_stereo_rds_tx.grc} & — & بلوک ضبط، شمارندهٔ گروه \lr{RDS} و فرستندهٔ آمادهٔ جلسهٔ دوم \\ \hline
+	\end{tabularx}
+\end{table}
+
+% \noindent
+% فلوگراف فرستنده برای
+% \lr{ADALM-PLUTO}
+% نوشته شده است. برای سخت‌افزار دیگر فقط بلوک خروجی عوض می‌شود (جدول
+% \ref{tab:txhw}).
+% [INSTRUCTOR][HW] Labels checked against GNU Radio 3.10.9 block definitions.
+% Maximum output powers are nominal data-sheet values; verify with your units.
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{بلوک خروجی فرستنده برای سخت‌افزارهای مختلف (\GR{} \lr{3.10})}
+% 	\label{tab:txhw}
+% 	\begin{tabularx}{\linewidth}{|c|c|X|X|}
+% 		\hline
+% 		\hdrrow \hdr{سخت‌افزار} & \hdr{بلوک} & \hdr{فرکانس و توان} & \hdr{حد ایمن در این آزمایش} \\ \hline
+% 		\lr{ADALM-PLUTO} & \blk{PlutoSDR Sink} & \prm{LO Frequency}؛ \prm{Attenuation TX1 (dB)} (بیشتر یعنی توان کمتر) & تضعیف دست‌کم \q{10}{dB}؛ بیشینهٔ خروجی نوعی \q{+7}{dBm}؛ بازهٔ پیش‌فرض \q{325}{MHz} تا \q{3.8}{GHz} \\ \hline
+% 		\lr{HackRF One} & \blk{Soapy HackRF Sink} & \prm{Center Freq (Hz)}؛ \prm{VGA Gain (0dB - 47dB)} & \prm{Amp On (+14 dB)} همیشه خاموش؛ \prm{VGA Gain} حداکثر \val{20} \\ \hline
+% 		\lr{USRP} & \blk{UHD: USRP Sink} & \prm{Ch0: Center Freq (Hz)}؛ \prm{Ch0: Gain Value} & بهره را از صفر آغاز کنید؛ بیشینهٔ توان را از برگهٔ مشخصات برد بخوانید \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+%======================================================================
+\isection{warn}{ایمنی و مقررات این آزمایش}
+%======================================================================
+قواعد همیشگی آزمایشگاه (سقف
+\q{-10}{dBm}
+در ورودی گیرنده، حساسیت به
+\lr{DC}،
+تخلیهٔ الکتریسیتهٔ ساکن) مانند آزمایش ۱ برقرار است. این آزمایش ارسال دارد و قواعد زیر به آن افزوده می‌شود. قواعد ارسال و چک‌لیست زیر فقط در صورت انجام بخش اختیاری ۳ لازم است.
+% [orig] تخلیهٔ الکتریسیتهٔ ساکن) مانند آزمایش ۱ برقرار است. این آزمایش ارسال دارد و قواعد زیر به آن افزوده می‌شود.
+
+\begin{safetybox}[قواعد ارسال (آیین‌نامه، بندهای \bnd{۸-۱} و \bnd{۸-۲})]
+\begin{itemize}
+\item هر ارسالی فقط از راه کابل و تضعیف‌گر انجام می‌شود. به درگاه فرستنده آنتن وصل نکنید.
+\item خروجی فرستنده را هرگز مستقیم به ورودی گیرنده وصل نکنید؛ همیشه دست‌کم تضعیف‌گر
+\q{30}{dB}
+در مسیر باشد.
+\item ارسال هوایی در باندهای دارای مجوز (از جمله باند پخش
+\lr{FM})
+تحت هیچ شرایطی مجاز نیست. فرکانس کار
+$f_{\mathrm{tx}}$
+را فقط از فهرست اعلامی مدرس بردارید.
+\item پیش از هر ارسال، خالی‌بودن فرکانس هدف را با روش آزمایش ۱ بررسی کنید.
+\item کابل
+\lr{RF}
+را فقط وقتی وصل یا جدا کنید که فلوگراف فرستنده متوقف است.
+\end{itemize}
+\end{safetybox}
+
+\begin{cautionbox}[محاسبهٔ سطح پیش از اتصال]
+توان در ورودی گیرنده برابر است با
+\begin{equation}
+	P_{\mathrm{rx}} = P_{\max} - A_{\mathrm{tx}} + 20\log_{10}(a_{\mathrm{tx}}) - A_{\mathrm{pad}} - L_{\mathrm{cable}}
+	\label{eq:budget}
+\end{equation}
+که
+$P_{\max}$
+بیشینهٔ توان فرستنده،
+$A_{\mathrm{tx}}$
+تضعیف تنظیم‌شده در فرستنده،
+$a_{\mathrm{tx}}$
+دامنهٔ دیجیتال (میان صفر و یک)،
+$A_{\mathrm{pad}}$
+تضعیف‌گر ثابت و
+$L_{\mathrm{cable}}$
+تلفات کابل است. با مقادیر آغازین این دستور کار
+($P_{\max} = +7\un{dBm}$، $A_{\mathrm{tx}} = 40\un{dB}$، $a_{\mathrm{tx}} = 0.5$، $A_{\mathrm{pad}} = 30\un{dB}$):
+$P_{\mathrm{rx}} \approx 7 - 40 - 6 - 30 - 0.5 = -69.5\un{dBm}$.
+حتی با کمترین تضعیف مجاز
+($A_{\mathrm{tx}} = 10\un{dB}$)
+توان
+\q{-39.5}{dBm}
+است و از سقف
+\q{-10}{dBm}
+فاصلهٔ کافی دارد. بدون تضعیف‌گر ثابت این فاصله از بین می‌رود.
+\end{cautionbox}
+
+\noindent
+\textbf{چک‌لیست راه‌اندازی}
+(اگر بخش ۳ انجام می‌شود، پیش از نخستین ارسال کامل و به امضای دستیار آموزشی برسد):
+% [orig] (در هر دو جلسه پیش از نخستین ارسال کامل و به امضای دستیار آموزشی برسد):
+\begin{checklist}
+\item مسیر «درگاه فرستنده، تضعیف‌گر
+\q{30}{dB}،
+کابل، ورودی گیرنده» بسته شده و هیچ آنتنی به فرستنده وصل نیست.
+\item فرکانس کار تیم از فهرست مدرس انتخاب و خالی‌بودن آن با گیرنده بررسی و در لاگ‌بوک ثبت شده است.
+\item در فلوگراف فرستنده، تضعیف آغازین
+\q{40}{dB} (بدون تضعیف‌گر خارجی: \q{70}{dB})
+% [orig] \q{40}{dB}
+و دامنهٔ دیجیتال حداکثر
+\val{0.5}
+است.
+\item هر سه عضو می‌توانند رابطهٔ
+\eqref{eq:budget}
+را برای تنظیمات فعلی حساب کنند.
+\item در گیرنده \prm{Gain Mode (RX1)} روی \val{manual} (بدون تقویت خودکار) است.
+% [orig] \item در گیرنده
+% [orig] \prm{Bias Tee Power}
+% [orig] و
+% [orig] \prm{AGC}
+% [orig] خاموش است.
+\end{checklist}
+\noindent
+{\small فرکانس کار تیم: $f_{\mathrm{tx}} = $ \blank[2.6cm] \lr{MHz} \hfill امضای دستیار آموزشی: \blank[3.4cm] \hfill ساعت: \blank[1.6cm]}
+
+%======================================================================
+% \isection{clock}{نقشهٔ زمانی دو جلسه}
+%======================================================================
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{زمان‌بندی دو جلسه (مطابق الگوی آیین‌نامه)}
+% 	\label{tab:timeline2}
+% 	\begin{tabularx}{\linewidth}{|c|X|X|}
+% 		\hline
+% 		\hdrrow \hdr{دقیقه} & \hdr{جلسهٔ اول} & \hdr{جلسهٔ دوم} \\ \hline
+% 		۰ تا ۱۵ & کوئیز ورودی و کنترل گزارش پیش‌از‌جلسه & کوئیز ورودی و کنترل گزارش پیش‌از‌جلسه \\ \hline
+% 		۱۵ تا ۳۰ & توضیح مدرس، مرور ایمنی ارسال، چک‌لیست راه‌اندازی & توضیح مدرس، مرور ایمنی، چک‌لیست راه‌اندازی \\ \hline
+% 		۳۰ تا ۵۵ & بخش \ref{part:rx1}: گیرنده با آشکارساز ناهمدوس & بخش \ref{part:mono}: \lr{WFM} مونو و طیف باند پایه \\ \hline
+% 		۵۵ تا ۷۵ & بخش \ref{part:pll}: آشکارساز همدوس و مقایسه & بخش \ref{part:stereo}: بازسازی استریو (تا دقیقهٔ ۹۰) \\ \hline
+% 		۷۵ تا ۱۰۰ & بخش \ref{part:link}: پیوند کابلی \lr{NBFM} & بخش \ref{part:rds}: دیکد \lr{RDS} (دقیقهٔ ۹۰ تا ۱۲۰) \\ \hline
+% 		۱۰۰ تا ۱۲۰ & بخش \ref{part:thr}: $\mathrm{SNR}$ خروجی و آستانه & \\ \hline
+% 		۱۲۰ تا ۱۵۰ & بخش \ref{part:dev}: چالش تیمی (انحراف اختصاصی) & بخش \ref{part:rdslevel}: چالش تیمی (\lr{RDS} در برابر سطح) \\ \hline
+% 		۱۵۰ تا ۱۸۰ & پرسش شفاهی، جمع‌بندی، تحویل تجهیزات & پرسش شفاهی، جمع‌بندی، تحویل تجهیزات \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+%======================================================================
+\isection{book}{مرور کوتاه تئوری}
+%======================================================================
+جزئیات و جدول «ایده‌آل نظری در برابر پیاده‌سازی عملی» در راهنمای پیش‌از‌جلسه آمده است. با نرخ
+$f_q$
+در ورودی آشکارساز، بیشینهٔ انحراف
+$\Delta f$
+و پهنای باند صوتی
+$W$:
+\begin{equation}
+	B_T \approx 2(\Delta f + W), \qquad
+	G_{\mathrm{det}} = \frac{f_q}{2\pi \Delta f}, \qquad
+	k_f = \frac{2\pi \Delta f}{f_q}, \qquad
+	B_L \approx 1.06 \times (\text{\lr{Loop Bandwidth}}) \times f_q
+	\label{eq:recap2}
+\end{equation}
+\begin{equation}
+	\mathrm{CNR} = \frac{P_{\mathrm{on}} - P_{\mathrm{off}}}{P_{\mathrm{off}}}, \qquad
+	\mathrm{SNR}_o \approx \frac{3}{2}\left(\frac{\Delta f}{W}\right)^{2} \frac{B_T}{W}\, \mathrm{CNR}
+	\quad \text{(\fa{بالاتر از آستانه})}, \qquad
+	\mathrm{SINAD} = \frac{P_{S+N+D}}{P_{N+D}}
+	\label{eq:snr2}
+\end{equation}
+که
+$P_{\mathrm{on}}$
+و
+$P_{\mathrm{off}}$
+توان خطی کانال با فرستندهٔ روشن و خاموش‌اند (نمایشگر آن‌ها را بر حسب
+\dBFS{}
+می‌دهد؛ پیش از تفریق به مقیاس خطی ببرید). حامل تک‌تن در
+$\Delta f = 2.405\, f_m$
+و
+$5.520\, f_m$
+صفر می‌شود.
+
+%======================================================================
+\isection{flow}{معماری سیستم و فلوگراف‌ها}
+%======================================================================
+\subsection{چیدمان سخت‌افزار و برنامهٔ نرخ}
+در این آزمایش دو چیدمان به کار می‌رود (شکل
+\ref{fig:setup2}):
+دریافت از آنتن برای ایستگاه‌های واقعی، و پیوند کابلی میان فرستنده و گیرنده (فقط برای بخش اختیاری ۳). هر دو
+% [orig] دریافت از آنتن برای ایستگاه‌های واقعی، و پیوند کابلی میان فرستنده و گیرنده. هر دو
+\lr{SDR}
+به یک رایانه وصل‌اند و دو فلوگراف هم‌زمان اجرا می‌شوند. همهٔ فلوگراف‌ها یک برنامهٔ نرخ دارند:
+\q{2.4}{MS/s}
+در سخت‌افزار،
+\q{240}{kHz}
+در آشکارساز و
+\q{48}{kHz}
+در صوت.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\node[font=\footnotesize\bfseries,text=sdrDark] at (-1.6,1.3) {\fa{(الف)}};
+		\node[sdrblkhw,minimum width=2.3cm] (ant) at (1.0,1.3) {\fa{آنتن}};
+% [orig] 		\node[sdrblkhw,minimum width=2.3cm] (ant) at (1.0,1.3) {\fa{آنتن \lr{VHF}}};
+		\node[sdrblkhl,minimum width=2.2cm] (rx1) at (5.0,1.3) {Pluto SDR};
+% [orig] 		\node[sdrblkhl,minimum width=2.2cm] (rx1) at (5.0,1.3) {RTL-SDR};
+		\node[sdrblkpc,minimum width=2.6cm] (pc1) at (9.6,1.3) {\fa{رایانه: \lr{lab02\_fm\_rx}}};
+		\draw[sdrarr] (ant)--(rx1); \draw[cplx] (rx1)--node[above,font=\scriptsize,text=black]{USB}(pc1);
+		\node[font=\footnotesize\bfseries,text=sdrDark] at (-1.6,-0.6) {\fa{(ب)}};
+		\node[sdrblkhw,minimum width=2.3cm] (tx) at (1.0,-0.6) {\fa{فرستنده}\\ (PlutoSDR)};
+		\node[sdrblk,minimum width=1.9cm] (pad) at (4.1,-0.6) {\fa{تضعیف‌گر}\\ 30 dB};
+		\node[sdrblkhl,minimum width=2.0cm] (rx2) at (7.1,-0.6) {Pluto SDR};
+% [orig] 		\node[sdrblkhl,minimum width=2.0cm] (rx2) at (7.1,-0.6) {RTL-SDR};
+		\node[sdrblkpc,minimum width=2.6cm] (pc2) at (11.0,-0.6) {\fa{رایانه: \lr{TX + RX}}};
+		\draw[sdrarr] (tx)--node[above,font=\scriptsize]{\fa{کابل}}(pad); \draw[sdrarr] (pad)--(rx2);
+		\draw[cplx] (rx2)--node[above,font=\scriptsize,text=black]{USB}(pc2);
+		\draw[cplx] (pc2.south) -- ++(0,-0.55) -| node[pos=0.25,below,font=\scriptsize,text=black]{USB}(tx.south);
+	\end{tikzpicture}
+	\caption{دو چیدمان آزمایش: (الف) دریافت از آنتن، (ب) پیوند کابلی با تضعیف‌گر (اختیاری)}
+% [orig] 	\caption{دو چیدمان آزمایش: (الف) دریافت از آنتن، (ب) پیوند کابلی با تضعیف‌گر}
+	\label{fig:setup2}
+\end{figure}
+
+\begin{notebox}[تنظیم با آفست]
+گیرنده را
+\q{250}{kHz}
+پایین‌تر از سیگنال تنظیم می‌کنیم
+(\code{f_off})
+و فیلتر
+\blk{Frequency Xlating FIR Filter}
+سیگنال را به مرکز می‌آورد. به این ترتیب قلهٔ
+\lr{DC}
+گیرنده بیرون از کانال می‌ماند. فرستنده نیز سیگنال را
+\q{250}{kHz}
+بالاتر از فرکانس نوسان‌ساز خود می‌سازد تا نشت حامل فرستنده روی سیگنال نیفتد.
+\end{notebox}
+
+\subsection{گیرندهٔ جلسهٔ اول: \lr{lab02\_fm\_rx}}
+شکل
+\ref{fig:fg-rx}
+مسیر سیگنال و جدول‌های
+\ref{tab:params-rx}
+و
+\ref{tab:params-rx2}
+پارامترها را می‌دهند. دو آشکارساز به‌موازات هم کار می‌کنند و
+\blk{Selector}
+یکی را به زنجیرهٔ صوت می‌دهد. سه اندازه‌گیر نیز در فلوگراف هست: توان کانال (برای
+$\mathrm{CNR}$)،
+خطای فرکانس حامل (میانگین خروجی تمایزگر ضرب در
+$\Delta f$)
+و
+\lr{SINAD}.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\node[grcsrc] (src) at (0,0) {\grcname{PlutoSDR Source}\\ \grcp{Sample Rate}{2.4e6}\\ \grcp{LO Frequency}{fc - f\_off}};
+% [orig] 		\node[grcsrc] (src) at (0,0) {\grcname{PlutoSDR Source}\\ \grcp{Sample Rate}{2.4e6}\\ \grcp{Center Freq}{fc - f\_off}};
+% [orig] 		\node[grcsrc] (src) at (0,0) {\grcname{Soapy RTLSDR Source}\\ \grcp{Sample Rate}{2.4e6}\\ \grcp{Center Freq}{fc - f\_off}};
+		\node[grc,anchor=west] (xl) at (3.15,0) {\grcname{Freq. Xlating FIR}\\ \grcp{Decimation}{10}\\ \grcp{Center}{f\_off + f\_fine}};
+		\node[grc,anchor=west] (cf) at (6.6,0) {\grcname{Low Pass Filter}\\ \grcp{Cutoff}{chan\_bw/2}};
+		\node[grc,anchor=west] (qd) at (9.7,0.75) {\grcname{Quadrature Demod}};
+		\node[grc,anchor=west] (pl) at (9.7,-0.75) {\grcname{PLL Freq. Detector}\\ $\times$ \texttt{Gain}};
+		\node[grc,anchor=west] (sel) at (13.1,0) {\grcname{Selector}\\ \grcp{in}{det}};
+		\node[grc,anchor=west] (af) at (6.6,-3.25) {\grcname{Low Pass Filter}\\ \grcp{Decimation}{5}\\ \grcp{Cutoff}{audio\_bw}};
+		\node[grc,anchor=west] (dc) at (9.7,-3.25) {\grcname{DC Blocker}};
+		\node[grcsink,anchor=west] (au) at (12.1,-2.75) {\grcname{FM Deemphasis}\\ $\rightarrow$ \grcname{Audio Sink}};
+		\node[grcsink,anchor=west] (sn) at (12.1,-3.95) {\grcname{SINAD meter}\\ RMS, Band Reject, Log10};
+		\node[grcsink,anchor=north] (pm) at (7.9,-0.95) {\grcname{RMS $\to$ Log10}: \texttt{P\_ch}};
+		\node[grcfile,anchor=north] (rec) at (4.2,-0.95) {\grcname{IQ Recorder}\\ \grcp{fs}{240e3}};
+		\draw[cplx] (src)--(xl); \draw[cplx] (xl)--(cf);
+		\draw[cplx] (cf.east) -- ++(0.25,0) |- (qd.west); \draw[cplx] (cf.east) -- ++(0.25,0) |- (pl.west);
+		\draw[flt] (qd.east) -- ++(0.3,0) |- ([yshift=3pt]sel.west); \draw[flt] (pl.east) -- ++(0.3,0) |- ([yshift=-3pt]sel.west);
+		\draw[flt] (sel.south) |- ++(-7.95,-1.78) |- (af.west);
+		\draw[flt] (af)--(dc); \draw[flt] (dc.east) -- ++(0.2,0) |- (au.west); \draw[flt] (dc.east) -- ++(0.2,0) |- (sn.west);
+		\draw[cplx] (cf.south)--(pm.north -| cf.south); \draw[cplx] (xl.south)--(rec.north -| xl.south);
+	\end{tikzpicture}
+	\caption{طرح‌وارهٔ گیرندهٔ جلسهٔ اول (رسم‌شده؛ تصویر واقعی \GRC{} نیست). آبی: جریان مختلط، نارنجی: جریان حقیقی}
+	\label{fig:fg-rx}
+\end{figure}
+% \screenshotslot{labs/figs/lab02_fm_rx.png}{تصویر فلوگراف \lr{lab02\_fm\_rx} در \GRC}
+
+\begin{table}[H]
+	\centering\small
+	\caption{پارامترهای گیرندهٔ \lr{lab02\_fm\_rx} (\GR{} \lr{3.10})}
+	\label{tab:params-rx}
+	\begin{tabularx}{\linewidth}{|C{4.4cm}|Z|}
+		\hline
+		\hdrrow \hdr{بلوک (\lr{Id})} & \hdr{پارامترها} \\ \hline
+		\blk{Variable} & \pv{samp\_rate}{2.4e6}؛ \pv{quad\_rate}{240e3}؛ \pv{audio\_rate}{48e3}؛ \pv{f\_off}{250e3}؛ \pv{chan\_bw}{min(2*(dev + audio\_bw), 200e3)}؛ \pv{team}{"Team-07"} \\ \hline
+		\blk{Import} & \pv{Import}{import math} \\ \hline
+		\blk{QT GUI Range} & \code{fc}: فرکانس سیگنال (\val{98.0e6}، گام \val{100e3})؛ \code{f_fine}: تنظیم ریز (\val{0}، از \val{-30e3} تا \val{30e3}، گام \val{10})؛ \code{rf_gain} (\val{20.7})؛ \code{dev} (\val{75e3}، از \val{1e3} تا \val{75e3})؛ \code{f_m} (\val{1e3})؛ \code{pll_bw} (\val{0.3}، از \val{0.005} تا \val{0.6})؛ \code{volume} (\val{0.3}) \\ \hline
+		\blk{QT GUI Chooser} & \code{det}: \val{0} (\lr{Quadrature Demod}) یا \val{1} (\lr{PLL})؛ \code{audio_bw}: \val{15e3} یا \val{3e3}؛ \code{tau}: \val{50e-6} یا \val{75e-6} \\ \hline
+		\blk{PlutoSDR Source} & \pv{Sample Rate}{samp\_rate}؛ \pv{LO Frequency}{int(fc - f\_off)}؛ \pv{Gain Mode (RX1)}{manual}؛ \pv{Manual Gain (RX1)(dB)}{rf\_gain} \\ \hline
+% [orig] 		\blk{Soapy RTLSDR Source} & \pv{Sample Rate}{samp\_rate}؛ \pv{Center Freq (Hz)}{fc - f\_off}؛ \pv{AGC}{False}؛ \pv{RF Gain}{rf\_gain}؛ \pv{Bias Tee Power}{False} \\ \hline
+		\blk{Frequency Xlating}\newline\blk{FIR Filter} & \pv{Type}{Complex->Complex (Complex Taps)}؛ \pv{Decimation}{10}؛ \pv{Taps}{firdes.low\_pass(1, samp\_rate, 100e3, 20e3)}؛ \pv{Center Frequency}{f\_off + f\_fine}؛ \pv{Sample Rate}{samp\_rate} \\ \hline
+		\blk{Low Pass Filter} (کانال) & \pv{FIR Type}{Complex->Complex (Decimating)}؛ \pv{Decimation}{1}؛ \pv{Sample Rate}{quad\_rate}؛ \pv{Cutoff Freq}{chan\_bw/2}؛ \pv{Transition Width}{chan\_bw/8} \\ \hline
+		\blk{Quadrature Demod} & \pv{Gain}{quad\_rate/(2*math.pi*dev)} \\ \hline
+		\blk{PLL Frequency Detector} & \pv{Loop Bandwidth}{pll\_bw}؛ \pv{Max Phase/sample}{min(2*math.pi*1.5*dev/quad\_rate, 3.0)}؛ \prm{Min Phase/sample}: همان با علامت منفی \\ \hline
+		\blk{Multiply Const} (پس از \lr{PLL}) & \pv{IO Type}{float}؛ \pv{Constant}{quad\_rate/(2*math.pi*dev)} \\ \hline
+		\blk{Selector} & \pv{Type}{float}؛ \pv{Number of Inputs}{2}؛ \pv{Number of Outputs}{1}؛ \pv{Input Index}{det} \\ \hline
+		\blk{Low Pass Filter} (صوت) & \pv{FIR Type}{Float->Float (Decimating)}؛ \pv{Decimation}{5}؛ \pv{Sample Rate}{quad\_rate}؛ \pv{Cutoff Freq}{audio\_bw}؛ \pv{Transition Width}{0.25*audio\_bw + 250} \\ \hline
+		\blk{DC Blocker} & \pv{Type}{Float->Float}؛ \pv{Length}{512} \\ \hline
+		\blk{FM Deemphasis}، \blk{Multiply Const}، \blk{Audio Sink} & \pv{Sample Rate}{audio\_rate}؛ \pv{Tau}{tau}؛ سپس ضرب در \code{volume} و \blk{Audio Sink} با \pv{Sample Rate}{48 kHz} \\ \hline
+	\end{tabularx}
+\end{table}
+\begin{table}[H]
+	\centering\small
+	\caption{اندازه‌گیرها، نمایشگرها و ضبط در گیرندهٔ \lr{lab02\_fm\_rx}}
+	\label{tab:params-rx2}
+	\begin{tabularx}{\linewidth}{|C{4.4cm}|Z|}
+		\hline
+		\hdrrow \hdr{بخش} & \hdr{بلوک‌ها و پارامترها} \\ \hline
+		توان کانال & خروجی فیلتر کانال به \blk{RMS} (\pv{Input Type}{complex}؛ \pv{Alpha}{2e-5})، \blk{Log10} (\pv{n}{20}) و \blk{QT GUI Number Sink} \\ \hline
+		خطای فرکانس & خروجی \blk{Quadrature Demod} به \blk{Single Pole IIR Filter} (\pv{Alpha}{2e-5})، \blk{Multiply Const} (\pv{Constant}{dev}) و \blk{QT GUI Number Sink} \\ \hline
+		\lr{SINAD} & خروجی \blk{DC Blocker} از دو مسیر به \blk{Subtract} می‌رود: (۱) \blk{RMS} (\pv{Alpha}{2e-4}) و \blk{Log10} (\pv{n}{20})؛ (۲) \blk{Band Reject Filter} (\pv{Low Cutoff Freq}{f\_m - 300}؛ \pv{High Cutoff Freq}{f\_m + 300}؛ \pv{Transition Width}{200}) و سپس همان \blk{RMS} و \blk{Log10}. خروجی \blk{Subtract} به \blk{QT GUI Number Sink} \\ \hline
+		نمایشگرها & \blk{QT GUI Frequency Sink} مختلط روی خروجی فیلتر کانال (\pv{Bandwidth (Hz)}{quad\_rate}؛ \pv{Center Frequency (Hz)}{fc})؛ \blk{QT GUI Frequency Sink} حقیقی با دو ورودی روی خروجی دو آشکارساز (\pv{FFT Size}{4096})؛ \blk{QT GUI Frequency Sink} حقیقی روی صوت (\pv{Bandwidth (Hz)}{audio\_rate}) \\ \hline
+		\blk{Python Block} (ضبط) & کد آزمایش ۱؛ ورودی از خروجی \blk{Frequency Xlating FIR Filter}؛ \pv{Lab}{2}؛ \pv{Fc}{fc}؛ \pv{Fs}{quad\_rate}؛ \pv{Gain}{rf\_gain}؛ \pv{Record}{rec}؛ \pv{Max Seconds}{30} \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{notebox}[ضبط در نرخ \q{240}{kHz}]
+در این آزمایش جریان
+\IQ{}
+پس از انتخاب کانال (نرخ
+\q{240}{kHz})
+ضبط می‌شود، نه جریان
+\q{2.4}{MS/s}.
+حجم فایل ده برابر کمتر است (حدود
+\q{1.9}{MB}
+در ثانیه) و کل سیگنال
+\lr{FM}
+را در بر دارد. در نام فایل،
+\code{fs}
+برابر
+\val{240000}
+و
+\code{fc}
+فرکانس خود سیگنال است.
+\end{notebox}
+
+\subsection{فرستندهٔ کابلی: \lr{lab02\_fm\_tx} (بخش اختیاری ۳)}
+% [orig] \subsection{فرستندهٔ کابلی: \lr{lab02\_fm\_tx}}
+% \begin{center}
+% \lr{\small\sffamily Signal Source \then\ Frequency Mod \then\ Rational Resampler ($\times 10$) \then\ Rotator \then\ Multiply Const \then\ PlutoSDR Sink}
+% \end{center}
+
+\begin{table}[H]
+	\centering\small
+	\caption{پارامترهای فرستندهٔ \lr{lab02\_fm\_tx} (اختیاری)}
+% [orig] 	\caption{پارامترهای فرستندهٔ \lr{lab02\_fm\_tx}}
+	\label{tab:params-tx}
+	\begin{tabularx}{\linewidth}{|C{4.4cm}|Z|}
+		\hline
+		\hdrrow \hdr{بلوک (\lr{Id})} & \hdr{پارامترها} \\ \hline
+		\blk{Variable} & \pv{samp\_rate}{2.4e6}؛ \pv{quad\_rate}{240e3}؛ \pv{f\_off}{250e3} \\ \hline
+		\blk{QT GUI Range} & \code{f_tx}: فرکانس کار تیم (پیش‌فرض \val{434.0e6})؛ \code{dev} (\val{5e3}، از \val{500} تا \val{75e3}، گام \val{50})؛ \code{f_m} (\val{1e3})؛ \code{a_m} (\val{1.0})؛ \code{tx_atten} (\val{40}، از \val{10} تا \val{89}، گام \val{1})؛ \code{tx_amp} (\val{0.5}، از \val{0} تا \val{0.8}) \\ \hline
+		\blk{Signal Source} & \pv{Output Type}{Float}؛ \pv{Sample Rate}{quad\_rate}؛ \pv{Waveform}{Cosine}؛ \pv{Frequency}{f\_m}؛ \pv{Amplitude}{a\_m} \\ \hline
+		\blk{Frequency Mod} & \pv{Sensitivity}{2*math.pi*dev/quad\_rate} \\ \hline
+		\blk{Rational Resampler} & \pv{Type}{Complex->Complex (Complex Taps)}؛ \pv{Interpolation}{10}؛ \pv{Decimation}{1} \\ \hline
+		\blk{Rotator} & \pv{Phase Increment}{2*math.pi*f\_off/samp\_rate} \\ \hline
+		\blk{Multiply Const} & \pv{IO Type}{complex}؛ \pv{Constant}{tx\_amp} \\ \hline
+		\blk{PlutoSDR Sink} & \pv{LO Frequency}{int(f\_tx - f\_off)}؛ \pv{Sample Rate}{int(samp\_rate)}؛ \pv{Attenuation TX1 (dB)}{tx\_atten}؛ \pv{RF Bandwidth (Hz)}{2000000} \\ \hline
+		\blk{QT GUI Frequency Sink} & مختلط، روی خروجی \blk{Frequency Mod}؛ \pv{FFT Size}{4096}؛ \pv{Bandwidth (Hz)}{quad\_rate} \\ \hline
+	\end{tabularx}
+\end{table}
+\noindent
+تضعیف فرستنده
+(\code{tx_atten})
+هنگام اجرا تغییر می‌کند و با آن سطح دریافتی را پله‌پله کم خواهید کرد. برای فرستادن صدا به‌جای تن،
+\blk{Signal Source}
+را با
+\blk{Wav File Source}
+(\q{48}{kHz}،
+تک‌کاناله) و یک
+\blk{Rational Resampler}
+با
+\pv{Interpolation}{5}
+جایگزین کنید.
+
+%======================================================================
+\isection{steps}{شرح آزمایش: جلسهٔ اول}
+%======================================================================
+
+\labpart[]{گیرندهٔ \lr{FM} با آشکارساز ناهمدوس}\label{part:rx1}
+% [orig] \labpart[۲۵ دقیقه]{گیرندهٔ \lr{FM} با آشکارساز ناهمدوس}\label{part:rx1}
+\begin{steps}
+\item آنتن را به گیرنده ببندید (چیدمان الف) و فلوگراف
+\code{lab02_fm_rx.grc}
+را اجرا کنید:
+\pv{dev}{75e3}،
+پهنای صوتی
+\q{15}{kHz}،
+آشکارساز
+\lr{Quadrature Demod}
+و
+\code{fc}
+برابر فرکانس یک ایستگاه قوی از فهرست آزمایش ۱.
+\item بهره را مانند آزمایش ۱ تنظیم کنید (بدون اشباع) و صدا را با هدفون بشنوید. ثابت زمانی واتأکید محل را انتخاب کنید و با مقدار دیگر مقایسه کنید.
+\item در نمایشگر «خروجی آشکارسازها» (تا
+\q{120}{kHz})
+آنچه را بالاتر از باند صوتی می‌بینید یادداشت کنید.
+% [orig] آنچه را بالاتر از باند صوتی می‌بینید یادداشت کنید؛ در جلسهٔ دوم به آن بازمی‌گردید.
+\item \textbf{خطای فرکانس.} عدد «خطای فرکانس حامل» را بخوانید. با
+\code{f_fine}
+آن را به نزدیک صفر برسانید و مقدار
+\code{f_fine}
+را بنویسید. خطای گیرنده را بر حسب
+\lr{ppm}
+حساب کنید.
+\item \textbf{توان کانال.} «توان کانال» را در بهرهٔ کاری بخوانید؛ سپس
+\code{fc}
+را روی یک کانال خالی مجاور بگذارید و دوباره بخوانید. از این دو عدد
+$\mathrm{CNR}$
+ایستگاه را در
+\q{200}{kHz}
+حساب کنید.
+\item یک ضبط ده‌ثانیه‌ای از ایستگاه بگیرید.
+\end{steps}
+
+\begin{expectbox}
+صدای روشن و بدون خش. خطای فرکانس گیرنده معمولاً از چند صد هرتز تا چند کیلوهرتز است و پس از تنظیم
+\code{f_fine}
+نزدیک صفر می‌شود. در طیف خروجی آشکارساز، بالاتر از صوت یک خط باریک در
+\q{19}{kHz}
+دیده می‌شود (اگر ایستگاه استریو باشد).
+\end{expectbox}
+
+\begin{question}
+اگر در گیرنده
+\code{dev}
+را
+\val{37.5e3}
+بگذارید، سطح صدا چه تغییری می‌کند و چرا؟ چرا طیف
+\lr{RF}
+کانال با این تغییر عوض نمی‌شود؟
+\end{question}
+\begin{question}
+چرا خطای فرکانس حامل در خروجی تمایزگر به‌صورت مقدار ثابت دیده می‌شود؟ خطای اندازه‌گیری‌شده با مقداری که در آزمایش ۱ برای همین گیرنده دیدید سازگار است؟
+\end{question}
+
+\labpart[]{آشکارساز همدوس و مقایسهٔ دو آشکارساز}\label{part:pll}
+% [orig] \labpart[۲۰ دقیقه]{آشکارساز همدوس و مقایسهٔ دو آشکارساز}\label{part:pll}
+\begin{steps}
+\item آشکارساز را روی
+\lr{PLL}
+بگذارید
+(\pv{pll\_bw}{0.3})
+و بشنوید. میان دو آشکارساز چند بار جابه‌جا شوید.
+\item \code{pll_bw}
+را از
+\val{0.5}
+پله‌پله تا
+\val{0.02}
+کم کنید. در هر پله جدول
+\ref{tab:pllbw}
+را پر کنید: کیفیت صدا، و سطح خط
+\q{19}{kHz}
+در خروجی
+\lr{PLL}
+نسبت به خروجی تمایزگر (از نمایشگر دو منحنی).
+\item \textbf{سیگنال ضعیف.}
+\code{pll_bw}
+را به کوچک‌ترین مقداری که صدا هنوز سالم است برگردانید. بهره را کم کنید تا نویز شنیده شود. در سه سطح سیگنال، برای هر آشکارساز سطح نویز را در ناحیهٔ خالی حوالی
+\q{17}{kHz}
+و سطح خط پایلوت را بخوانید (جدول
+\ref{tab:weak}).
+در هر سطح یک ضبط ده‌ثانیه‌ای بگیرید.
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{اثر پهنای حلقه بر خروجی آشکارساز \lr{PLL} (ایستگاه: \blank[1.8cm] \lr{MHz})}
+	\label{tab:pllbw}
+	\begin{tabularx}{\linewidth}{|c|Y|Y|Y|Y|}
+		\hline
+		\hdrrow \hdr{\lr{pll\_bw}} & \hdr{$B_L$ (\lr{kHz})} & \hdr{صدا سالم است؟} & \hdr{خط \q{19}{kHz}: \lr{PLL} منهای تمایزگر (\lr{dB})} & \hdr{مؤلفه‌های بالای \q{23}{kHz} دیده می‌شوند؟} \\ \hline
+		$0.5$ & \rowstrut & & & \\ \hline
+		$0.3$ & \rowstrut & & & \\ \hline
+		$0.15$ & \rowstrut & & & \\ \hline
+		$0.08$ & \rowstrut & & & \\ \hline
+		$0.04$ & \rowstrut & & & \\ \hline
+		$0.02$ & \rowstrut & & & \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+	\centering\small
+	\caption{مقایسهٔ دو آشکارساز در سطوح مختلف سیگنال (\lr{pll\_bw} = \blank[1.2cm])}
+	\label{tab:weak}
+	\begin{tabularx}{\linewidth}{|c|c|Y|Y|Y|Y|Y|}
+		\hline
+		\hdrrow & & \multicolumn{2}{c|}{\hdr{تمایزگر}} & \multicolumn{2}{c|}{\hdr{\lr{PLL}}} & \\ \hline
+		\subhdrrow \textbf{بهره (\lr{dB})} & \textbf{توان کانال (\lr{dBFS})} & پایلوت (\lr{dB}) & نویز \q{17}{kHz} (\lr{dB}) & پایلوت (\lr{dB}) & نویز \q{17}{kHz} (\lr{dB}) & کدام بهتر شنیده می‌شود؟ \\ \hline
+		\rowstrut & & & & & & \\ \hline
+		\rowstrut & & & & & & \\ \hline
+		\rowstrut & & & & & & \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{expectbox}
+با حلقهٔ پهن
+(\val{0.3}
+و بیشتر) دو آشکارساز تقریباً یکسان شنیده می‌شوند. با باریک‌شدن حلقه ابتدا مؤلفه‌های بالای باند پایه
+(\q{38}{}
+و
+\q{57}{kHz})
+و سپس پایلوت در خروجی
+\lr{PLL}
+تضعیف می‌شوند؛ در شبیه‌سازی، حلقهٔ باریک‌تر از حدود
+\val{0.1}
+دیگر انحراف
+$\pm 75\un{kHz}$
+را دنبال نمی‌کند و صدا خراب می‌شود. در سیگنال ضعیف، حلقهٔ باریک‌تر نویز کمتری در خروجی دارد.
+\end{expectbox}
+
+% [orig block follows]
+% \begin{question}
+% چرا خروجی
+% \lr{PLL}
+% با حلقهٔ باریک مؤلفه‌های
+% \q{38}{}
+% و
+% \q{57}{kHz}
+% را از دست می‌دهد؟ نتیجه بگیرید برای دیکد استریو و
+% \lr{RDS}
+% در جلسهٔ دوم کدام آشکارساز مناسب‌تر است.
+% \end{question}
+\begin{question}
+چرا خروجی
+\lr{PLL}
+با حلقهٔ باریک مؤلفه‌های
+\q{38}{}
+و
+\q{57}{kHz}
+را از دست می‌دهد؟
+% [orig] \lr{RDS}
+% [orig] در جلسهٔ دوم کدام آشکارساز مناسب‌تر است.
+\end{question}
+\begin{question}
+در سیگنال ضعیف، نسبت «پایلوت به نویز» برای کدام آشکارساز بهتر بود؟ این نتیجه چه ارتباطی با نسبت پهنای حلقه به پهنای کانال دارد؟
+\end{question}
+
+\labpart[]{پیوند کابلی \lr{NBFM} ساخت خودتان (اختیاری)}\label{part:link}
+% [orig] \labpart[]{پیوند کابلی \lr{NBFM} ساخت خودتان}\label{part:link}
+% [orig] \labpart[۲۵ دقیقه]{پیوند کابلی \lr{NBFM} ساخت خودتان}\label{part:link}
+\noindent\textbf{این بخش اختیاری است و در صورت وجود وقت و تجهیزات انجام می‌شود.}
+\begin{steps}
+\item \textbf{بررسی فرکانس.} پیش از هر ارسال، گیرنده را با آنتن روی
+$f_{\mathrm{tx}}$
+بگذارید
+(\pv{dev}{5e3}،
+پهنای صوتی
+\q{3}{kHz})
+و مطمئن شوید کانال خالی است. نتیجه را در لاگ‌بوک بنویسید.
+\item \textbf{اتصال.} در حالی که فلوگراف فرستنده متوقف است، چیدمان (ب) را ببندید و چک‌لیست راه‌اندازی را به امضا برسانید.
+\item «توان کانال» را با فرستندهٔ خاموش بخوانید
+($P_{\mathrm{off}}$).
+\item فلوگراف
+\code{lab02_fm_tx.grc}
+را اجرا کنید:
+\pv{dev}{5e3}،
+\pv{f\_m}{1e3}،
+\pv{tx\_atten}{40}.
+در گیرنده، خطای فرکانس را با
+\code{f_fine}
+صفر کنید (اگر سیگنال در کانال دیده نمی‌شود، موقتاً
+\code{dev}
+گیرنده را بزرگ کنید تا فیلتر کانال پهن شود).
+\item طیف کانال را با
+\pv{FFT Size}{4096}
+ببینید: حامل و خطوط جانبی به فاصلهٔ
+\q{1}{kHz}.
+«توان کانال»
+($P_{\mathrm{on}}$)
+و
+\lr{SINAD}
+را بخوانید و تن را بشنوید.
+\item \textbf{صفرشدن حامل.} با
+\pv{f\_m}{1e3}،
+\code{dev}
+فرستنده را از
+\val{1e3}
+آهسته بالا ببرید و دو مقداری را که خط حامل در آن‌ها ناپدید می‌شود بیابید (جدول
+\ref{tab:null}).
+\item \textbf{پهنای باند.} برای دو حالت جدول
+\ref{tab:null}
+فاصلهٔ بیرونی‌ترین خطوط جانبی‌ای را که کمتر از
+\q{20}{dB}
+پایین‌تر از بزرگ‌ترین خط‌اند بخوانید و برای هر حالت یک ضبط پنج‌ثانیه‌ای بگیرید.
+\end{steps}
+
+\begin{table}[H]
+	\centering\small
+	\caption{کالیبراسیون انحراف با صفرشدن حامل و اندازه‌گیری پهنای باند ($f_{\mathrm{tx}} = $ \blank[1.8cm] \lr{MHz})}
+	\label{tab:null}
+	\begin{tabularx}{\linewidth}{|X|c|c|c|}
+		\hline
+		\hdrrow \hdr{کمیت} & \hdr{نظری} & \hdr{اندازه‌گیری} & \hdr{اختلاف} \\ \hline
+		نخستین انحرافی که حامل صفر می‌شود، $f_m = 1\un{kHz}$ (\lr{Hz}) & \rowstrut\hspace{1.6cm} & \hspace{1.6cm} & \hspace{1.4cm} \\ \hline
+		دومین انحرافی که حامل صفر می‌شود (\lr{Hz}) & \rowstrut & & \\ \hline
+		پهنای باند با $\Delta f = 5\un{kHz}$ و $f_m = 1\un{kHz}$ (\lr{kHz}) & \rowstrut & & \\ \hline
+		پهنای باند با $\Delta f = 5\un{kHz}$ و $f_m = 3\un{kHz}$ (\lr{kHz}) & \rowstrut & & \\ \hline
+		$\mathrm{CNR}$ با \pv{tx\_atten}{40} (\lr{dB}) & \rowstrut & & \\ \hline
+% 		خطای فرکانس میان فرستنده و گیرنده (\lr{Hz} و \lr{ppm}) & \rowstrut & & \\ \hline
+	\end{tabularx}
+\end{table}
+
+\begin{expectbox}
+حامل نخست در انحراف حدود
+\q{2405}{Hz}
+و سپس حدود
+\q{5520}{Hz}
+ناپدید می‌شود. خطای فرکانس میان دو دستگاه در این فرکانس می‌تواند چندین کیلوهرتز باشد؛ بدون تصحیح آن، سیگنال از فیلتر کانال
+\q{16}{kHz}
+بیرون می‌افتد.
+\end{expectbox}
+
+\begin{recordbox}
+مقدار
+\code{f_fine}،
+$P_{\mathrm{off}}$،
+$P_{\mathrm{on}}$،
+تصویر طیف در لحظهٔ صفرشدن حامل و دو فایل
+\IQ{}
+برای پهنای باند.
+\end{recordbox}
+
+\begin{question}
+\textbf{(اختیاری)}
+انحراف‌های صفرشدن حامل را با مقدار نظری مقایسه کنید. اگر اختلافی هست، خطا از تنظیم
+\code{dev}
+است، از تفکیک نمایشگر یا از تشخیص «صفر»؟ برای هر کدام یک برآورد عددی بدهید.
+\end{question}
+\begin{question}
+\textbf{(اختیاری)}
+پهنای باند اندازه‌گیری‌شده را برای دو حالت با قاعدهٔ کارسون مقایسه کنید. در کدام حالت قاعدهٔ کارسون پهنای باند را کمتر از واقع برآورد می‌کند؟
+\end{question}
+
+% \labpart[۲۰ دقیقه]{نسبت سیگنال به نویز خروجی و آستانهٔ \lr{FM}}\label{part:thr}
+% \begin{steps}
+% \item فرستنده:
+% \pv{dev}{5e3}،
+% \pv{f\_m}{1e3}.
+% گیرنده:
+% \pv{dev}{5e3}،
+% پهنای صوتی
+% \q{3}{kHz}،
+% \pv{pll\_bw}{0.05}.
+% \item \code{tx_atten}
+% را از
+% \val{40}
+% با گام
+% \q{5}{dB}
+% زیاد کنید تا
+% \lr{SINAD}
+% شروع به افت کند؛ از آن‌جا با گام
+% \q{1}{dB}
+% ادامه دهید تا
+% \lr{SINAD}
+% به کمتر از
+% \q{5}{dB}
+% برسد. اگر به انتهای بازهٔ
+% \code{tx_atten}
+% رسیدید،
+% \code{tx_amp}
+% را
+% \val{0.05}
+% کنید
+% (\q{20}{dB}
+% کمتر) و ادامه دهید.
+% \item در هر پله: «توان کانال»،
+% \lr{SINAD}
+% برای هر دو آشکارساز و شنیده‌شدن یا نشدن «کلیک» را در جدول
+% \ref{tab:thr}
+% بنویسید و یک ضبط پنج‌ثانیه‌ای بگیرید. دست‌کم ده پله ثبت کنید که چهار تای آن در ناحیهٔ افت سریع باشد.
+% \item $\mathrm{CNR}$
+% هر پله را از
+% $P_{\mathrm{on}}$
+% و
+% $P_{\mathrm{off}}$
+% حساب کنید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{$\mathrm{SNR}$ خروجی بر حسب $\mathrm{CNR}$ ($\Delta f = 5\un{kHz}$، $P_{\mathrm{off}} = $ \blank[1.3cm] \dBFS)}
+% 	\label{tab:thr}
+% 	\begin{tabularx}{\linewidth}{|c|Y|Y|Y|Y|Y|Y|}
+% 		\hline
+% 		\hdrrow \hdr{\lr{tx\_atten}} & \hdr{$P_{\mathrm{on}}$ (\dBFS)} & \hdr{$\mathrm{CNR}$ (\lr{dB})} & \hdr{\lr{SINAD} تمایزگر} & \hdr{\lr{SINAD} \lr{PLL}} & \hdr{کلیک؟} & \hdr{نام فایل} \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{expectbox}
+% بالاتر از آستانه،
+% \lr{SINAD}
+% دسی‌بل به دسی‌بل با
+% $\mathrm{CNR}$
+% پایین می‌آید و حدود
+% \q{13}{dB}
+% از آن بیشتر است. در شبیه‌سازی با نویز ایده‌آل، برای
+% $\Delta f = 5\un{kHz}$
+% آستانه حوالی
+% $\mathrm{CNR} \approx 8\un{dB}$
+% است و دو آشکارساز تقریباً مانند هم رفتار می‌کنند؛ تفاوت آن‌ها با بزرگ‌شدن انحراف آشکار می‌شود (بخش بعد). در
+% \lr{SINAD}های
+% بالا عدد به سقفی می‌رسد که اعوجاج و نویز خود دستگاه‌ها تعیین می‌کند.
+% \end{expectbox}
+
+% \begin{question}
+% در ناحیهٔ خطی، اختلاف
+% \lr{SINAD}
+% و
+% $\mathrm{CNR}$
+% را با رابطهٔ
+% \eqref{eq:snr2}
+% مقایسه کنید. آستانه را نقطه‌ای بگیرید که
+% \lr{SINAD}
+% یک دسی‌بل از خط راست پایین‌تر می‌افتد؛
+% $\mathrm{CNR}$
+% آن چقدر است؟
+% \end{question}
+% \begin{question}
+% چرا برای محاسبهٔ
+% $\mathrm{CNR}$
+% باید
+% $P_{\mathrm{off}}$
+% را از
+% $P_{\mathrm{on}}$
+% کم کرد؟ این تصحیح در کدام ردیف‌های جدول مهم است؟
+% \end{question}
+
+% \labpart[۳۰ دقیقه]{چالش تیمی: انحراف فرکانس اختصاصی}\label{part:dev}
+% \begin{tcolorbox}[sdrframed=sdrTeal,title={پارامتر اختصاصی تیم (دستیار آموزشی اعلام می‌کند)}]
+% \small انحراف فرکانس تیم: $\Delta f_{\mathrm{team}} = $ \blank[2.2cm] \lr{kHz} \hfill تن آزمون: $f_m = 1\un{kHz}$ \hfill پهنای صوتی: $W = 3\un{kHz}$
+% \end{tcolorbox}
+% هدف: نشان دهید انحراف فرکانس تیم شما در مقایسه با
+% $\Delta f = 5\un{kHz}$
+% چه اثری بر پهنای باند، بر
+% $\mathrm{SNR}$
+% خروجی و بر آستانه دارد، و مزیت آشکارساز
+% \lr{PLL}
+% در آن چقدر است.
+% \begin{steps}
+% \item \textbf{پیش‌بینی.} پیش از اندازه‌گیری، ردیف «پیش‌بینی» جدول
+% \ref{tab:devteam}
+% را پر کنید: پهنای باند کارسون، تغییر
+% \lr{SINAD}
+% نسبت به
+% \q{5}{kHz}
+% در توان دریافتی یکسان، و مقدار مناسب
+% \code{pll_bw}
+% (با رابطهٔ
+% \eqref{eq:recap2}
+% و این قاعدهٔ سرانگشتی که
+% $B_L$
+% باید از هر دو مقدار
+% $3W$
+% و
+% $4.7\sqrt{\Delta f\, f_m}$
+% بزرگ‌تر باشد).
+% \item \code{dev}
+% را در فرستنده و گیرنده روی
+% $\Delta f_{\mathrm{team}}$
+% بگذارید؛ فیلتر کانال خودکار پهن یا باریک می‌شود.
+% $P_{\mathrm{off}}$
+% را دوباره بخوانید، چون پهنای کانال عوض شده است.
+% \item پهنای باند را مانند بخش
+% \ref{part:link}
+% اندازه بگیرید و یک ضبط پنج‌ثانیه‌ای بگیرید.
+% \item در سه سطح قوی که در بخش
+% \ref{part:thr}
+% هم اندازه گرفته‌اید،
+% \lr{SINAD}
+% را بخوانید و با مقادیر
+% \q{5}{kHz}
+% مقایسه کنید.
+% \item ناحیهٔ آستانه را برای هر دو آشکارساز با گام
+% \q{1}{dB}
+% بپیمایید (دست‌کم شش پله، هر پله یک ضبط پنج‌ثانیه‌ای) و
+% \code{tx_atten}
+% آستانهٔ هر آشکارساز را بیابید.
+% \item \code{pll_bw}
+% را نصف و دو برابر کنید و اثر آن را بر آستانه و بر
+% \lr{SINAD}
+% در سیگنال قوی بنویسید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{نتایج چالش انحراف فرکانس ($\Delta f_{\mathrm{team}} = $ \blank[1.4cm] \lr{kHz})}
+% 	\label{tab:devteam}
+% 	\begin{tabularx}{\linewidth}{|X|c|c|c|}
+% 		\hline
+% 		\hdrrow \hdr{کمیت} & \hdr{مرجع $5\un{kHz}$} & \hdr{پیش‌بینی برای تیم} & \hdr{اندازه‌گیری تیم} \\ \hline
+% 		پهنای باند اشغالی (\lr{kHz}) & \rowstrut\hspace{1.8cm} & \hspace{1.8cm} & \hspace{1.8cm} \\ \hline
+% 		\lr{SINAD} در سیگنال قوی، تمایزگر (\lr{dB}) & \rowstrut & & \\ \hline
+% 		\code{tx_atten} آستانه، تمایزگر (\lr{dB}) & \rowstrut & & \\ \hline
+% 		\code{tx_atten} آستانه، \lr{PLL} (\lr{dB}) & \rowstrut & & \\ \hline
+% 		\code{pll_bw} به‌کاررفته و $B_L$ (\lr{kHz}) & \rowstrut & & \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{question}
+% تغییر
+% \lr{SINAD}
+% نسبت به
+% \q{5}{kHz}
+% را با
+% $20\log_{10}(\Delta f_{\mathrm{team}}/5\un{kHz})$
+% مقایسه کنید. آستانهٔ تمایزگر (بر حسب توان دریافتی) چند دسی‌بل جابه‌جا شد و چرا؟
+% \end{question}
+% \begin{question}
+% آشکارساز
+% \lr{PLL}
+% آستانه را چند دسی‌بل پایین‌تر برد؟ نتیجهٔ خود را با تیم‌هایی که انحراف کوچک‌تر و بزرگ‌تر داشتند مقایسه کنید و روند را توضیح دهید.
+% \end{question}
+
+%%%% SESSION-2 %%%%
+
+%======================================================================
+% \isection{flow}{فلوگراف‌های جلسهٔ دوم}
+%======================================================================
+% \subsection{گیرندهٔ استریو و \lr{RDS}: \lr{lab02\_stereo\_rds\_rx}}
+% بخش ورودی این گیرنده همان گیرندهٔ جلسهٔ اول است (منبع، فیلتر انتخاب کانال با کاهش نرخ ۱۰ و
+% \blk{Quadrature Demod}
+% با
+% $\Delta f = 75\un{kHz}$).
+% خروجی تمایزگر، یعنی سیگنال
+% \lr{MPX}
+% با نرخ
+% \q{240}{kHz}،
+% به سه شاخه می‌رود (شکل
+% \ref{fig:fg-stereo}):
+% شاخهٔ مجموع، شاخهٔ پایلوت و تفاضل، و شاخهٔ
+% \lr{RDS}.
+% چون آشکارساز
+% \lr{PLL}
+% مؤلفه‌های بالای باند پایه را تضعیف می‌کند، در این گیرنده فقط تمایزگر به کار می‌رود.
+
+% \begin{figure}[H]
+% 	\centering
+% 	\begin{tikzpicture}
+% 		\node[sdrblkhl] (mpx) at (0,0) {MPX\\ 240 kHz};
+% 		\node[sdrblk] (bpf) at (3.0,1.75) {\fa{میان‌گذر \lr{19 kHz}}\\ \fa{(ضرایب مختلط)}};
+% 		\node[sdrblk] (pll) at (6.4,1.75) {PLL Carrier\\ Regeneration};
+% 		\node[sdrblk] (sq) at (9.6,1.75) {\fa{$(\cdot)^2$ و بخش موهومی}};
+% 		\node[sdrblk] (dl) at (3.0,0) {Delay};
+% 		\node[sdrblk,circle,minimum width=0.75cm,minimum height=0.75cm,inner sep=0pt] (mx) at (6.4,0) {$\times$};
+% 		\node[sdrblk] (dif) at (9.6,0) {\fa{پایین‌گذر \lr{15 kHz}، $\downarrow 5$}\\ \fa{بهره: \lr{lr\_gain}}};
+% 		\node[sdrblk] (sum) at (9.6,-1.5) {\fa{پایین‌گذر \lr{15 kHz}، $\downarrow 5$}};
+% 		\node[sdrblkpc] (mat) at (13.2,-0.75) {$L = \Sigma + \Delta$\\ $R = \Sigma - \Delta$\\ \fa{واتأکید و صدا}};
+% 		\draw[flt] (mpx.north) |- (bpf.west); \draw[flt] (mpx)--(dl); \draw[cplx] (bpf)--(pll); \draw[cplx] (pll)--(sq);
+% 		\draw[flt] (dl)--(mx); \draw[flt] (sq.south) -- ++(0,-0.45) -| node[pos=0.25,above,font=\scriptsize,text=black]{38 kHz}(mx.north);
+% 		\draw[flt] (mx)--(dif); \draw[flt] (dl.south) |- (sum.west);
+% 		\draw[flt] (dif.east) -- ++(0.35,0) |- ([yshift=4pt]mat.west); \draw[flt] (sum.east) -- ++(0.35,0) |- ([yshift=-4pt]mat.west);
+% 		\node[font=\scriptsize,text=sdrGray] at (11.45,0.25) {$L-R$}; \node[font=\scriptsize,text=sdrGray] at (11.45,-1.75) {$L+R$};
+% 		\node[sdrblk] (x57) at (2.2,-3.3) {\fa{جابه‌جایی \lr{57 kHz}}\\ $\downarrow 10$};
+% 		\node[sdrblk] (rs) at (5.0,-3.3) {\fa{تغییر نرخ}\\ $\times 19/24$};
+% 		\node[sdrblk] (mf) at (7.75,-3.3) {\fa{فیلتر منطبق}\\ \fa{و \lr{AGC}}};
+% 		\node[sdrblk] (sy) at (10.6,-3.3) {Symbol Sync\\ \fa{و گیرندهٔ \lr{BPSK}}};
+% 		\node[sdrblkpc] (rd) at (13.5,-3.3) {RDS Decoder\\ Parser, Panel};
+% 		\draw[flt] (mpx.south) |- (x57.west);
+% 		\draw[cplx] (x57)--node[above,font=\scriptsize,text=black]{24k}(rs); \draw[cplx] (rs)--node[above,font=\scriptsize,text=black]{19k}(mf);
+% 		\draw[cplx] (mf)--(sy); \draw[msg] (sy)--node[above,font=\scriptsize,text=black]{\fa{بیت}}(rd);
+% 	\end{tikzpicture}
+% 	\caption{ساختار گیرندهٔ استریو و \lr{RDS}: بالا دیکودر استریو، پایین زنجیرهٔ \lr{RDS} (رسم‌شده؛ تصویر واقعی \GRC{} نیست)}
+% 	\label{fig:fg-stereo}
+% \end{figure}
+% \screenshotslot{labs/figs/lab02_stereo_rds_rx.png}{تصویر فلوگراف \lr{lab02\_stereo\_rds\_rx} در \GRC}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{پارامترهای دیکودر استریو (ساختار برگرفته از نمونهٔ \lr{gr-rds}؛ نام‌ها مطابق \GR{} \lr{3.10})}
+% 	\label{tab:params-st}
+% 	\begin{tabularx}{\linewidth}{|C{4.4cm}|Z|}
+% 		\hline
+% 		\hdrrow \hdr{بلوک (\lr{Id})} & \hdr{پارامترها} \\ \hline
+% 		\blk{Quadrature Demod} & \pv{Gain}{quad\_rate/(2*math.pi*75e3)} \\ \hline
+% 		\blk{Band-pass Filter Taps} (\code{pilot_taps}) & \pv{Tap Type}{Complex}؛ \pv{Sample Rate (Hz)}{quad\_rate}؛ \pv{Low Cutoff Freq (Hz)}{18980}؛ \pv{High Cutoff Freq (Hz)}{19020}؛ \pv{Transition Width (Hz)}{1000} \\ \hline
+% 		\blk{Decimating FIR Filter} (پایلوت) & \pv{Type}{Float->Complex (Complex Taps)}؛ \pv{Decimation}{1}؛ \pv{Taps}{pilot\_taps} \\ \hline
+% 		\blk{PLL Carrier}\newline\blk{Regeneration} & \pv{Loop Bandwidth}{0.001}؛ \pv{Max Phase/sample}{2*math.pi*19020/quad\_rate}؛ \pv{Min Phase/sample}{2*math.pi*18980/quad\_rate} \\ \hline
+% 		\blk{Multiply} و \blk{Complex to Imag} & \blk{Multiply} مختلط با دو ورودی که هر دو به خروجی \lr{PLL} وصل‌اند (مربع پایلوت)، سپس بخش موهومی: حامل \q{38}{kHz} \\ \hline
+% 		\blk{Delay} & \pv{Type}{float}؛ \pv{Delay}{(len(pilot\_taps) - 1) // 2}؛ ورودی: خروجی تمایزگر \\ \hline
+% 		\blk{Decimating FIR Filter} (مجموع) & \pv{Type}{Float->Float (Real Taps)}؛ \pv{Decimation}{5}؛ \pv{Taps}{firdes.low\_pass(1.0, quad\_rate, 15e3, 2e3)}؛ ورودی: خروجی \blk{Delay} \\ \hline
+% 		\blk{Multiply} (حقیقی) و \blk{Decimating FIR Filter} (تفاضل) & ضرب خروجی \blk{Delay} در حامل \q{38}{kHz}؛ سپس \pv{Decimation}{5}؛ \pv{Taps}{firdes.low\_pass(lr\_gain*stereo, quad\_rate, 15e3, 2e3)} \\ \hline
+% 		\blk{Add} و \blk{Subtract} & \blk{Add}: مجموع و تفاضل (کانال چپ)؛ \blk{Subtract}: مجموع منهای تفاضل (کانال راست) \\ \hline
+% 		\blk{FM Deemphasis}، \blk{Multiply Const}، \blk{Audio Sink} & برای هر کانال \pv{Tau}{tau} و ضرب در \code{volume}؛ \blk{Audio Sink} با \pv{Num Inputs}{2} \\ \hline
+% 		\blk{QT GUI Range}، \blk{QT GUI Chooser} & \code{lr_gain} (\val{-2.1}، از \val{-3} تا \val{-1}، گام \val{0.05})؛ \code{stereo}: \val{1} (استریو) یا \val{0} (مونو) \\ \hline
+% 	\end{tabularx}
+% \end{table}
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{پارامترهای زنجیرهٔ \lr{RDS} و نمایشگرها}
+% 	\label{tab:params-rds}
+% 	\begin{tabularx}{\linewidth}{|C{4.4cm}|Z|}
+% 		\hline
+% 		\hdrrow \hdr{بلوک (\lr{Id})} & \hdr{پارامترها} \\ \hline
+% 		\blk{Frequency Xlating}\newline\blk{FIR Filter} & \pv{Type}{Float->Complex (Complex Taps)}؛ \pv{Decimation}{10}؛ \pv{Taps}{firdes.low\_pass(1.0, quad\_rate, 7.5e3, 5e3)}؛ \pv{Center Frequency}{57e3}؛ \pv{Sample Rate}{quad\_rate} \\ \hline
+% 		\blk{Rational Resampler} & \pv{Type}{Complex->Complex (Complex Taps)}؛ \pv{Interpolation}{19}؛ \pv{Decimation}{24} \\ \hline
+% 		\blk{RRC Filter Taps} (\code{rrc_taps}) و \blk{Variable} & \pv{Sample Rate (Hz)}{19000}؛ \pv{Symbol Rate (Hz)}{19000/8}؛ \pv{Excess BW}{1.0}؛ \pv{Num Taps}{151}. سپس متغیر \code{rrc_taps_manchester} با این مقدار (یک عبارت پیوسته): \val{[rrc\_taps[n] - rrc\_taps[n+8]} \val{for n in range(len(rrc\_taps)-8)]} \\ \hline
+% 		\blk{Decimating FIR Filter} (منطبق) & \pv{Type}{Complex->Complex (Complex Taps)}؛ \pv{Decimation}{1}؛ \pv{Taps}{rrc\_taps\_manchester} \\ \hline
+% 		\blk{AGC} & \pv{Type}{complex}؛ \pv{Rate}{2e-3}؛ \pv{Reference}{0.585}؛ \pv{Gain}{53}؛ \pv{Max Gain}{1000} \\ \hline
+% 		\blk{Symbol Sync} & \pv{I/O Type}{Complex}؛ \pv{Timing Error Detector}{Zero Crossing}؛ \pv{TED Slicer Constellation}{digital.constellation\_bpsk().base()}؛ \pv{Samples per Symbol}{16}؛ \pv{Loop Bandwidth}{0.01}؛ \pv{Maximum Deviation}{0.1}؛ \pv{Output Samples/Symbol}{1} \\ \hline
+% 		\blk{Constellation Receiver} & \pv{Constellation Object}{digital.constellation\_bpsk().base()}؛ \pv{Loop Bandwidth}{2*math.pi/100}؛ \pv{Minimum Freq Deviation}{-0.002}؛ \pv{Maximum Freq Deviation}{0.002}. خروجی صفر به \blk{Differential Decoder}، خروجی‌های ۱ تا ۳ به \blk{Null Sink} و خروجی ۴ به \blk{QT GUI Constellation Sink} \\ \hline
+% 		\blk{Differential Decoder} & \pv{Modulus}{2} \\ \hline
+% 		\blk{RDS Decoder}، \blk{RDS Parser}، \blk{RDS Panel} & اتصال پیامی (درگاه‌های خاکستری): \lr{out} دیکودر به \lr{in} پارسر و \lr{out} پارسر به \lr{in} پنل \\ \hline
+% 		\blk{Python Block} (شمارندهٔ گروه) & کد \code{sdrlab_rds_counter.py} (پیوست)؛ \pv{Period}{5.0}؛ درگاه \lr{in} به \lr{out} بلوک \blk{RDS Decoder} \\ \hline
+% 		نمایشگرها & \blk{QT GUI Frequency Sink} حقیقی روی \lr{MPX} (\pv{FFT Size}{4096}؛ \pv{Bandwidth (Hz)}{quad\_rate})؛ \blk{QT GUI Frequency Sink} حقیقی با دو ورودی روی کانال چپ و راست (\pv{Bandwidth (Hz)}{audio\_rate}) \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{notebox}[ضریب \lr{lr\_gain}]
+% علامت منفی، فاز حامل بازسازی‌شده را تصحیح می‌کند؛ عدد ۲ نصف‌شدن دامنه در آشکارسازی
+% \lr{DSB-SC}
+% را جبران می‌کند و مقدار اضافه (از ۲ تا حدود
+% $2.1$)
+% افت دامنهٔ زیرحامل در فیلتر کانال را. بهترین مقدار را در بخش
+% \ref{part:stereo}
+% با اندازه‌گیری می‌یابید.
+% \end{notebox}
+
+% \subsection{فرستندهٔ آمادهٔ استریو و \lr{RDS}: \lr{lab02\_stereo\_rds\_tx}}
+% این فلوگراف را آماده دریافت می‌کنید و فقط متغیرهای جدول
+% \ref{tab:params-sttx}
+% را تغییر می‌دهید. سیگنال
+% \lr{MPX}
+% در آن با نرخ
+% \q{380}{kHz}
+% ساخته می‌شود (۲۰ برابر پایلوت، تا هر نیم‌بیت
+% \lr{RDS}
+% تعداد صحیحی نمونه داشته باشد) و پس از مدولاسیون با نسبت
+% $120/19$
+% به
+% \q{2.4}{MS/s}
+% می‌رسد. پایلوت، حامل
+% \q{38}{kHz}
+% و حامل
+% \q{57}{kHz}
+% همه از یک نوسان‌ساز
+% \q{19}{kHz}
+% ساخته می‌شوند و بنابراین هم‌فازند. فلوگراف را باز کنید و مسیر هر جزء رابطهٔ
+% \lr{MPX}
+% را در آن پیدا کنید.
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{متغیرهای قابل تنظیم فرستندهٔ آماده}
+% 	\label{tab:params-sttx}
+% 	\begin{tabularx}{\linewidth}{|c|c|X|}
+% 		\hline
+% 		\hdrrow \hdr{متغیر} & \hdr{مقدار آغازین} & \hdr{معنا} \\ \hline
+% 		\code{f_tx}، \code{tx_atten}، \code{tx_amp} & \val{434.0e6}، \val{40}، \val{0.5} & مانند فرستندهٔ جلسهٔ اول \\ \hline
+% 		\code{f_L}، \code{a_L} & \val{1e3}، \val{0.9} & فرکانس و دامنهٔ تن کانال چپ \\ \hline
+% 		\code{f_R}، \code{a_R} & \val{2.5e3}، \val{0.0} & فرکانس و دامنهٔ تن کانال راست \\ \hline
+% 		\code{pilot_gain} & \val{0.1} & سطح پایلوت نسبت به بیشینهٔ انحراف \\ \hline
+% 		\code{rds_gain} & \val{0.027} & سطح \lr{RDS}؛ \val{0.027} یعنی انحراف حدود \q{2}{kHz} \\ \hline
+% 		\code{ps_name}، \code{pi_ref} & \val{"TEAM-00"}، \val{0} & نام ایستگاه (حداکثر هشت حرف) و شمارهٔ مرجع برنامه؛ شناسهٔ برنامه \lr{D3} به‌اضافهٔ \code{pi_ref} به‌صورت دو رقم شانزده‌شانزدهی می‌شود \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+%======================================================================
+% \isection{steps}{شرح آزمایش: جلسهٔ دوم}
+%======================================================================
+
+% \labpart[۲۵ دقیقه]{گیرندهٔ \lr{WFM} مونو و طیف باند پایه}\label{part:mono}
+% \begin{steps}
+% \item آنتن را ببندید (چیدمان الف) و فلوگراف
+% \code{lab02_stereo_rds_rx.grc}
+% را در حالت
+% \lr{Mono}
+% روی یک ایستگاه قوی اجرا کنید. بهره را بدون اشباع تنظیم کنید.
+% \item در نمایشگر
+% \lr{MPX}
+% با
+% \pv{FFT Size}{4096}
+% (فاصلهٔ خانه‌ها
+% \q{58.6}{Hz})
+% و میانگین‌گیری
+% \val{High}،
+% اجزای طیف باند پایه را بیابید و جدول
+% \ref{tab:mpx}
+% را پر کنید. برای خواندن دقیق فرکانس، روی هر جزء بزرگ‌نمایی کنید.
+% \item همین کار را برای یک ایستگاه دیگر تکرار کنید و تفاوت‌ها را بنویسید (آیا پایلوت دارد؟ آیا
+% \lr{RDS}
+% دارد؟).
+% \item ثابت زمانی واتأکید را میان
+% \q{50}{}
+% و
+% \q{75}{$\mu$s}
+% عوض کنید و اثر آن را بر صدا و بر شیب طیف صوت ببینید.
+% \item یک ضبط ده‌ثانیه‌ای از ایستگاه نخست بگیرید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{اجزای طیف باند پایهٔ استریو (ایستگاه: \blank[1.8cm] \lr{MHz}، بهره: \blank[1.2cm] \lr{dB})}
+% 	\label{tab:mpx}
+% 	\begin{tabularx}{\linewidth}{|X|c|c|c|}
+% 		\hline
+% 		\hdrrow \hdr{جزء} & \hdr{فرکانس مورد انتظار (\lr{kHz})} & \hdr{فرکانس اندازه‌گیری‌شده (\lr{kHz})} & \hdr{سطح (\lr{dB})} \\ \hline
+% 		لبهٔ بالایی $L+R$ & $15$ & \rowstrut\hspace{2.2cm} & \hspace{1.5cm} \\ \hline
+% 		پایلوت & $19.000$ & \rowstrut & \\ \hline
+% 		لبهٔ پایینی و بالایی $L-R$ & $23$ و $53$ & \rowstrut & \\ \hline
+% 		مرکز و پهنای \lr{RDS} & $57$ و حدود $4.8$ & \rowstrut & \\ \hline
+% 		کف نویز حوالی \q{17}{kHz} & — & — & \rowstrut \\ \hline
+% 		کف نویز حوالی \q{65}{kHz} & — & — & \rowstrut \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{expectbox}
+% پایلوت خطی باریک در
+% \q{19}{kHz}
+% است؛ دو نیمهٔ
+% $L-R$
+% دو طرف
+% \q{38}{kHz}
+% قرینهٔ هم‌اند و در خود
+% \q{38}{kHz}
+% حاملی دیده نمی‌شود. ایستگاهی که
+% \lr{RDS}
+% دارد برآمدگی کوچکی به پهنای حدود
+% \q{5}{kHz}
+% در
+% \q{57}{kHz}
+% نشان می‌دهد. کف نویز با فرکانس بالا می‌رود. همهٔ ایستگاه‌ها استریو یا دارای
+% \lr{RDS}
+% نیستند.
+% \end{expectbox}
+% \screenshotslot{labs/figs/lab02_mpx_spectrum.png}{نمونهٔ طیف باند پایهٔ یک ایستگاه استریو در آزمایشگاه شما}
+
+% \begin{question}
+% چرا کف نویز طیف باند پایه با فرکانس بالا می‌رود؟ اختلاف سطح نویز در
+% \q{17}{}
+% و
+% \q{65}{kHz}
+% را با پیش‌بینی
+% $f^2$
+% مقایسه کنید.
+% \end{question}
+% \begin{question}
+% فرکانس پایلوت را با چه دقتی خواندید و این دقت را چه چیزی محدود می‌کند؟ خطای نوسان‌ساز گیرنده
+% (چند ده
+% \lr{ppm})
+% چه سهمی در آن دارد؟
+% \end{question}
+
+% \labpart[۳۵ دقیقه]{بازسازی استریو}\label{part:stereo}
+% \begin{steps}
+% \item حالت را روی
+% \lr{Stereo}
+% بگذارید و یک ایستگاه استریو را با هدفون بشنوید. میان مونو و استریو چند بار جابه‌جا شوید؛ روی یک ایستگاه ضعیف‌تر، تفاوت نویز دو حالت را نیز بشنوید.
+% \item \textbf{آزمون با فرستندهٔ کابلی.} فلوگراف‌ها را متوقف کنید، چیدمان (ب) را ببندید و چک‌لیست راه‌اندازی را کامل کنید. فلوگراف
+% \code{lab02_stereo_rds_tx.grc}
+% را با مقادیر آغازین جدول
+% \ref{tab:params-sttx}
+% اجرا کنید (فقط کانال چپ تن دارد). گیرنده را روی
+% $f_{\mathrm{tx}}$
+% بگذارید.
+% \item در نمایشگر «کانال چپ و راست» سطح تن
+% \q{1}{kHz}
+% را در هر دو کانال بخوانید؛ اختلاف این دو، جداسازی استریو است. سپس
+% \pv{a\_L}{0}
+% و
+% \pv{a\_R}{0.9}
+% بگذارید و جداسازی را در جهت دیگر اندازه بگیرید.
+% \item \code{lr_gain}
+% را در بازهٔ
+% \val{-1.8}
+% تا
+% \val{-2.4}
+% تغییر دهید و مقداری را که بیشترین جداسازی را می‌دهد بیابید (جدول
+% \ref{tab:sep}).
+% \item \textbf{اثر تأخیر.} مقدار
+% \blk{Delay}
+% را یک، دو و سه نمونه بیشتر کنید (هر بار فلوگراف را دوباره اجرا کنید) و جداسازی را بخوانید. سپس مقدار درست را بازگردانید.
+% \item \textbf{اثر پایلوت.} در فرستنده
+% \code{pilot_gain}
+% را صفر کنید. خروجی دو کانال چه می‌شود؟ سپس آن را به
+% \val{0.1}
+% بازگردانید.
+% \item یک ضبط ده‌ثانیه‌ای از سیگنال کابلی بگیرید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{جداسازی استریو با فرستندهٔ کابلی (تن فقط در کانال چپ مگر خلاف آن ذکر شود)}
+% 	\label{tab:sep}
+% 	\begin{tabularx}{\linewidth}{|X|Y|Y|Y|}
+% 		\hline
+% 		\hdrrow \hdr{تنظیم} & \hdr{سطح تن در چپ (\lr{dB})} & \hdr{سطح تن در راست (\lr{dB})} & \hdr{جداسازی (\lr{dB})} \\ \hline
+% 		\pv{lr\_gain}{-2.1}، تأخیر درست & \rowstrut & & \\ \hline
+% 		تن فقط در کانال راست & \rowstrut & & \\ \hline
+% 		\pv{lr\_gain}{-2.0} & \rowstrut & & \\ \hline
+% 		بهترین \code{lr_gain} = \blank[1.2cm] & \rowstrut & & \\ \hline
+% 		تأخیر یک نمونه بیشتر & \rowstrut & & \\ \hline
+% 		تأخیر دو نمونه بیشتر & \rowstrut & & \\ \hline
+% 		تأخیر سه نمونه بیشتر & \rowstrut & & \\ \hline
+% 		\pv{pilot\_gain}{0} & \rowstrut & & \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{expectbox}
+% در شبیه‌سازی با کانال ایده‌آل، جداسازی با
+% \pv{lr\_gain}{-2.1}
+% حدود
+% \q{49}{dB}
+% و با
+% \val{-2.0}
+% حدود
+% \q{34}{dB}
+% است؛ روی سخت‌افزار معمولاً کمتر است. یک نمونه خطای تأخیر جداسازی را به حدود
+% \q{11}{dB}
+% می‌رساند و با سه نمونه خطا دو کانال تقریباً جابه‌جا می‌شوند، چون سه نمونه در نرخ
+% \q{240}{kHz}
+% نزدیک نیم‌دورهٔ حامل
+% \q{38}{kHz}
+% است.
+% \end{expectbox}
+
+% \begin{question}
+% چرا بلوک
+% \blk{Delay}
+% لازم است و مقدار آن از کجا می‌آید؟ جداسازی اندازه‌گیری‌شده با یک نمونه خطا را با رابطهٔ خطای فاز در گزارش پیش‌از‌جلسه مقایسه کنید.
+% \end{question}
+% \begin{question}
+% با حذف پایلوت چه رخ داد و چرا؟ گیرنده‌های تجاری در این وضعیت چه می‌کنند؟
+% \end{question}
+% \begin{question}
+% روی ایستگاه ضعیف، نویز حالت استریو از مونو بیشتر بود. با توجه به شکل طیف نویز خروجی تمایزگر توضیح دهید چرا.
+% \end{question}
+
+% \labpart[۲۵ دقیقه]{دیکد \lr{RDS}}\label{part:rds}
+% \begin{steps}
+% \item فرستندهٔ کابلی هنوز وصل است. در فرستنده
+% \code{ps_name}
+% را شناسهٔ تیم و
+% \code{pi_ref}
+% را شمارهٔ تیم بگذارید و دوباره اجرا کنید
+% (\pv{rds\_gain}{0.027}).
+% \item در گیرنده نمودار صورت‌فلکی
+% \lr{RDS}
+% را ببینید: پس از چند ثانیه دو خوشه روی محور حقیقی شکل می‌گیرد. در
+% \blk{RDS Panel}
+% نام ایستگاه و شناسهٔ برنامه را بخوانید و در کنسول، سطرهای
+% \code{[RDS]}
+% شمارندهٔ گروه را ببینید.
+% \item شناسهٔ برنامهٔ نمایش‌داده‌شده را با مقدار مورد انتظار
+% (\lr{D3}
+% و شمارهٔ تیم) مقایسه کنید.
+% \item فلوگراف فرستنده را متوقف کنید، کابل را جدا و آنتن را ببندید. دست‌کم چهار ایستگاه را بررسی و جدول
+% \ref{tab:stations}
+% را پر کنید.
+% \item برای یک ایستگاه دارای
+% \lr{RDS}،
+% روی
+% \q{57}{kHz}
+% در طیف
+% \lr{MPX}
+% بزرگ‌نمایی و پهنای برآمدگی
+% \lr{RDS}
+% و سطح آن نسبت به پایلوت را اندازه بگیرید. یک ضبط بیست‌ثانیه‌ای بگیرید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{ایستگاه‌های بررسی‌شده}
+% 	\label{tab:stations}
+% 	\begin{tabularx}{\linewidth}{|c|c|c|c|Y|Y|Y|}
+% 		\hline
+% 		\hdrrow \hdr{فرکانس (\lr{MHz})} & \hdr{توان کانال (\dBFS)} & \hdr{پایلوت؟} & \hdr{\lr{RDS}؟} & \hdr{نام ایستگاه (\lr{PS})} & \hdr{شناسه (\lr{PI})} & \hdr{گروه در \q{5}{s}} \\ \hline
+% 		\rowstrut\hspace{1.6cm} & \hspace{1.6cm} & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{expectbox}
+% با سیگنال قوی، شمارنده حدود ۵۷ گروه در هر پنج ثانیه نشان می‌دهد (نرخ اسمی
+% $11.4$
+% گروه بر ثانیه) و نام ایستگاه ظرف یک تا دو ثانیه پس از قفل کامل می‌شود. اگر هیچ ایستگاهی در محل شما
+% \lr{RDS}
+% ندارد، این بخش را فقط با فرستندهٔ کابلی انجام دهید و همین را در گزارش بنویسید.
+% \end{expectbox}
+
+% \begin{question}
+% چرا شاخهٔ
+% \lr{RDS}
+% به نرخ
+% \q{19}{kHz}
+% برده می‌شود؟ در این نرخ هر بیت و هر نیم‌بیت چند نمونه دارد و چرا این برای بلوک
+% \blk{Symbol Sync}
+% مهم است؟
+% \end{question}
+% \begin{question}
+% از لحظهٔ اجرای فلوگراف تا نمایش کامل نام ایستگاه چقدر طول کشید؟ این زمان را به سهم همگام‌شدن و سهم ساختار گروه‌ها تفکیک کنید.
+% \end{question}
+
+% \labpart[۳۰ دقیقه]{چالش تیمی: \lr{RDS} در برابر سطح سیگنال}\label{part:rdslevel}
+% \begin{tcolorbox}[sdrframed=sdrTeal,title={پارامترهای اختصاصی تیم (دستیار آموزشی اعلام می‌کند)}]
+% \small سطح \lr{RDS}: \code{rds_gain} = \blank[1.8cm] \hfill نام ایستگاه: \code{ps_name} = \blank[2.4cm] \hfill شمارهٔ مرجع: \code{pi_ref} = \blank[1.2cm]
+% \end{tcolorbox}
+% هدف: منحنی نرخ خطای گروه
+% \lr{RDS}
+% را بر حسب
+% $\mathrm{CNR}$
+% برای سطح
+% \lr{RDS}
+% تیم خود به دست آورید و با کیفیت صدا در همان سطح‌ها مقایسه کنید.
+% \begin{steps}
+% \item چیدمان (ب) را ببندید. فرستنده را با پارامترهای تیم و
+% \pv{a\_L}{0.5}،
+% \pv{a\_R}{0.5}
+% اجرا کنید.
+% \item فلوگراف فرستنده را متوقف و «توان کانال» را بخوانید
+% ($P_{\mathrm{off}}$
+% در پهنای
+% \q{200}{kHz})؛
+% سپس دوباره اجرا کنید.
+% \item \code{tx_atten}
+% را از
+% \val{40}
+% با گام
+% \q{5}{dB}
+% زیاد کنید تا شمارندهٔ گروه شروع به کم شدن کند؛ از آن‌جا با گام
+% \q{1}{dB}
+% ادامه دهید تا هیچ گروهی دیکد نشود. در صورت نیاز
+% \code{tx_amp}
+% را ده برابر کوچک کنید.
+% \item در هر پله سه سطر پیاپی شمارنده را
+% (\q{15}{s})
+% بخوانید و میانگین بگیرید. نرخ خطای گروه برابر
+% $1 - n/57$
+% است که
+% $n$
+% میانگین تعداد گروه در پنج ثانیه است. کیفیت صدای مونو و استریو را نیز در همان پله ارزیابی کنید (جدول
+% \ref{tab:rdslevel}).
+% \item در سه پله (بالا، میانه و پایین ناحیهٔ گذار) یک ضبط بیست‌ثانیه‌ای بگیرید.
+% \item $\mathrm{CNR}$
+% متناظر با نرخ خطای ۵۰ درصد را با درون‌یابی به دست آورید.
+% \end{steps}
+
+% \begin{table}[H]
+% 	\centering\small
+% 	\caption{نرخ خطای گروه \lr{RDS} بر حسب سطح سیگنال (\lr{rds\_gain} = \blank[1.2cm] ، $P_{\mathrm{off}} = $ \blank[1.3cm] \dBFS)}
+% 	\label{tab:rdslevel}
+% 	\begin{tabularx}{\linewidth}{|c|Y|Y|Y|Y|Y|Y|}
+% 		\hline
+% 		\hdrrow \hdr{\lr{tx\_atten}} & \hdr{$P_{\mathrm{on}}$ (\dBFS)} & \hdr{$\mathrm{CNR}$ (\lr{dB})} & \hdr{گروه در \q{5}{s}} & \hdr{نرخ خطای گروه (٪)} & \hdr{نام درست؟} & \hdr{صدا: مونو / استریو} \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 		\rowstrut & & & & & & \\ \hline
+% 	\end{tabularx}
+% \end{table}
+
+% \begin{expectbox}
+% در شبیه‌سازی با نویز ایده‌آل و
+% \pv{rds\_gain}{0.027}،
+% دیکد در
+% $\mathrm{CNR}$
+% حدود
+% \q{16}{dB}
+% تقریباً از کار می‌افتد و از حدود
+% \q{21}{dB}
+% به بالا تقریباً بی‌خطاست؛ دو برابر کردن
+% \code{rds_gain}
+% این ناحیه را حدود
+% \q{6}{dB}
+% پایین می‌برد. گذار بسیار تند است: چند دسی‌بل میان «همه» و «هیچ».
+% \end{expectbox}
+
+% \begin{question}
+% جابه‌جایی ناحیهٔ گذار تیم شما نسبت به
+% \pv{rds\_gain}{0.027}
+% را با
+% $20\log_{10}(\text{\lr{rds\_gain}}/0.027)$
+% مقایسه کنید. نتیجهٔ تیم‌های دیگر این رابطه را تأیید می‌کند؟
+% \end{question}
+% \begin{question}
+% در سطحی که
+% \lr{RDS}
+% از کار افتاد، صدای مونو و استریو چه وضعی داشتند؟ با توجه به شکل طیف نویز و سهم انحراف هر جزء توضیح دهید چرا
+% \lr{RDS}
+% زودتر از صدا از بین می‌رود.
+% \end{question}
+
+%======================================================================
+\isection{wrench}{خطایابی}
+%======================================================================
+\begin{table}[H]
+	\centering\small
+	\caption{نشانه‌ها، علت‌های محتمل و راه‌حل‌ها}
+	\label{tab:trouble-fm}
+	\begin{tabularx}{\linewidth}{|X|X|X|}
+		\hline
+		\hdrrow \hdr{نشانه} & \hdr{علت محتمل} & \hdr{راه‌حل} \\ \hline
+		فقط خش‌خش شنیده می‌شود & فرکانس اشتباه، یا \code{dev} و پهنای صوتی با سیگنال نمی‌خواند & \code{fc} را بررسی کنید؛ برای پخش \lr{FM}: \pv{dev}{75e3} و پهنای صوتی \q{15}{kHz} \\ \hline
+		صدا بریده‌بریده است؛ \lr{aU} در کنسول & کارت صدا و گیرنده دو ساعت جدا دارند؛ یا بار پردازنده زیاد است & گاه‌به‌گاه طبیعی است؛ برنامه‌های دیگر را ببندید؛ \pv{OK to Block}{Yes} \\ \hline
+		صدا خفه یا بیش از حد تیز است & ثابت زمانی واتأکید نادرست & \code{tau} را عوض کنید \\ \hline
+		سیگنال کابلی در کانال دیده نمی‌شود & خطای فرکانس از پهنای فیلتر کانال بیشتر است؛ یا فرستنده اجرا نمی‌شود & موقتاً \code{dev} گیرنده را بزرگ کنید، سیگنال را بیابید و با \code{f_fine} به مرکز بیاورید \\ \hline
+		\lr{SINAD} حتی با سیگنال قوی کم است & \code{f_m} گیرنده با تن فرستنده یکی نیست؛ خطای فرکانس؛ یا اشباع گیرنده & \code{f_m} و \code{dev} دو طرف را یکی کنید؛ خطا را صفر کنید؛ اگر توان کانال نزدیک صفر \dBFS{} است تضعیف را زیاد کنید \\ \hline
+		خروجی \lr{PLL} اعوجاج دارد & حلقه باریک‌تر از آن است که انحراف را دنبال کند & \code{pll_bw} را زیاد کنید \\ \hline
+		فرستنده پیدا نمی‌شود & نشانی دستگاه یا درایور & در \blk{PlutoSDR Sink} مقدار \prm{IIO context URI} را بررسی کنید (مثلاً \val{ip:192.168.2.1})؛ از دستیار آموزشی کمک بگیرید \\ \hline
+		قله‌ای باریک در مرکز طیف فرستنده & نشت حامل فرستنده & طبیعی است؛ به همین دلیل سیگنال با \code{f_off} از مرکز دور شده است \\ \hline
+% 		دو کانال صدا یکسان‌اند & حالت \lr{Mono}؛ یا شاخهٔ پایلوت قفل نیست & حالت را \lr{Stereo} کنید؛ حدود فرکانس \lr{PLL} پایلوت و اتصال \blk{Multiply} را بررسی کنید \\ \hline
+% 		کانال چپ و راست جابه‌جا شده‌اند & علامت \code{lr_gain} یا مقدار \blk{Delay} نادرست است & \code{lr_gain} منفی باشد؛ \blk{Delay} را طبق جدول \ref{tab:params-st} بگذارید \\ \hline
+% 		\blk{RDS Panel} خالی می‌ماند & ایستگاه \lr{RDS} ندارد؛ سیگنال ضعیف است؛ نسبت تغییر نرخ نادرست؛ یا اتصال پیامی برقرار نیست & برآمدگی \q{57}{kHz} را در طیف \lr{MPX} بیابید؛ نسبت $19/24$ و اتصال درگاه‌های خاکستری را بررسی کنید \\ \hline
+		خطای \lr{ID is blacklisted} در \GRC & شناسهٔ بلوک با یک نام رزروشده یکی است (مثلاً \code{audio}) & شناسهٔ بلوک را عوض کنید \\ \hline
+	\end{tabularx}
+\end{table}
+
+%======================================================================
+\isection{pencil}{تحلیل نتایج و گزارش پس‌از‌جلسه}
+%======================================================================
+گزارش در قالب اجباری آیین‌نامه (بند
+\bnd{۴-۲})
+و بر پایهٔ فایل‌های خام ذخیره‌شده نوشته می‌شود. مهلت و این‌که برای این آزمایش دوجلسه‌ای یک گزارش تحویل شود یا دو گزارش را مدرس اعلام می‌کند؛ تحلیل‌های الزامی هر جلسه در زیر جدا آمده است.
+
+\subsection{تحلیل‌های الزامی جلسهٔ اول}
+\begin{enumerate}
+% \item \textbf{منحنی $\mathrm{SNR}$ خروجی بر حسب $\mathrm{SNR}$ ورودی.} از فایل‌های بخش
+% \ref{part:thr}
+% و با کد خودتان (یا با اجرای فلوگراف روی
+% \blk{File Source})،
+% $\mathrm{SNR}$
+% خروجی صوت را برای هر دو آشکارساز بر حسب
+% $\mathrm{CNR}$
+% رسم و نقطهٔ آستانهٔ
+% \lr{FM}
+% را به‌طور تجربی تعیین کنید. منحنی را با رابطهٔ
+% \eqref{eq:snr2}
+% و با شبیه‌سازی پیش‌از‌جلسه مقایسه کنید.
+\item \textbf{پهنای باند} (فقط در صورت انجام بخش ۳)\textbf{.} پهنای باند ۹۹ درصد توان را برای حالت‌های بخش
+% [orig] \item \textbf{پهنای باند.} پهنای باند ۹۹ درصد توان را برای حالت‌های بخش
+\ref{part:link}
+و برای انحراف تیم حساب و با قاعدهٔ کارسون مقایسه کنید.
+\item \textbf{کالیبراسیون انحراف} (فقط در صورت انجام بخش ۳)\textbf{.} نتیجهٔ روش صفرشدن حامل را با عدم‌قطعیت آن گزارش کنید.
+% [orig] \item \textbf{کالیبراسیون انحراف.} نتیجهٔ روش صفرشدن حامل را با عدم‌قطعیت آن گزارش کنید.
+% \item \textbf{اثر انحراف فرکانس.} نتایج چالش تیمی را تحلیل کنید: پهنای باند،
+% \lr{SINAD}
+% و آستانهٔ هر دو آشکارساز در برابر مقدار مرجع.
+\end{enumerate}
+
+% \subsection{تحلیل‌های الزامی جلسهٔ دوم}
+% \begin{enumerate}
+% \item \textbf{طیف باند پایهٔ استریو.} از فایل ضبط‌شدهٔ ایستگاه، سیگنال را با کد خودتان دمدوله و طیف باند پایه را رسم کنید؛ همهٔ مؤلفه‌ها را با فرکانس اندازه‌گیری‌شده علامت بزنید.
+% \item \textbf{جداسازی استریو.} نتایج جدول
+% \ref{tab:sep}
+% را تحلیل کنید و اثر
+% \code{lr_gain}
+% و خطای تأخیر را با رابطهٔ خطای فاز بسنجید.
+% \item \textbf{نرخ خطای دیکد \lr{RDS} در برابر سطح سیگنال.} منحنی نرخ خطای گروه را بر حسب
+% $\mathrm{CNR}$
+% رسم و
+% $\mathrm{CNR}$
+% متناظر با ۵۰ درصد را گزارش کنید؛ عدم‌قطعیت
+% $\mathrm{CNR}$
+% را برآورد کنید.
+% \end{enumerate}
+
+% \begin{question}[پرسش گسترشی]
+% چرا در سیستم استریوی
+% \lr{FM}
+% از پایلوت
+% \q{19}{kHz}
+% استفاده می‌شود و نه خود حامل
+% \q{38}{kHz}؟
+% پاسخ را با استدلال طیفی و توان بدهید.
+% \end{question}
+
+\subsection{سایر اجزای الزامی}
+\begin{itemize}
+\item پاسخ پرسش‌های ۱ تا ۴ (پرسش‌های ۵ و ۶ اختیاری‌اند) همین دستور کار و جدول «پیش‌بینی در برابر اندازه‌گیری» هر جلسه با خطای نسبی و منبع کمّی هر خطا.
+% [orig] \item پاسخ پرسش‌های ۱ تا ۶ (پرسش ۳ اختیاری است) همین دستور کار و جدول «پیش‌بینی در برابر اندازه‌گیری» هر جلسه با خطای نسبی و منبع کمّی هر خطا.
+% [orig] \item پاسخ پرسش‌های ۱ تا ۶ همین دستور کار و جدول «پیش‌بینی در برابر اندازه‌گیری» هر جلسه با خطای نسبی و منبع کمّی هر خطا.
+% [orig] \item پاسخ پرسش‌های ۱ تا ۱۹ همین دستور کار و جدول «پیش‌بینی در برابر اندازه‌گیری» هر جلسه با خطای نسبی و منبع کمّی هر خطا.
+\item همان اجزایی که در آزمایش ۱ برشمرده شد: نمودار ساخته‌شده از دادهٔ خام با کد خودتان، بخش «آنچه اگر دوباره انجام می‌دادیم»، انتشار کد و فلوگراف‌ها و داده، خلاصهٔ اجرایی، جدول سهم اعضا و اعلام ابزارهای هوش مصنوعی. معیارهای ارزیابی همان جدول آیین‌نامه (بخش ۶) است.
+\item پیشنهاد برای «عنصر تعاملی» وب‌سایت (آیین‌نامه، بخش ۵): پخش‌کنندهٔ صوتِ خروجی دمدولاسیون پیوند کابلی خودتان، پیش و پس از آستانه.
+\end{itemize}
+
+%======================================================================
+\isection{bulb}{تمرین‌های تکمیلی (اختیاری)}
+%======================================================================
+\begin{enumerate}
+% \item \textbf{بلوک‌های آماده.} خروجی گیرندهٔ خود را با بلوک
+% \blk{WBFM Receive PLL}
+% مقایسه کنید: جداسازی استریو و رفتار در سیگنال ضعیف.
+\item \textbf{پیش‌تأکید.} در فرستنده
+\blk{FM Preemphasis}
+و در گیرنده
+\blk{FM Deemphasis}
+بگذارید و بهبود
+$\mathrm{SNR}$
+خروجی را برای تن
+\q{10}{kHz}
+اندازه بگیرید.
+\item \textbf{دمدولاسیون آفلاین.} هر دو آشکارساز را در پایتون بنویسید و روی یکی از فایل‌های ضبط‌شده اجرا کنید؛ نتیجه را با خروجی
+\GR{}
+مقایسه کنید.
+% \item \textbf{متن رادیویی.} پیام
+% \lr{RadioText}
+% یک ایستگاه یا فرستندهٔ کابلی را دیکد کنید و ساختار گروه حامل آن را شرح دهید.
+\end{enumerate}
+
+%======================================================================
+\isection{list}{چک‌لیست پایان هر جلسه}
+%======================================================================
+\begin{checklist}
+\item فلوگراف فرستنده متوقف شده، کابل‌ها جدا شده و هیچ فرستنده‌ای در حال کار نیست.
+\item لاگ‌بوک جلسه با همهٔ مشاهدات، خطاها، مقدار
+\code{f_fine}،
+$P_{\mathrm{off}}$
+و نقش اعضا در مخزن ثبت شده است.
+\item همهٔ فایل‌های خام
+\IQ{}
+نام استاندارد دارند
+(\code{lab02}،
+نرخ
+\val{240000})
+و نسخهٔ پشتیبان آن‌ها گرفته شده است.
+\item فلوگراف‌ها و تصاویر نمایشگر در مخزن است و جدول‌های همین جلسه کامل شده است.
+\item هر دو
+\lr{SDR}،
+تضعیف‌گر و کابل‌ها (در صورت انجام بخش ۳) و آنتن شمارش و تحویل شده و برگهٔ تسویهٔ تجهیزات امضا شده است.
+% [orig] تضعیف‌گر، بار ۵۰ اهمی، کابل‌ها و آنتن شمارش و تحویل شده و برگهٔ تسویهٔ تجهیزات امضا شده است.
+\end{checklist}
+
+%======================================================================
+% \isection{flow}{پیوست: کد بلوک شمارندهٔ گروه \lr{RDS}}
+%======================================================================
+% این کد را در یک
+% \blk{Python Block}
+% قرار دهید (فایل
+% \code{sdrlab_rds_counter.py}).
+% بلوک فقط یک درگاه پیامی ورودی دارد و هر پیام بلوک
+% \blk{RDS Decoder}
+% را یک گروه درست می‌شمارد. کد بلوک ضبط همان کد پیوست آزمایش ۱ است.
+% \begin{pycode}
+% import threading
+% import time
+
+% import pmt
+% from gnuradio import gr
+
+
+% class blk(gr.basic_block):
+%     def __init__(self, period=5.0):
+%         gr.basic_block.__init__(self, name='SDR Lab RDS Group Counter',
+%                                 in_sig=None, out_sig=None)
+%         self.period = period
+%         self._n = 0
+%         self._run = False
+%         self.message_port_register_in(pmt.intern('in'))
+%         self.set_msg_handler(pmt.intern('in'), self._on_group)
+
+%     def _on_group(self, msg):
+%         self._n += 1          # one message = one correctly received group
+
+%     def _loop(self):
+%         while self._run:
+%             time.sleep(self.period)
+%             n, self._n = self._n, 0
+%             nominal = 1187.5 / 104 * self.period
+%             print('[RDS] %3d groups in %.0f s (nominal %.0f) -> group error rate %5.1f %%'
+%                   % (n, self.period, nominal, 100 * max(0.0, 1 - n / nominal)))
+
+%     def start(self):
+%         self._run = True
+%         threading.Thread(target=self._loop, daemon=True).start()
+%         return True
+
+%     def stop(self):
+%         self._run = False
+%         return True
+% \end{pycode}
+
+%======================================================================
+\isection{book}{مراجع}
+%======================================================================
+\begin{latin}\small
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=1pt]
+\item J. G. Proakis and M. Salehi, \textit{Communication Systems Engineering}, 2nd ed. Upper Saddle River, NJ: Prentice Hall, 2002.
+\item M. Lichtman, \textit{PySDR: A Guide to SDR and DSP using Python}. [Online]. Available: https://pysdr.org
+\item ITU-R, Recommendation BS.450, ``Transmission standards for FM sound broadcasting at VHF''; and Recommendation BS.643, ``Radio data system for automatic tuning and other applications in FM radio receivers for use with pilot-tone system.''
+% \item B. Bloessl, \textit{gr-rds: FM RDS/TMC transceiver for GNU Radio}. [Online]. Available: https://github.com/bastibl/gr-rds
+\item GNU Radio project, GNU Radio Wiki: block documentation. [Online]. Available: https://wiki.gnuradio.org
+\end{enumerate}
+\end{latin}
+
+\end{document}

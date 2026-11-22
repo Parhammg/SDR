@@ -1,0 +1,96 @@
+% !TEX encoding = UTF-8
+%======================================================================
+%  SDR Lab -- call-out boxes, numbered questions / examples / tasks,
+%  code listings and screenshot placeholders
+%======================================================================
+\makeatletter
+\tcbset{
+  sdrcallout/.style={enhanced,breakable,boxrule=0pt,frame hidden,arc=2pt,
+     colback=#1!7!white,borderline east={3pt}{0pt}{#1},
+     left=8pt,right=11pt,top=5pt,bottom=5pt,boxsep=0pt,
+     before skip=7pt plus 2pt,after skip=7pt plus 2pt},
+  sdrframed/.style={enhanced,breakable,colback=white,colframe=#1,boxrule=0.6pt,arc=2pt,
+     colbacktitle=#1,coltitle=white,fonttitle=\bfseries\small,
+     left=8pt,right=8pt,top=6pt,bottom=6pt,toptitle=3pt,bottomtitle=3pt,
+     before skip=8pt plus 2pt,after skip=8pt plus 2pt},
+}
+% generic call-out: #1 colour, #2 icon, #3 label, [#4] optional title
+\NewDocumentEnvironment{sdrcallout}{m m m o}{%
+  \begin{tcolorbox}[sdrcallout=#1]%
+    \renewcommand{\SDRiconcolor}{#1}%
+    \noindent\SDRicon[0.40]{#2}\hspace{0.4em}%
+    {\bfseries\color{#1!72!black}#3\IfValueT{#4}{ — #4}:}\hspace{0.35em}\ignorespaces}%
+  {\end{tcolorbox}}
+
+\NewDocumentEnvironment{safetybox}{o}{\begin{sdrcallout}{sdrRed}{warn}{ایمنی}[#1]}{\end{sdrcallout}}
+\NewDocumentEnvironment{cautionbox}{o}{\begin{sdrcallout}{sdrOrange}{warn}{توجه}[#1]}{\end{sdrcallout}}
+\NewDocumentEnvironment{notebox}{o}{\begin{sdrcallout}{sdrMid}{info}{نکته}[#1]}{\end{sdrcallout}}
+\NewDocumentEnvironment{expectbox}{o}{\begin{sdrcallout}{sdrGreen}{eye}{مشاهده‌ی مورد انتظار}[#1]}{\end{sdrcallout}}
+\NewDocumentEnvironment{recordbox}{o}{\begin{sdrcallout}{sdrPurple}{record}{ثبت کنید}[#1]}{\end{sdrcallout}}
+
+% numbered in-lab / pre-lab question
+\newcounter{sdrq}
+\NewDocumentEnvironment{question}{o}{%
+  \refstepcounter{sdrq}%
+  \begin{sdrcallout}{sdrTeal}{question}{پرسش \thesdrq}[#1]}{\end{sdrcallout}}
+
+% numbered worked example  (\begin{example}{title} ... or the template's \شروع{مثال})
+\newcounter{sdrex}
+\NewDocumentEnvironment{example}{O{}}{%
+  \refstepcounter{sdrex}%
+  \begin{tcolorbox}[sdrframed=sdrHead,colback=sdrPaper,
+     title={مثال \thesdrex\ifstrempty{#1}{}{: #1}}]}{\end{tcolorbox}}
+\newenvironment{مثال}[1][]{\begin{example}[#1]}{\end{example}}
+
+% numbered pre-lab deliverable:  \begin{task}{title}[tag]
+\newcounter{sdrtask}
+\NewDocumentEnvironment{task}{m O{}}{%
+  \refstepcounter{sdrtask}%
+  \begin{tcolorbox}[sdrframed=sdrDark,
+     title={تکلیف \thesdrtask: #1\hfill{\normalfont\footnotesize #2}}]}{\end{tcolorbox}}
+
+% compact titled box for cheat sheets:  \begin{cheatbox}[colour]{title}
+\NewDocumentEnvironment{cheatbox}{O{sdrDark} m}{%
+  \begin{tcolorbox}[enhanced,colback=white,colframe=#1,boxrule=0.5pt,arc=1.5pt,
+     colbacktitle=#1,coltitle=white,fonttitle=\bfseries,title={#2},
+     left=4pt,right=4pt,top=3pt,bottom=3pt,toptitle=1.5pt,bottomtitle=1.5pt,
+     before skip=0pt,after skip=5pt]}{\end{tcolorbox}}
+
+% key-facts strip placed under the banner
+\newenvironment{infostrip}{%
+  \begin{tcolorbox}[enhanced,boxrule=0.6pt,colframe=sdrMid!60,colback=sdrPaper,arc=2pt,
+     left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=4pt,after skip=8pt]\small}{\end{tcolorbox}}
+
+%----------------------------------------------------------------------
+% Code listings (always left-to-right).  \latin ... \endlatin are the bare
+% macros of xepersian's `latin' environment (using \begin{latin} here would
+% stop listings from finding the end of the listing).
+%----------------------------------------------------------------------
+\lstdefinestyle{sdrcode}{basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue!75!black}\bfseries,commentstyle=\color{sdrGreen!75!black}\itshape,
+  stringstyle=\color{sdrOrange!85!black},showstringspaces=false,columns=fullflexible,
+  keepspaces=true,breaklines=true,tabsize=4,frame=l,framerule=2.5pt,rulecolor=\color{sdrMid},
+  backgroundcolor=\color{sdrPaper},xleftmargin=12pt,framexleftmargin=7pt,
+  aboveskip=6pt,belowskip=6pt,numbers=none}
+\lstnewenvironment{pycode}[1][]{\latin\lstset{style=sdrcode,language=Python,#1}}{\endlatin}
+\lstnewenvironment{shellcode}[1][]{\latin\lstset{style=sdrcode,language=bash,#1}}{\endlatin}
+\lstnewenvironment{textcode}[1][]{\latin\lstset{style=sdrcode,language={},#1}}{\endlatin}
+
+%----------------------------------------------------------------------
+% Screenshot slot:  \screenshotslot[<width>]{<file rel. to project root>}{<caption>}
+%   file exists            -> real figure with caption
+%   file missing + \ifSDRplaceholders -> dashed frame telling what to insert
+%----------------------------------------------------------------------
+\newcommand{\screenshotslot}[3][0.92\linewidth]{%
+  \IfFileExists{\SDRroot/#2}{%
+    \begin{figure}[H]\centering\includegraphics[width=#1]{\SDRroot/#2}\caption{#3}\end{figure}}{%
+    \ifSDRplaceholders
+      \begin{center}
+      \begin{tcolorbox}[enhanced,width=#1,colback=white,boxrule=0pt,frame hidden,arc=3pt,
+           borderline={0.7pt}{0pt}{sdrGray,dashed},halign=center,top=7pt,bottom=7pt]
+        {\small\color{sdrGray}جای تصویر واقعی \lr{GNU Radio}: #3\\[-1pt]
+         {\footnotesize (فایل \lr{\ttfamily\detokenize{#2}} را در پروژه قرار دهید)}}
+      \end{tcolorbox}
+      \end{center}
+    \fi}}
+\makeatother
